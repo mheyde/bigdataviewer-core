@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><SequenceDescription>
     <BasePath type="relative">.</BasePath>
     <ImageLoader class="bdv.img.dvid.DvidMultiscale2dImageLoader">
-        <apiUrl>http://hackathon.janelia.org/api</apiUrl>
+        <apiUrl>http://emrecon100.janelia.priv/api</apiUrl>
         <nodeId>2a3fd320aef011e4b0ce18037320227c</nodeId>
         <dataInstanceId>graytiles</dataInstanceId>
     </ImageLoader>

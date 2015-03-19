@@ -279,8 +279,8 @@ public class BigDataViewer
 
 	public BigDataViewer( final AbstractSpimData< ? > spimData, final String windowTitle, final ProgressWriter progressWriter )
 	{
-		final int width = 800;
-		final int height = 600;
+		final int width = 1264;
+		final int height = 704;
 
 		if ( WrapBasicImgLoader.wrapImgLoaderIfNecessary( spimData ) )
 		{
