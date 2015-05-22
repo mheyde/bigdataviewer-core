@@ -39,6 +39,7 @@ import net.imglib2.ui.OverlayRenderer;
 import net.imglib2.ui.PainterThread;
 import net.imglib2.ui.TransformEventHandler;
 import net.imglib2.ui.TransformEventHandler3D;
+import net.imglib2.ui.TransformEventHandlerFactory;
 import net.imglib2.ui.TransformListener;
 import net.imglib2.util.LinAlgHelpers;
 
@@ -202,6 +203,8 @@ public class ViewerPanel extends JPanel implements OverlayRenderer, TransformLis
 
 		private MessageOverlayAnimator msgOverlay = new MessageOverlayAnimator( 800 );
 
+		private TransformEventHandlerFactory< AffineTransform3D > transformEventHandlerFactory = TransformEventHandler3D.factory();
+
 		public Options width( final int w )
 		{
 			width = w;
@@ -249,6 +252,12 @@ public class ViewerPanel extends JPanel implements OverlayRenderer, TransformLis
 			msgOverlay = o;
 			return this;
 		}
+
+		public Options transformEventHandlerFactory( final TransformEventHandlerFactory< AffineTransform3D > f )
+		{
+			transformEventHandlerFactory = f;
+			return this;
+		}
 	}
 
 	/**
@@ -282,16 +291,11 @@ public class ViewerPanel extends JPanel implements OverlayRenderer, TransformLis
 		final int numGroups = 10;
 		final ArrayList< SourceGroup > groups = new ArrayList< SourceGroup >( numGroups );
 		for ( int i = 0; i < numGroups; ++i )
-		{
-			final SourceGroup g = new SourceGroup( "group " + Integer.toString( i + 1 ) );
-			if ( i < sources.size() )
-			{
-				g.addSource( i );
-			}
-			groups.add( g );
-		}
-
+			groups.add( new SourceGroup( "group " + Integer.toString( i + 1 ), null ) );
 		state = new ViewerState( sources, groups, numTimePoints );
+		for ( int i = Math.min( numGroups, sources.size() ) - 1; i >= 0; --i )
+			state.getSourceGroups().get( i ).addSource( i );
+
 		if ( !sources.isEmpty() )
 			state.setCurrentSource( 0 );
 		multiBoxOverlayRenderer = new MultiBoxOverlayRenderer();
@@ -301,7 +305,7 @@ public class ViewerPanel extends JPanel implements OverlayRenderer, TransformLis
 		painterThread = new PainterThread( this );
 		viewerTransform = new AffineTransform3D();
 		display = new InteractiveDisplayCanvasComponent< AffineTransform3D >(
-				optional.width, optional.height, TransformEventHandler3D.factory() );
+				optional.width, optional.height, optional.transformEventHandlerFactory );
 		display.addTransformListener( this );
 		renderTarget = new TransformAwareBufferedImageOverlayRenderer();
 		renderTarget.setCanvasSize( optional.width, optional.height );

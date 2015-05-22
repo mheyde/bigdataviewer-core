@@ -193,7 +193,7 @@ class HDF5AccessHack implements IHDF5Access
 		H5Sselect_hyperslab( dataset.fileSpaceId, H5S_SELECT_SET, reorderedMin, null, reorderedDimensions, null );
 		H5Dread( dataset.dataSetId, H5T_NATIVE_FLOAT, memorySpaceId, dataset.fileSpaceId, numericConversionXferPropertyListID, dataBlock );
 		H5Sclose( memorySpaceId );
-
+		HDF5Access.unsignedShort( dataBlock );
 		return dataBlock;
 	}
 
@@ -202,6 +202,7 @@ class HDF5AccessHack implements IHDF5Access
 	{
 		for ( final OpenDataSet dataset : openDataSetCache.values() )
 			dataset.close();
+		openDataSetCache.clear();
 	}
 
 	@Override
@@ -211,18 +212,20 @@ class HDF5AccessHack implements IHDF5Access
 		hdf5Reader.close();
 	}
 
-	@Override
-	protected void finalize() throws Throwable
-	{
-		try
-		{
-			for ( final OpenDataSet dataset : openDataSetCache.values() )
-				dataset.close();
-			hdf5Reader.close();
-		}
-		finally
-		{
-			super.finalize();
-		}
-	}
+//	@Override
+//	protected void finalize() throws Throwable
+//	{
+//		try
+//		{
+//			for ( final OpenDataSet dataset : openDataSetCache.values() )
+//				dataset.close();
+//			openDataSetCache.clear();
+//			System.out.println("img.hdf5.HDF5AccessHack.finalize()");
+//			hdf5Reader.close();
+//		}
+//		finally
+//		{
+//			super.finalize();
+//		}
+//	}
 }
