@@ -550,6 +550,7 @@ public class BigDataViewer
 //		final String fn = "src/main/resources/dvid-flyem-graytiles.xml";
 //		final String fn = "src/main/resources/dvid-flyem-grayscale.xml";
 		final String fn = "src/main/resources/dvid-flyem-bodies.xml";
+//		final String fn = "src/main/resources/dvid-flyem-superpixels.xml";
 //		final String fn = "/Users/Pietzsch/Desktop/data/catmaid-confocal.xml";
 //		final String fn = "/Users/pietzsch/desktop/data/BDV130418A325/BDV130418A325_NoTempReg.xml";
 //		final String fn = "/Users/pietzsch/Desktop/data/valia2/valia.xml";
