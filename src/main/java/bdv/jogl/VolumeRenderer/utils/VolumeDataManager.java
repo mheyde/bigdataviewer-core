@@ -6,11 +6,11 @@ import static bdv.jogl.VolumeRenderer.utils.VolumeDataUtils.getDataBlock;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.realtransform.AffineTransform3D;
 
 import com.jogamp.opengl.math.Matrix4;
@@ -34,7 +34,7 @@ public class VolumeDataManager {
 	
 	private final Map<Integer, Boolean> enabled =new HashMap<Integer, Boolean>();
 	
-	private float globalMaxVolume = 0;
+	private float globalMaxVolume =40000;
 	
 	private int globalMaxOccurance = 0;
 	
@@ -72,9 +72,11 @@ public class VolumeDataManager {
 	}
 	
 	private void updateGlobals(){
-		globalMaxVolume = 0;
+
 		globalMaxOccurance = 0;
 		minGlobalValue = Float.MAX_VALUE;
+		
+		
 		
 		for(VolumeDataBlock data: volumes.values()){
 			

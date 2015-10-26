@@ -535,14 +535,13 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 	private boolean updateTextureData(GL4 gl2){
 
 		float min = Float.MAX_VALUE;
-		float max = Float.MIN_VALUE;
 		boolean somethingUpdated = false;
 
 		for(Integer i : dataManager.getVolumeKeys()){
 			VolumeDataBlock data = dataManager.getVolume(i);
 
 			min = Math.min(min, data.minValue);
-			max = Math.max(max, data.maxValue);
+			
 
 			if(!data.needsUpdate()){
 				continue;
@@ -582,7 +581,7 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		if(somethingUpdated){
 			//min max
 			gl2.glUniform1f(getLocation(suvMinVolumeValue), min);
-			gl2.glUniform1f(getLocation(suvMaxVolumeValue), max);
+			gl2.glUniform1f(getLocation(suvMaxVolumeValue), dataManager.getGlobalMaxVolumeValue());
 		}
 		return somethingUpdated;
 	}
