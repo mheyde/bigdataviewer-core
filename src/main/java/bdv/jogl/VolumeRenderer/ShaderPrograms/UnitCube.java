@@ -27,6 +27,8 @@ public class UnitCube extends AbstractShaderSceneElement{
 	
 	private UnitCubeShaderSource source = new UnitCubeShaderSource();
 
+	private boolean isVertBufferUpdateable = true;
+
 	@Override
 	protected UnitCubeShaderSource getSource() {
 		return source;
@@ -82,6 +84,9 @@ public class UnitCube extends AbstractShaderSceneElement{
 
 	
 	protected void updateVertexBufferSubClass(GL4 gl2, VertexAttribute position){
+		if(!isVertBufferUpdateable){
+			return;
+		}
 		FloatBuffer bufferData;
 		
 		if(renderWireframe){
@@ -92,6 +97,9 @@ public class UnitCube extends AbstractShaderSceneElement{
 		bufferData.rewind();
 
 		position.setAttributeValues(gl2, bufferData);
+		isVertBufferUpdateable  = false;
+		
+		
 	}
 
 
