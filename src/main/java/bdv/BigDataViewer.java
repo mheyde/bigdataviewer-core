@@ -683,7 +683,8 @@ public class BigDataViewer
 	@Deprecated
 	public static void view( final String filename, final ProgressWriter progressWriter ) throws SpimDataException
 	{
-		open( filename, new File( filename ).getName(), progressWriter, ViewerOptions.options() );
+		final BigDataViewer bdv = open( filename, new File( filename ).getName(), progressWriter, ViewerOptions.options() );
+		new VolumeRendererExtension(bdv);
 	}
 
 	public static void main( final String[] args )
