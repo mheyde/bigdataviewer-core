@@ -83,6 +83,7 @@ public class TransferFunctionDrawPanel extends JPanel {
 		add(c);
 	}
 	
+	
 	private void initUI(){
 		setLayout(mainLayout);
 		
@@ -147,11 +148,13 @@ public class TransferFunctionDrawPanel extends JPanel {
 	private void updateXScale(){
 		renderPanel.setSize(renderPanel.getMinimumSize().width * ((Number)zoomSpinnerx.getValue()).intValue(), renderPanel.getHeight());
 		renderPanel.setPreferredSize(renderPanel.getSize());
+		scrollArea.updateUI();
 	}
 
 	private void updateYScale(){
 		renderPanel.setSize(renderPanel.getWidth(), renderPanel.getMinimumSize().height * ((Number) zoomSpinnery.getValue()).intValue());
 		renderPanel.setPreferredSize(renderPanel.getSize());
+		scrollArea.updateUI();
 	}
 	
 	private void initListener(){
