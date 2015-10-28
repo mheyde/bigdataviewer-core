@@ -46,13 +46,14 @@ public class GLWindow extends JFrame {
 	//TODO bench
 	private final int maxStamps = 1000; 
 	private final int startSteps = 1000;
-	private final int startSamples = 10;
-	private final int stopSamples = 20;
-	private final int incrementSamples =2; 
+	private final int startSamples = 100;
+	private final int stopSamples = 3100;
+	private final int incrementSamples =500; 
 	private int currentSamples=startSamples;
 	
-	private boolean measurementInProgress = false;
+
 	private boolean startPhaseInProgress = false;
+	private boolean benchmarkInProgress = false;
 	private long timeStamp[] = new long[maxStamps];
 	private ArrayList<Double> means = new ArrayList<Double>();
 	private ArrayList<Double> medians = new ArrayList<Double>();
@@ -123,40 +124,52 @@ public class GLWindow extends JFrame {
 	public void startBenchmark(int startsamples){
 		startStepsTaken = 0;
 		measureStepsTaken = 0;
+		benchmarkInProgress = true;
 		startPhaseInProgress = true;
-		measurementInProgress = false;
+
+		
 		currentSamples = startsamples;
 		((VolumeDataScene)getScene()).getRenderer().setSamples(currentSamples);
-		System.out.println("Benchmark started!");
+		
+		System.out.print("Mesurement started! [" + currentSamples +"/"+stopSamples+"]");
+		
 		glCanvas.repaint();
 	}
 	
-	private void doMeasurement(){
-		if(startStepsTaken < startSteps){
-			startStepsTaken++;
-			return;
-		}	
-		if(startPhaseInProgress||measurementInProgress){
-		startPhaseInProgress = false;
-		measurementInProgress = true;
-		if(measureStepsTaken < maxStamps){
+	private void doWarmupStep(){
+			startPhaseInProgress = startStepsTaken < startSteps;
+			startStepsTaken++;	
+	}
+	
+	private void doMeasurementStep(){
+
+		if(benchmarkInProgress){
 			
 			timeStamp[measureStepsTaken] = System.nanoTime();
 			measureStepsTaken++;
 			if(measureStepsTaken >= maxStamps){
-				measurementInProgress= false;
+
 				evaluateResults();
-				System.out.println("Benchmark done!");
-				if(currentSamples <= stopSamples){
+				System.out.println("Mesurement done!");
+				benchmarkInProgress = currentSamples < stopSamples;
+				if(benchmarkInProgress){
 					currentSamples += incrementSamples;
 					startBenchmark(currentSamples);
-				}
-				if(currentSamples == stopSamples+incrementSamples){		
-					currentSamples += incrementSamples;
+				}else{		
 					printResultsToFile();
 				}
 			}
 		}
+	}
+	
+	private void doBenchmarkStep(){
+		if(!benchmarkInProgress ){
+			return;
+		}
+		if(startPhaseInProgress){
+			doWarmupStep();
+		}else{	
+			doMeasurementStep();
 		}
 	}
 	
@@ -234,6 +247,8 @@ public class GLWindow extends JFrame {
 				histogram.put(times[i], 0l);
 			}
 			histogram.put(times[i],1l + histogram.get(times[i]));
+			
+			times[i] = -1;
 		}
 		avg/=((double)times.length);
 		mins.add(timeToFps((double)min));
@@ -254,9 +269,11 @@ public class GLWindow extends JFrame {
 		return 1.0/(timeInNs / 1000000000.0);
 	}
 	private void prepareNextMeasurement(){
-		if(measurementInProgress||startPhaseInProgress ){
-			if(measurementInProgress&&measureStepsTaken %100 ==0){
-				System.out.print(".");
+		if(benchmarkInProgress   ){
+			if(!startPhaseInProgress){
+				if(measureStepsTaken %(maxStamps/ 10) ==0){
+					System.out.print(".");
+				}
 			}
 			glCanvas.repaint();
 		}
@@ -315,7 +332,7 @@ public class GLWindow extends JFrame {
 			public synchronized void display(GLAutoDrawable drawable) {		
 
 				//TODO bench
-				//doMeasurement();
+		//		doBenchmarkStep();
 				//TODO bench
 				GL gl = drawable.getGL();
 				GL4 gl2 = gl.getGL4();
@@ -323,7 +340,7 @@ public class GLWindow extends JFrame {
 				//renders available scene
 				renderScene.render(gl2);
 				//TODO bench
-				//prepareNextMeasurement();
+			//	prepareNextMeasurement();
 				//TODO bench
 			}
 		});
