@@ -40,41 +40,44 @@ public class GLWindow extends JFrame {
 	private final GLCanvas glCanvas;
 
 	private AbstractScene renderScene;
-	
+
 	private CameraUpdater cUpdater;
 
 	//TODO bench
-	private final int maxStamps = 1000; 
+	private final int maxStamps = 61; 
 	private final int startSteps = 1000;
-	private final int startSamples = 100;
-	private final int stopSamples = 3100;
-	private final int incrementSamples =500; 
+	private final int startSamples = 10;
+	private final int stopSamples = 10;
+	private final int incrementSamples =2; 
 	private int currentSamples=startSamples;
-	
+	private long measureBegin =-1;
+	private long formerPrintStep =-1;
+	private long framesScinceBegin = 0;
+
 
 	private boolean startPhaseInProgress = false;
 	private boolean benchmarkInProgress = false;
-	private long timeStamp[] = new long[maxStamps];
+	private double timeStamp[] = new double[maxStamps];
 	private ArrayList<Double> means = new ArrayList<Double>();
 	private ArrayList<Double> medians = new ArrayList<Double>();
 	private ArrayList<Double> maxs = new ArrayList<Double>();
 	private ArrayList<Double> mins = new ArrayList<Double>();
 	private ArrayList<Double> vars = new ArrayList<Double>();
-	
-	
+
+
 	private int startStepsTaken =  0;
 	private int measureStepsTaken = 0 ;
 
 	//TODO bench
-			
+
 	private void adaptScene(){
-		
+
 		renderScene.addSceneEventListener(new SceneEventListener() {
-			
+
 			@Override
 			public void needsUpdate() {
 				glCanvas.repaint();
-				
+
 			}
 		});
 		cUpdater = new CameraUpdater(renderScene.getCamera());
@@ -82,9 +85,9 @@ public class GLWindow extends JFrame {
 		glCanvas.addMouseMotionListener(cUpdater.getMouseMotionListener());
 		glCanvas.addMouseWheelListener(cUpdater.getMouseWheelListener());
 	}
-	
-	
-	
+
+
+
 	/**
 	 * @param scenes the scenes to set
 	 */
@@ -119,34 +122,45 @@ public class GLWindow extends JFrame {
 		means.clear();
 		medians.clear();
 		vars.clear();
+		benchmarkInProgress = true;
+
 		startBenchmark(startSamples);
 	}
 	public void startBenchmark(int startsamples){
 		startStepsTaken = 0;
 		measureStepsTaken = 0;
-		benchmarkInProgress = true;
 		startPhaseInProgress = true;
+		measureBegin = -1;
+		framesScinceBegin=0;
 
-		
 		currentSamples = startsamples;
 		((VolumeDataScene)getScene()).getRenderer().setSamples(currentSamples);
-		
+
 		System.out.print("Mesurement started! [" + currentSamples +"/"+stopSamples+"]");
-		
+
 		glCanvas.repaint();
 	}
-	
+
 	private void doWarmupStep(){
-			startPhaseInProgress = startStepsTaken < startSteps;
-			startStepsTaken++;	
+		startPhaseInProgress = startStepsTaken < startSteps;
+		startStepsTaken++;	
 	}
-	
+
 	private void doMeasurementStep(){
 
 		if(benchmarkInProgress){
-			
-			timeStamp[measureStepsTaken] = System.nanoTime();
-			measureStepsTaken++;
+			long currentTime = System.nanoTime();
+			if(measureBegin < 0){
+				measureBegin = currentTime;
+			}else{
+				framesScinceBegin++;
+			}
+			if((currentTime- measureBegin) > 1000000000 && framesScinceBegin > 1){
+				timeStamp[measureStepsTaken] = timeToFps(framesScinceBegin,currentTime- measureBegin);
+				measureStepsTaken++;
+				framesScinceBegin=0;
+				measureBegin = currentTime;
+			}
 			if(measureStepsTaken >= maxStamps){
 
 				evaluateResults();
@@ -161,7 +175,7 @@ public class GLWindow extends JFrame {
 			}
 		}
 	}
-	
+
 	private void doBenchmarkStep(){
 		if(!benchmarkInProgress ){
 			return;
@@ -172,7 +186,7 @@ public class GLWindow extends JFrame {
 			doMeasurementStep();
 		}
 	}
-	
+
 	private void printResultsToFile() {
 		PrintWriter resultWriter = null;
 		try {
@@ -184,102 +198,100 @@ public class GLWindow extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		int i = 0;
 		resultWriter.write("samples\t\t\tfastes\t\t\tslowest\t\t\tmean\t\t\tmedian\t\t\tstandard derivation\n");
 		for(int step = startSamples;step<= stopSamples; step +=incrementSamples){
-			
+
 			resultWriter.write(""+ (int)step + "\t\t\t"
-			+mins.get(i).toString()+"\t\t\t"
-			+maxs.get(i).toString()+"\t\t\t"
+					+mins.get(i).toString()+"\t\t\t"
+					+maxs.get(i).toString()+"\t\t\t"
 					+means.get(i).toString()+"\t\t\t"
-			+medians.get(i).toString()+"\t\t\t"
+					+medians.get(i).toString()+"\t\t\t"
 					+vars.get(i).toString()+"\n");
-			
+
 			i++;
 		}
 		resultWriter.close();
-		
+
 	}
 
 
 
 	private void evaluateResults(){
-		long[] times = new long[timeStamp.length-1];
-		long latestTimeStep = timeStamp[0];
-		//create times
-		for(int i= 1; i <timeStamp.length ;i++){
-			times[i-1] = timeStamp[i]-latestTimeStep;
-			latestTimeStep = timeStamp[i];
-			
-		}
-		
+		double[] fpsField = timeStamp.clone();
+
 		//sort for median
-		Arrays.sort(times);
-		
-		long max = Long.MIN_VALUE;
-		long min = Long.MAX_VALUE;
+		Arrays.sort(fpsField);
+
+		double max = Double.MIN_VALUE;
+		double min = Double.MAX_VALUE;
 		double avg = 0;
 		double median =0;
 		//median 
-		if(times.length%2 ==0){
+		if(fpsField.length%2 ==0){
 			//even
-			median= 0.5* (double)(times[times.length/2-1]+times[times.length/2]);
-			
+			median= 0.5* fpsField[fpsField.length/2-1]+fpsField[fpsField.length/2];
+
 		}else{
 			//uneven
-			median = (double)times[(int)Math.floor(times.length/2)];
+			median = fpsField[(int)Math.floor(fpsField.length/2)];
 		}
-		
-		HashMap<Long,Long>histogram  = new HashMap<Long, Long>();
-		for(int i = 0; i<times.length;i++ ){
+
+		HashMap<Double,Long>histogram  = new HashMap<Double, Long>();
+		for(int i = 0; i<fpsField.length;i++ ){
 			//min
-			min = Math.min(min, times[i]);
-			
+			min = Math.min(min, fpsField[i]);
+
 			//max
-			max = Math.max(max, times[i]);
-			
+			max = Math.max(max, fpsField[i]);
+
 			//mean acc
-			avg += times[i];
-			
+			avg += fpsField[i];
+
 			//hist
-			if(!histogram.containsKey(times[i])){
-				histogram.put(times[i], 0l);
+			if(!histogram.containsKey(fpsField[i])){
+				histogram.put(fpsField[i], 0l);
 			}
-			histogram.put(times[i],1l + histogram.get(times[i]));
-			
-			times[i] = -1;
+			histogram.put(fpsField[i],1l + histogram.get(fpsField[i]));
+
+			fpsField[i] = -1;
 		}
-		avg/=((double)times.length);
-		mins.add(timeToFps((double)min));
-		maxs.add(timeToFps((double)max));
-		means.add(timeToFps(avg));
-		medians.add(timeToFps(median));
+		avg/=((double)fpsField.length);
+		mins.add(min);
+		maxs.add(max);
+		means.add(avg);
+		medians.add(median);
 		//variance
 		double variance = 0;
-		for(Long time : histogram.keySet()){
-			Long occurence = histogram.get(time);
-			double pi = (((double)occurence)/((double)times.length));
-			variance+=Math.pow(((double)time) - avg,2.0)*pi;
+		for(Double fps : histogram.keySet()){
+			Long occurence = histogram.get(fps);
+			double pi = (((double)occurence)/((double)fpsField.length));
+			variance+=Math.pow(fps - avg,2.0)*pi;
 		}
-		vars.add(Math.abs(timeToFps(avg+Math.sqrt(variance))-timeToFps(avg)));
+		vars.add(Math.sqrt(variance));
 	}
-	
-	private double timeToFps(double timeInNs){
-		return 1.0/(timeInNs / 1000000000.0);
+
+	private double timeToFps(double frames,double timeInNs){
+		return frames/(timeInNs / 1000000000.0);
 	}
 	private void prepareNextMeasurement(){
 		if(benchmarkInProgress   ){
 			if(!startPhaseInProgress){
-				if(measureStepsTaken %(maxStamps/ 10) ==0){
-					System.out.print(".");
+				if(formerPrintStep != measureStepsTaken){
+
+
+					if(measureStepsTaken %(maxStamps/ 10) ==0){
+						System.out.print(".");
+						formerPrintStep=measureStepsTaken;
+					}
 				}
 			}
 			glCanvas.repaint();
 		}
 	}
 	//TODO bench
-	
+
 	/**
 	 * constructor
 	 */
@@ -300,7 +312,7 @@ public class GLWindow extends JFrame {
 				GL4 gl2 = gl.getGL4();
 
 				//resizes available scene
-			    renderScene.resize(gl2, x, y, width, height);
+				renderScene.resize(gl2, x, y, width, height);
 			}
 
 			/**
@@ -332,7 +344,7 @@ public class GLWindow extends JFrame {
 			public synchronized void display(GLAutoDrawable drawable) {		
 
 				//TODO bench
-		//		doBenchmarkStep();
+				//doBenchmarkStep();
 				//TODO bench
 				GL gl = drawable.getGL();
 				GL4 gl2 = gl.getGL4();
@@ -340,7 +352,7 @@ public class GLWindow extends JFrame {
 				//renders available scene
 				renderScene.render(gl2);
 				//TODO bench
-			//	prepareNextMeasurement();
+				//prepareNextMeasurement();
 				//TODO bench
 			}
 		});
@@ -348,8 +360,8 @@ public class GLWindow extends JFrame {
 		setScene(scene);
 	}
 
-	
-	
+
+
 	/**
 	 * Does define the layout of the Window
 	 */
