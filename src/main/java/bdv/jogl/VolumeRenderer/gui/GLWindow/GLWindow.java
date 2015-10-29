@@ -231,7 +231,7 @@ public class GLWindow extends JFrame {
 		//median 
 		if(fpsField.length%2 ==0){
 			//even
-			median= 0.5* fpsField[fpsField.length/2-1]+fpsField[fpsField.length/2];
+			median= 0.5* (fpsField[fpsField.length/2-1]+fpsField[fpsField.length/2]);
 
 		}else{
 			//uneven
