@@ -27,6 +27,8 @@ public class TransferFunction1D {
 	private List<TransferFunctionListener> transferFunctionListeners = new ArrayList<TransferFunctionListener>();
 
 	private ITransferFunctionSampler sampler; 
+	
+	private final int maxFunctionPointSsmples = 2000;
 
 	//order points first by x then by y
 	private final Comparator<Point2D.Float> pointOrderXOperator = new Comparator<Point2D.Float>() {
@@ -176,7 +178,7 @@ public class TransferFunction1D {
 	 */
 	public void setMaxOrdinates(Point2D.Float maxOrdinates) {
 		maxVolumeValue = maxOrdinates.x;
-		maxOrdinates.x  = (maxOrdinates.x > 1000)?1000:maxOrdinates.x;
+		maxOrdinates.x  = (maxOrdinates.x > maxFunctionPointSsmples)?maxFunctionPointSsmples:maxOrdinates.x;
 			
 		Point2D.Float oldMax = new Point2D.Float(this.maxOrdinates.x,this.maxOrdinates.y);
 

@@ -12,11 +12,13 @@ import java.util.Set;
 
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.realtransform.AffineTransform3D;
+import net.imglib2.type.numeric.integer.UnsignedShortType;
 
 import com.jogamp.opengl.math.Matrix4;
 import com.jogamp.opengl.math.geom.AABBox;
 
 import bdv.BigDataViewer;
+import bdv.viewer.state.SourceGroup;
 import bdv.viewer.state.SourceState;
 import bdv.viewer.state.ViewerState;
 
@@ -34,7 +36,7 @@ public class VolumeDataManager {
 	
 	private final Map<Integer, Boolean> enabled =new HashMap<Integer, Boolean>();
 	
-	private float globalMaxVolume =40000;
+	private float globalMaxVolume = 2*(Short.MAX_VALUE+1)-1;
 	
 	private int globalMaxOccurance = 0;
 	
@@ -75,8 +77,6 @@ public class VolumeDataManager {
 
 		globalMaxOccurance = 0;
 		minGlobalValue = Float.MAX_VALUE;
-		
-		
 		
 		for(VolumeDataBlock data: volumes.values()){
 			
