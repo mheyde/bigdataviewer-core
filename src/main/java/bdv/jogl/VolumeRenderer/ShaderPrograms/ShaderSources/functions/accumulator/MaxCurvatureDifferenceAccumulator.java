@@ -154,7 +154,8 @@ public class MaxCurvatureDifferenceAccumulator extends AbstractVolumeAccumulator
 				"",
 				"float "+getFunctionName()+"(float densities["+scvMaxNumberOfVolumes+"]) {",
 				"	float minValue = "+Float.MAX_VALUE+";",
-				"	float maxValue = "+Float.MIN_VALUE+";",			
+				"	float maxValue = "+Float.MIN_VALUE+";",
+				"	int numberOfChanges = 0;",
 				"   if(!factorChanged){",
 				//TODO
 				"		"+sgvVolumeNormalizeFactor+" = curveNormalizeFactor;",
@@ -168,6 +169,10 @@ public class MaxCurvatureDifferenceAccumulator extends AbstractVolumeAccumulator
 				"		float cn = texture("+suvCurvatureTexture+"[n],texCN).r;",
 				"		maxValue = max(maxValue,cn);",
 				"		minValue = min(minValue,cn);",	
+				"		numberOfChanges++;",
+				"	}",
+				"	if(numberOfChanges ==0){",
+				"		return 0.0;",
 				"	}",
 				"	return maxValue -minValue;",	
 				"}"
