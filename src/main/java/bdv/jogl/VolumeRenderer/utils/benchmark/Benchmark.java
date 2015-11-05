@@ -22,15 +22,18 @@ public abstract class Benchmark {
 
 		@Override
 		public void doStep() {
+			System.out.print("Warmup ");
 			for(int i  = 0; i < numberOfWarmupSteps; i++){
 				functionToMeasure();
 			}
+			System.out.println("done");
 		}	
 	}
 	private class MeasureState implements BenchmarkState{
 
 		@Override
 		public void doStep() {
+			System.out.print("Measurement ");
 			long current;
 			long nanosToElapse = TimeUnit.NANOSECONDS.convert(minTime, minTimeUnit);
 			for(int measurement =0; measurement < repeatitions; measurement++){
@@ -44,6 +47,7 @@ public abstract class Benchmark {
 				}while(nanosToElapse > current-begin || iter <1 );
 				values[measurement] = ((double)(current-begin))/((double)iter);
 			}
+			System.out.println("done");
 		}	
 	}
 
@@ -104,8 +108,9 @@ public abstract class Benchmark {
 	private class EvaluationState implements BenchmarkState{
 		@Override
 		public void doStep() {
+			System.out.print("evaluation ");
 			result = evaluateResults(values);
-			
+			System.out.println("done");
 		}
 
 	} 
@@ -156,6 +161,10 @@ public abstract class Benchmark {
 
 	public double[] getSeconds() {
 		return values;
+	}
+	
+	public String toString(){
+		return "" + result.min+ " " +result.max+" "+result.mean + " "+result.median + result.stdder;
 	}
 
 }
