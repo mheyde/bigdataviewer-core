@@ -164,7 +164,7 @@ public abstract class Benchmark {
 	}
 	
 	public String toString(){
-		return "" + result.min+ " " +result.max+" "+result.mean + " "+result.median + result.stdder;
+		return "" + result.min+ " " +result.max+" "+result.mean + " "+result.median +" " + result.stdder;
 	}
 
 }
