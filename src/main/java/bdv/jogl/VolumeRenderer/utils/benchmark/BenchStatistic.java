@@ -1,4 +1,4 @@
-package bdv.util.benchmark;
+package bdv.jogl.VolumeRenderer.utils.benchmark;
 
 public class BenchStatistic {
 

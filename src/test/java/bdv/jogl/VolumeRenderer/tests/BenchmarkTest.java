@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
-import bdv.util.benchmark.Benchmark;
+import bdv.jogl.VolumeRenderer.utils.benchmark.Benchmark;
 
 public class BenchmarkTest {
 
