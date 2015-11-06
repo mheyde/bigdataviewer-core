@@ -36,7 +36,7 @@ public class VolumeDataManager {
 	
 	private final Map<Integer, Boolean> enabled =new HashMap<Integer, Boolean>();
 	
-	private float globalMaxVolume = 2*(Short.MAX_VALUE+1)-1;
+	private float globalMaxVolume = Short.MAX_VALUE/2;
 	
 	private int globalMaxOccurance = 0;
 	
@@ -87,7 +87,7 @@ public class VolumeDataManager {
 			}
 			Float cmax =data.getValueDistribution().lastKey();
 			Float cmin = data.getValueDistribution().firstKey();
-			globalMaxVolume = Math.max(globalMaxVolume,cmax.floatValue());
+			//globalMaxVolume = Math.max(globalMaxVolume,cmax.floatValue());
 			minGlobalValue = Math.max(0.0f,Math.min(minGlobalValue, cmin.floatValue()));
 		}
 	}

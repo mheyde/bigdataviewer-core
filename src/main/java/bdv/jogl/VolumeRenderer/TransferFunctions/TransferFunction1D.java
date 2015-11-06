@@ -28,7 +28,7 @@ public class TransferFunction1D {
 
 	private ITransferFunctionSampler sampler; 
 	
-	private final int maxFunctionPointSsmples = 2000;
+	private final int maxFunctionPointSsmples = 2048;
 
 	//order points first by x then by y
 	private final Comparator<Point2D.Float> pointOrderXOperator = new Comparator<Point2D.Float>() {
