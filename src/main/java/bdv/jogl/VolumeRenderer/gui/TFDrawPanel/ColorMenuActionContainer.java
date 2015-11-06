@@ -25,7 +25,7 @@ public class ColorMenuActionContainer {
 	
 	private Point interactionPoint;
 	
-	private final Action insertAction = new AbstractAction("Insert transferfunction point") {
+	private final Action insertAction = new AbstractAction("Insert point") {
 
 		/**
 		 * default version
@@ -35,7 +35,7 @@ public class ColorMenuActionContainer {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Color color = JColorChooser.showDialog(new JFrame(), "Select color for transferfunction point", Color.black);
+			Color color = JColorChooser.showDialog(new JFrame(), "Select color for point", Color.black);
 
 			//nothing choosen
 			if(color == null){
@@ -48,8 +48,13 @@ public class ColorMenuActionContainer {
 		}
 	};
 	
-	private final Action setColorAction = new AbstractAction("Set color of transferfunction point") {
+	private final Action setColorAction = new AbstractAction("Set color of point") {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			Dimension winSize = parent.getSize();
@@ -58,7 +63,7 @@ public class ColorMenuActionContainer {
 				return;
 			}
 			
-			Color color = JColorChooser.showDialog(new JFrame(), "Select color for transferfunction point", Color.black);
+			Color color = JColorChooser.showDialog(new JFrame(), "Select color for point", Color.black);
 
 			//nothing choosen
 			if(color == null){
@@ -69,7 +74,7 @@ public class ColorMenuActionContainer {
 		}
 	};
 	
-	private final Action resetAction = new AbstractAction("Reset transferfunction point") {
+	private final Action resetAction = new AbstractAction("Reset points") {
 
 		/**
 		 * default version
@@ -82,7 +87,7 @@ public class ColorMenuActionContainer {
 		}
 	};
 	
-	private final Action deleteAction = new AbstractAction("Delete transferfunction point"){
+	private final Action deleteAction = new AbstractAction("Delete point"){
 		/**
 		 * default version
 		 */
