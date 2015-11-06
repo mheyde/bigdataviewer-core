@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import com.jogamp.opengl.GLContext;
+import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.math.VectorUtil;
 
 import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.functions.IFunction;
@@ -28,7 +30,8 @@ public class TransferFunction1D {
 
 	private ITransferFunctionSampler sampler; 
 	
-	private final int maxFunctionPointSsmples = 2048;
+	//max text size
+	private final int maxFunctionPointSsmples =2048 -1;
 
 	//order points first by x then by y
 	private final Comparator<Point2D.Float> pointOrderXOperator = new Comparator<Point2D.Float>() {
@@ -269,61 +272,63 @@ public class TransferFunction1D {
 		return m* colorOffset + prevAlpha;
 	} 
 
-	private Color getColorForXOrdinateInObjectTransferSpace(Point2D.Float index){
+	private float[] getColorForXSampleTransferSpace(Point2D.Float index){
 
 		float [] result = {0,0,0,0};
 
 		getColorComponent(index).getColorComponents(result);
 
 		result[3] = getAlpha(index); 
-		Color resultColor = null ;
-		try {
-			resultColor = new Color(result[0],result[1],result[2],result[3]);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return resultColor;
+	
+		return result;
 	}
 
 	/**
 	 * @return the with alpha values
 	 */
-	public final TreeMap<Integer, Color> getTexturColor() {		
+	public final TreeMap<Integer, Color> sampleColors() {		
 		TreeMap<Integer, Color> returnColors = new TreeMap<Integer, Color>();
+		TreeMap<Integer, Long> multiplicities = new TreeMap<Integer, Long>();
+		TreeMap<Integer, float[]> colorComponents = new TreeMap<Integer, float[]>();
 
-
-		Color currentColor = null;
-		//get colors from gradient
-		for(Point2D.Float index : colors.keySet()){
-
-			if(returnColors.containsKey((int)index.x)){
-				continue;
-			}
-
-			currentColor = getColorForXOrdinateInObjectTransferSpace(index);
-			if(currentColor == null){
-				continue;
-			}
-
-			//TODO
-			returnColors.put((int)index.x, currentColor);
-		}
+		float[] currentColor = null;
 
 		//get colors from line
 		for(Point2D.Float index : colors.keySet()){
-
-			if(returnColors.containsKey((int)index.x)){
-				continue;
+			int intIndex = (int)index.x;
+			if(!multiplicities.containsKey(intIndex)){
+				multiplicities.put(intIndex, 0l);
+				colorComponents.put(intIndex, new float[]{0,0,0,0});
 			}
 
-			currentColor = getColorForXOrdinateInObjectTransferSpace(index);
+			currentColor = getColorForXSampleTransferSpace(index);
 			if(currentColor == null){
 				continue;
 			}
 
-			//TODO
-			returnColors.put((int)index.x, currentColor);
+			float[] colorComponent = colorComponents.get(intIndex);
+			for(int i = 0; i < colorComponent.length; i++){
+				colorComponent[i]+=currentColor[i];
+			}
+			Long num = multiplicities.get(intIndex) + 1;
+			multiplicities.put(intIndex, num);
+		}
+		
+		//create colors
+		for(int key: colorComponents.keySet()){
+			float[] component = colorComponents.get(key);
+			long multiplicity = multiplicities.get(key);
+			Color resultColor = null;
+			try {
+				resultColor = new Color(
+						component[0]/((float)multiplicity),
+						component[1]/((float)multiplicity),
+						component[2]/((float)multiplicity),
+						component[3]/((float)multiplicity));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			returnColors.put(key, resultColor);
 		}
 
 		return returnColors;
@@ -335,8 +340,7 @@ public class TransferFunction1D {
 	 * @param newPoint
 	 */
 	public void moveColor(Point2D.Float oldPoint, Point2D.Float newPoint) {
-		
-		
+			
 		Color color = colors.get(oldPoint);
 		if(color == null){
 			return;

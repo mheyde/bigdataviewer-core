@@ -13,19 +13,19 @@ public class TransferFunction1DTest {
 	@Test
 	public void borderCaseTest() {
 		TransferFunction1D tf= new TransferFunction1D();
-		assertNotEquals(true,tf.getTexturColor().isEmpty());
+		assertNotEquals(true,tf.sampleColors().isEmpty());
 		
 		//all zero
 		for(Float point: tf.getColors().keySet()){
 			tf.moveColor(point, new Float(point.x, 0));
 		}
-		assertNotEquals(true,tf.getTexturColor().isEmpty());
+		assertNotEquals(true,tf.sampleColors().isEmpty());
 		
 		//all one
 		for(Float point: tf.getColors().keySet()){
 			tf.moveColor(point, new Float(point.x, 1));
 		}
-		assertNotEquals(true,tf.getTexturColor().isEmpty());
+		assertNotEquals(true,tf.sampleColors().isEmpty());
 	}
 
 }

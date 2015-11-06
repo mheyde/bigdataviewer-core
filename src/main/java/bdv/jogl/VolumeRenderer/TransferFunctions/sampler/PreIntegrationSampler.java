@@ -58,6 +58,8 @@ public class PreIntegrationSampler implements ITransferFunctionSampler {
 		colorTexture.setTexParameteri(gl, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
 		colorTexture.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_S, GL2.GL_CLAMP_TO_BORDER);
 		colorTexture.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_T, GL2.GL_CLAMP_TO_BORDER);
+		//colorTexture.setTexParameteri(gl, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR_MIPMAP_LINEAR);
+		//colorTexture.setShouldGenerateMidmaps(true);
 	}
 	
 	@Override
@@ -74,7 +76,7 @@ public class PreIntegrationSampler implements ITransferFunctionSampler {
 		//http://www.uni-koblenz.de/~cg/Studienarbeiten/SA_MariusErdt.pdf
 		
 		int sampleStep=1;
-		TreeMap<Integer, Color> colorMap = transferFunction.getTexturColor();
+		TreeMap<Integer, Color> colorMap = transferFunction.sampleColors();
 
 
 		
@@ -127,26 +129,39 @@ public class PreIntegrationSampler implements ITransferFunctionSampler {
 		}
 		
 		//get Buffer last key is the highest number 
-		FloatBuffer buffer = Buffers.newDirectFloatBuffer((int)Math.pow(integalsOfS.size(), 2)*4);
+		int bufferSize = (int)Math.pow(integalsOfS.size(), 2);
+		bufferSize *=4;
+		float javaBuffer[] = new float[bufferSize];
+		
 		//classification
-		for(int sb = 0; sb < integalsOfS.size(); sb++){
-			for(int sf = 0; sf < integalsOfS.size(); sf++){
-				float rgba[] = {0,0,0,0};
+		final int iterations = integalsOfS.size();
+		int index=0;
+		float rgba[] = {0,0,0,0};
+		for(int sb = 0; sb < iterations; sb++){
+			float integralBack[] = integalsOfS.get(sb);
+			
+			for(int sf = 0; sf < iterations; sf++){
+	
 				if(sf!=sb){
 					float integralFront[] = integalsOfS.get(sf);
-					float integralBack[] = integalsOfS.get(sb);
+					float factor = stepSize/(float)(sb - sf);
 					for(int i =0; i< rgba.length; i++){
-						rgba[i] = stepSize/(float)(sb - sf) * (integralBack[i] - integralFront[i]);
+						rgba[i] = factor * (integralBack[i] - integralFront[i]);
 					}
 				}else{
 					//TODO 
 					//here sete diagonal to zero because no integral can be evaluated
 				}
 				rgba[3] = (float) (1.f - Math.exp(-rgba[3]));
-				buffer.put(rgba.clone());
+				javaBuffer[index] = rgba[0];
+				javaBuffer[index+1] = rgba[1];
+				javaBuffer[index+2] = rgba[2];
+				javaBuffer[index+3] = rgba[3];
+				index+=4;
 			}
 		}
 		
+		FloatBuffer buffer = Buffers.newDirectFloatBuffer(javaBuffer);
 		buffer.rewind();
 		return buffer;
 		

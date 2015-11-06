@@ -47,7 +47,7 @@ public class RegularSampler implements ITransferFunctionSampler {
 	 */
 	
 	public FloatBuffer sample(TransferFunction1D transferFunction, float sampleStep){
-		TreeMap<Integer, Color> colorMap = transferFunction.getTexturColor();
+		TreeMap<Integer, Color> colorMap = transferFunction.sampleColors();
 		//get Buffer last key is the highest number 
 		FloatBuffer buffer = Buffers.newDirectFloatBuffer(((colorMap.lastKey()-colorMap.firstKey())+1)*4);
 
