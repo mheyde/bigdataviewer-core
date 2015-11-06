@@ -36,7 +36,7 @@ public class VolumeDataManager {
 	
 	private final Map<Integer, Boolean> enabled =new HashMap<Integer, Boolean>();
 	
-	private float globalMaxVolume = Short.MAX_VALUE/2;
+	private float globalMaxVolume = (float) Math.pow(2, 16)-1;
 	
 	private int globalMaxOccurance = 0;
 	
