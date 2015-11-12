@@ -237,7 +237,7 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 	}
 
 	/**
-	 * calculates the bdv plane in texture space 1 since all ray positions are equal
+	 * calculates the bdv plane in global space
 	 * @return
 	 */
 	private float[] calcSlicePlane() {
@@ -248,33 +248,10 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		bdvTransSafe.multMatrix(getModelTransformation());
 		bdvTransSafe.invert();
 
+		//plane to global space
+		float plane[] = transformPlane(bdvTransSafe, normVector);		
 
-		Matrix4 mat = getNewIdentityMatrix();
-
-		//	mat.multMatrix(scaleInv);
-		//	mat.multMatrix(calcScaledVolumeTransformation(data));
-
-		mat.multMatrix(bdvTransSafe);
-		mat.multMatrix(getProjection());
-		mat.multMatrix(getView());
-
-
-
-
-		mat.invert();
-		mat.transpose();
-
-		float[]transformedNormal ={0,0,0,0};
-		mat.multVec(normVector, transformedNormal);
-
-		float n =VectorUtil.normVec3(transformedNormal);
-
-		float plane[] = new float[4];
-		//prepare return
-		for(int i =0; i < 4; i++){
-			plane[i]= transformedNormal[i]/n;
-		}
-		//no idea but works
+		//take the mirrored plane
 		plane[3] *= -1.f;
 		return plane;
 	}

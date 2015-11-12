@@ -336,7 +336,7 @@ public class MultiVolumeRendererTest {
 		List<float[]> eyesInTexture = new ArrayList<float[]>();
 		Matrix4 modelView = getNewIdentityMatrix();
 		modelView.multMatrix(c.getViewMatrix());
-		//modelView.multMatrix(rectTrans);
+		modelView.multMatrix(rectTrans);
 		for(int v = 0; v < localTrans.size(); v++){
 			float[] transformedEye = new float[4]; 
 			float transformEye[] = new float[]{c.getEyePoint()[0],c.getEyePoint()[1],c.getEyePoint()[2],1f};

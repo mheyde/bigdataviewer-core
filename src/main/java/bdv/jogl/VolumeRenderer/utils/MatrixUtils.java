@@ -8,6 +8,7 @@ import java.util.Collection;
 import net.imglib2.realtransform.AffineTransform3D;
 
 import com.jogamp.opengl.math.Matrix4;
+import com.jogamp.opengl.math.VectorUtil;
 import com.jogamp.opengl.math.geom.AABBox;
 
 /**
@@ -208,4 +209,28 @@ public class MatrixUtils {
 		AABBox boundingBox = new AABBox(lowhighPoint[0],lowhighPoint[1]);
 		return boundingBox;
 	}
+	
+	/**
+	 * transforms a given plane as hessian normal form using a matrix transformation
+	 * @param transformation
+	 * @param plane
+	 * @return
+	 */
+    public static float[] transformPlane(Matrix4 transformation, final float[] plane){
+    	Matrix4 mat = copyMatrix(transformation); 
+		mat.invert();
+		mat.transpose();
+
+		float[]transformedNormal ={0,0,0,0};
+		mat.multVec(plane, transformedNormal);
+
+		float n =VectorUtil.normVec3(transformedNormal);
+
+		float newPlane[] = new float[4];
+		//prepare return
+		for(int i =0; i < 4; i++){
+			newPlane[i]= transformedNormal[i]/n;
+		}
+		return newPlane;
+    }
 }
