@@ -4,7 +4,7 @@
   <class id="1" language="java" name="bdv.jogl.VolumeRenderer.gui.GLWindow.GLWindow" project="bigdataviewer-core" 
     file="/bigdataviewer-core/src/main/java/bdv/jogl/VolumeRenderer/gui/GLWindow/GLWindow.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="388" y="187"/>    
+    <position height="-1" width="-1" x="359" y="135"/>    
     <display autosize="false" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -14,7 +14,7 @@
   <class id="2" language="java" name="bdv.jogl.VolumeRenderer.gui.SceneControlsWindow" project="bigdataviewer-core" 
     file="/bigdataviewer-core/src/main/java/bdv/jogl/VolumeRenderer/gui/SceneControlsWindow.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="684" y="192"/>    
+    <position height="-1" width="-1" x="670" y="135"/>    
     <display autosize="false" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -24,7 +24,7 @@
   <class id="3" language="java" name="bdv.jogl.VolumeRenderer.Scene.AbstractScene" project="bigdataviewer-core" 
     file="/bigdataviewer-core/src/main/java/bdv/jogl/VolumeRenderer/Scene/AbstractScene.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="349" y="240"/>    
+    <position height="-1" width="-1" x="359" y="182"/>    
     <display autosize="false" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -34,7 +34,7 @@
   <interface id="4" language="java" name="bdv.jogl.VolumeRenderer.Scene.ISceneElements" project="bigdataviewer-core" 
     file="/bigdataviewer-core/src/main/java/bdv/jogl/VolumeRenderer/Scene/ISceneElements.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="351" y="292"/>    
+    <position height="-1" width="-1" x="359" y="231"/>    
     <display autosize="false" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -44,8 +44,8 @@
   <class id="5" language="java" name="bdv.jogl.VolumeRenderer.ShaderPrograms.AbstractShaderSceneElement" 
     project="bigdataviewer-core" 
     file="/bigdataviewer-core/src/main/java/bdv/jogl/VolumeRenderer/ShaderPrograms/AbstractShaderSceneElement.java" 
-    binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="348" y="365"/>    
+    binary="false" corner="TOP_LEFT">    
+    <position height="-1" width="-1" x="359" y="281"/>    
     <display autosize="false" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -56,7 +56,7 @@
     project="bigdataviewer-core" 
     file="/bigdataviewer-core/src/main/java/bdv/jogl/VolumeRenderer/ShaderPrograms/MultiVolumeRenderer.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="345" y="441"/>    
+    <position height="-1" width="-1" x="359" y="343"/>    
     <display autosize="false" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -68,7 +68,7 @@
     project="bigdataviewer-core" 
     file="/bigdataviewer-core/src/main/java/bdv/jogl/VolumeRenderer/ShaderPrograms/ShaderSources/MultiVolumeRendererShaderSource.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="603" y="445"/>    
+    <position height="-1" width="-1" x="597" y="342"/>    
     <display autosize="false" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -78,7 +78,7 @@
   <class id="8" language="java" name="bdv.jogl.VolumeRenderer.VolumeRendererExtension" project="bigdataviewer-core" 
     file="/bigdataviewer-core/src/main/java/bdv/jogl/VolumeRenderer/VolumeRendererExtension.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="516" y="117"/>    
+    <position height="-1" width="-1" x="514" y="85"/>    
     <display autosize="false" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -88,107 +88,155 @@
   <class id="9" language="java" name="bdv.jogl.VolumeRenderer.utils.VolumeDataManager" project="bigdataviewer-core" 
     file="/bigdataviewer-core/src/main/java/bdv/jogl/VolumeRenderer/utils/VolumeDataManager.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="526" y="261"/>    
+    <position height="-1" width="-1" x="669" y="212"/>    
     <display autosize="false" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
       <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <association id="10">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="11" name="renderer"/>      
-      <multiplicity id="12" minimum="0" maximum="1"/>    
+  <generalization id="10">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <association id="11">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="12" name="sources">        
+        <position height="0" width="0" x="-6" y="-103"/>      
+      </attribute>      
+      <multiplicity id="13" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-6" y="-103"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="false" multiplicity="false"/>  
   </association>  
-  <association id="13">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="14" name="dataManager"/>      
-      <multiplicity id="15" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="false" multiplicity="false"/>  
-  </association>  
-  <realization id="16">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="4"/>  
-  </realization>  
-  <association id="17">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="18" name="sceneElements"/>      
-      <multiplicity id="19" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="false" multiplicity="false"/>  
-  </association>  
-  <association id="20">    
+  <association id="14">    
     <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="21" name="dataManager"/>      
-      <multiplicity id="22" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="false" multiplicity="false"/>  
-  </association>  
-  <association id="23">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="24" name="controls"/>      
-      <multiplicity id="25" minimum="0" maximum="1"/>    
+      <attribute id="15" name="controls">        
+        <position height="0" width="0" x="-14" y="-57"/>      
+      </attribute>      
+      <multiplicity id="16" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-14" y="-57"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="false" multiplicity="false"/>  
   </association>  
-  <association id="26">    
+  <association id="17">    
+    <bendpoint x="552" y="211"/>    
     <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="27" name="volumeRenderer"/>      
-      <multiplicity id="28" minimum="0" maximum="1"/>    
+      <attribute id="18" name="dataManager">        
+        <position height="0" width="0" x="147" y="-49"/>      
+      </attribute>      
+      <multiplicity id="19" minimum="0" maximum="1">        
+        <position height="0" width="0" x="147" y="-49"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="20">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="21" name="renderScene">        
+        <position height="0" width="0" x="39" y="-58"/>      
+      </attribute>      
+      <multiplicity id="22" minimum="0" maximum="1">        
+        <position height="0" width="0" x="39" y="-58"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="23">    
+    <bendpoint x="514" y="278"/>    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="24" name="volumeRenderer">        
+        <position height="0" width="0" x="14" y="-98"/>      
+      </attribute>      
+      <multiplicity id="25" minimum="0" maximum="1">        
+        <position height="0" width="0" x="14" y="-98"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="26">    
+    <bendpoint x="520" y="292"/>    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="27" name="renderer">        
+        <position height="0" width="0" x="14" y="-98"/>      
+      </attribute>      
+      <multiplicity id="28" minimum="0" maximum="1">        
+        <position height="0" width="0" x="14" y="-98"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="false" multiplicity="false"/>  
   </association>  
   <association id="29">    
+    <bendpoint x="669" y="304"/>    
     <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="30" name="sources"/>      
-      <multiplicity id="31" minimum="0" maximum="1"/>    
+      <attribute id="30" name="dataManager">        
+        <position height="0" width="0" x="147" y="-49"/>      
+      </attribute>      
+      <multiplicity id="31" minimum="0" maximum="1">        
+        <position height="0" width="0" x="147" y="-49"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
+    <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="false" multiplicity="false"/>  
   </association>  
   <association id="32">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="33" name="drawWindow"/>      
-      <multiplicity id="34" minimum="0" maximum="1"/>    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="33" name="glWindow">        
+        <position height="0" width="0" x="5" y="-52"/>      
+      </attribute>      
+      <multiplicity id="34" minimum="0" maximum="1">        
+        <position height="0" width="0" x="5" y="-52"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="false" multiplicity="false"/>  
   </association>  
   <association id="35">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="36" name="renderScene"/>      
-      <multiplicity id="37" minimum="0" maximum="1"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="36" name="sceneElements">        
+        <position height="0" width="0" x="23" y="-61"/>      
+      </attribute>      
+      <multiplicity id="37" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="23" y="-61"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
+    <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="false" multiplicity="false"/>  
   </association>  
-  <generalization id="38">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
+  <realization id="38">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="4"/>  
+  </realization>  
   <association id="39">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="40" name="glWindow"/>      
-      <multiplicity id="41" minimum="0" maximum="1"/>    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="40" name="dataManager">        
+        <position height="0" width="0" x="147" y="-49"/>      
+      </attribute>      
+      <multiplicity id="41" minimum="0" maximum="1">        
+        <position height="0" width="0" x="147" y="-49"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
+    <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="false" multiplicity="false"/>  
   </association>  
   <association id="42">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="43" name="dataManager"/>      
-      <multiplicity id="44" minimum="0" maximum="1"/>    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="43" name="drawWindow">        
+        <position height="0" width="0" x="5" y="-52"/>      
+      </attribute>      
+      <multiplicity id="44" minimum="0" maximum="1">        
+        <position height="0" width="0" x="5" y="-52"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
+    <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="false" multiplicity="false"/>  
   </association>  
   <classifier-display autosize="false" stereotype="false" package="false" initial-value="false" signature="false" 
