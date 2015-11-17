@@ -64,7 +64,7 @@ public class SharpnessVolumeAccumulator extends AbstractVolumeAccumulator {
 				"	float weights["+scvMaxNumberOfVolumes+"];",
 				"	for(int v = 0; v < "+scvMaxNumberOfVolumes+"; v++){",
 				"		vec3 texC = getCorrectedTexturePositions("+sgvRayPositions+", v);",
-				"		weights[v] =  laplaceNormFactor*(texture("+suvLaplaceTextures+"[v],texC).r +"+suvLaplaceMinValue+") ;",
+				"		weights[v] =  laplaceNormFactor*(texture("+suvLaplaceTextures+"[v],texC).r -"+suvLaplaceMinValue+") ;",
 				"	}",
 				"	return weights;",
 				"}",
