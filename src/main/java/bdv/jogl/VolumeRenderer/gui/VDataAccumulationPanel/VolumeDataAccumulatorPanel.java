@@ -30,12 +30,19 @@ public class VolumeDataAccumulatorPanel extends JPanel {
 	private final AccumulatorManager dataManager;
 	
 	private ActionListener radioListener = new ActionListener() {
+		
+		/**
+		 * Sets an accumulator to activ, when its radiobutton is selected
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			dataManager.setActiveAcumulator(e.getActionCommand());
 		}
 	}; 
 	
+	/**
+	 * Initializes the UI
+	 */
 	private void initPanel(){
 		setBorder(BorderFactory.createTitledBorder("Volume data accumulators"));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -60,6 +67,10 @@ public class VolumeDataAccumulatorPanel extends JPanel {
 		}
 	}
 	
+	/**
+	 * Constructor
+	 * @param manager
+	 */
 	public VolumeDataAccumulatorPanel(final AccumulatorManager manager){
 		this.dataManager = manager;
 		initPanel();

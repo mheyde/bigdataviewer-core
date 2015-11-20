@@ -18,10 +18,14 @@ import javax.swing.event.ChangeListener;
 import bdv.jogl.VolumeRenderer.ShaderPrograms.MultiVolumeRenderer;
 import bdv.jogl.VolumeRenderer.gui.GLWindow.GLWindow;
 
+/**
+ * Configuration panel for the iso surface interpreter
+ * @author michael
+ */
 public class IsoSurfaceConfigurations extends JPanel {
 
 	/**
-	 * 
+	 * Default id
 	 */
 	private static final long serialVersionUID = 1L;
 	
@@ -33,6 +37,11 @@ public class IsoSurfaceConfigurations extends JPanel {
 	
 	private final MultiVolumeRenderer renderer;
 	
+	/**
+	 * Constructor
+	 * @param drawWindow
+	 * @param renderer
+	 */
 	public IsoSurfaceConfigurations(final GLWindow drawWindow, final MultiVolumeRenderer renderer){
 		this.drawWindow = drawWindow;
 		this.renderer = renderer;
@@ -40,14 +49,23 @@ public class IsoSurfaceConfigurations extends JPanel {
 		initListeners();
 	}
 
+	/**
+	 * Update the renderer iso value with the iso spinner value
+	 */
 	private void updateIsoSurface(){
 		renderer.setIsoSurface(((Number)isoValueSpinner.getValue()).floatValue());
 	}
 	
+	/**
+	 * Initializes iso value change and light color value change handlers
+	 */
 	private void initListeners() {
 		updateIsoSurface();
 		isoValueSpinner.addChangeListener(new ChangeListener() {
-
+			
+			/**
+			 * Handles iso value changes
+			 */
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				updateIsoSurface();
@@ -60,6 +78,9 @@ public class IsoSurfaceConfigurations extends JPanel {
 		final IsoSurfaceConfigurations me = this;
 		isoLightButton.addActionListener(new ActionListener() {
 			
+			/**
+			 * Handles light color changes
+			 */
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Color selectedColor = JColorChooser.showDialog(me, "Select light color", isoLightButton.getBackground());
@@ -73,13 +94,16 @@ public class IsoSurfaceConfigurations extends JPanel {
 		});
 	}
 
+	/**
+	 * Updates the render light color for iso surfaces with the color of the light button
+	 */
 	private void updateLightColor() {
 		renderer.setLightColorForIsoSurface(isoLightButton.getBackground());
-		
 	}
 
-	
-	
+	/**
+	 * Initializes the UI
+	 */
 	private void initUI() {
 		setLayout(new GridLayout(2, 2));
 		setBorder(BorderFactory.createTitledBorder("Iso configuration"));
@@ -95,5 +119,4 @@ public class IsoSurfaceConfigurations extends JPanel {
 		setPreferredSize(getMinimumSize());
 		setMaximumSize(getMinimumSize());
 	}
-	
 }

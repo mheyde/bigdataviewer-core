@@ -31,24 +31,30 @@ public class AccumulatorManager {
 	
 	private String activeAccumulatorName;
 	
-	private void notifyChanged(IVolumeAccumulatorListener listener){
-		listener.aggregationChanged(accumulators.get(activeAccumulatorName));
-	}
-	
+	/**
+	 * Informs all listeners of accumulator changes 
+	 */
 	private void notifyChangedAll(){
 		for(IVolumeAccumulatorListener listener: listeners){
-			notifyChanged(listener);
+			listener.aggregationChanged(accumulators.get(activeAccumulatorName));
 		}
 	}
 	
+	/**
+	 * Stores the an accumulator
+	 * @param a
+	 */
 	private void addAccumulator(AbstractVolumeAccumulator a){
 		String visualName = beautifyaccumulatorFuncName(a.getFunctionName());
 		accumulators.put(visualName, a);
 		aggregatorNames.add(visualName);
 	}
 	
-	
-	
+	/**
+	 * Beautifies the function name of an accumulator (Uppercase first letter, changes '_' to ' ')
+	 * @param functionName
+	 * @return
+	 */
 	private String beautifyaccumulatorFuncName(String functionName) {
 		String beautified =""+ Character.toUpperCase( (char)functionName.getBytes()[0]);
 		
@@ -62,6 +68,9 @@ public class AccumulatorManager {
 		return beautified;
 	}
 
+	/**
+	 * Constructor
+	 */
 	public AccumulatorManager(){
 		MaximumVolumeAccumulator max =new MaximumVolumeAccumulator();
 	
@@ -85,7 +94,6 @@ public class AccumulatorManager {
 	public void addListener(IVolumeAccumulatorListener listener){
 		this.listeners.add(listener);
 	} 
-
 	
 	/**
 	 * Returns the function name of the currently active accumulator
@@ -94,7 +102,6 @@ public class AccumulatorManager {
 	public String getActiveAccumulator(){
 		return activeAccumulatorName;
 	}
-	
 	
 	/**
 	 * Set the current active accumulator and calls the changed listener 
@@ -105,7 +112,6 @@ public class AccumulatorManager {
 		notifyChangedAll();
 	}
 	
-	
 	/**
 	 * returns a accumulator identified by its funktion name or null if not present
 	 * @param name
@@ -114,7 +120,6 @@ public class AccumulatorManager {
 	public AbstractVolumeAccumulator getAccumulator(String name){
 		return accumulators.get(name);
 	};
-	
 	
 	/**
 	 * returns the function-names of the stored accumulators 

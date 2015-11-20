@@ -7,7 +7,7 @@ import bdv.jogl.VolumeRenderer.gui.GLWindow.GLWindow;
 import bdv.util.AbstractNamedAction;
 
 /**
- * Defines all menu actions
+ * Defines the BigDataViewer menu action for opening the 3D volume extension 
  * @author michael
  *
  */
@@ -26,6 +26,13 @@ public class VolumeRendereActions {
 		
 		private final InteraktionAnimator animator;
 		
+		/**
+		 * Constructor
+		 * @param name
+		 * @param win3d
+		 * @param controls
+		 * @param animator
+		 */
 		public OpenVolumeRendererAction(final String name, final GLWindow win3d, SceneControlsWindow controls, InteraktionAnimator animator ) {
 			super(name);
 			window3D = win3d;
@@ -33,13 +40,14 @@ public class VolumeRendereActions {
 			this.animator = animator;
 		}
 		
-		
+		/**
+		 * Opens the render and configuration window
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			animator.startInitAnimation();
 			controls.setVisible(true);
 			window3D.setVisible(true);
 		}
-	}
-	
+	}	
 }

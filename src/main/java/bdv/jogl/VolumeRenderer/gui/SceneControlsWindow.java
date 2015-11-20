@@ -43,7 +43,7 @@ import bdv.jogl.VolumeRenderer.utils.VolumeDataManagerAdapter;
 import static bdv.jogl.VolumeRenderer.utils.WindowUtils.aligneLeft;
 
 /**
- * Class for providing tf scene controls
+ * Window for providing the controls
  * @author michael
  *
  */
@@ -106,7 +106,7 @@ public class SceneControlsWindow extends JFrame {
 
 	private final JSpinner sampleSpinner = new JSpinner(new SpinnerNumberModel(256, 1, 10000, 1));
 
-	private final JCheckBox useGradient = new JCheckBox("Use gradients as values",false);
+	//private final JCheckBox useGradient = new JCheckBox("Use gradients as values",false);
 
 	private final JPanel transferFunktionEditorPanel = new JPanel();
 	
@@ -126,6 +126,15 @@ public class SceneControlsWindow extends JFrame {
 	
 	private final JButton benchButton = new JButton("start Benchmark");
 	
+	/**
+	 * Constructor
+	 * @param tf
+	 * @param agm
+	 * @param dataManager
+	 * @param mvr
+	 * @param win
+	 * @param scene
+	 */
 	public SceneControlsWindow(
 			final TransferFunction1D tf,
 			final AccumulatorManager agm, 
@@ -150,12 +159,22 @@ public class SceneControlsWindow extends JFrame {
 		return detailViewConfig.getResetButton();
 	}
 	
+	/**
+	 * Add aligned Component to the layout
+	 * @param c
+	 */
 	private void addComponetenToMainPanel(JComponent c){
 		c.setAlignmentX(LEFT_ALIGNMENT);
 		c.setAlignmentY(TOP_ALIGNMENT);
 		mainPanel.add(c);
 	}
 
+	/**
+	 * Initializes the UI
+	 * @param tf
+	 * @param agm
+	 * @param dataManager
+	 */
 	private void createTFWindow(final TransferFunction1D tf,final AccumulatorManager agm,final VolumeDataManager dataManager){
 		tfpanel = new TransferFunctionDrawPanel(tf,dataManager);
 		tfDataPanel = new TransferFunctionDataPanel(tf);
@@ -168,11 +187,11 @@ public class SceneControlsWindow extends JFrame {
 		initBackgroundPanel();
 		initUsePreIntegration();
 		initTransferFunctionEditorPanel();
-		initShowIsoSurface();
+		initListeners();
 		initBorderCheck();
 		initShowSlice();
 		initSampleSpinner();
-		initUseGradient();
+		//initUseGradient();
 		initVolumeInterpreterPanel();
 		initSceneControlsPanel();
 
@@ -212,7 +231,9 @@ public class SceneControlsWindow extends JFrame {
 		pack();
 	}
 
-
+	/**
+	 * Initializes scene controls menu 
+	 */
 	private void initSceneControlsPanel() {
 		sceneConfigurationPanel.setBorder(BorderFactory.createTitledBorder("Scene configurations"));
 		sceneConfigurationPanel.setLayout(new BoxLayout(sceneConfigurationPanel, BoxLayout.Y_AXIS));
@@ -232,6 +253,9 @@ public class SceneControlsWindow extends JFrame {
 		sceneConfigurationPanel.add(aligneLeft(backgroundPanel));
 	}
 
+	/**
+	 * Initializes the transfer function editor panel
+	 */
 	private void initTransferFunctionEditorPanel() {
 		transferFunktionEditorPanel.setBorder(BorderFactory.createTitledBorder("Transferfunction Editor"));
 		transferFunktionEditorPanel.setLayout(new BoxLayout(transferFunktionEditorPanel, BoxLayout.Y_AXIS));
@@ -244,6 +268,9 @@ public class SceneControlsWindow extends JFrame {
 		
 	}
 
+	/**
+	 * Initializes the volumen interpreter menu
+	 */
 	private void initVolumeInterpreterPanel() {
 		volumeInterpreterPanel.setBorder(BorderFactory.createTitledBorder("Volume interpreters"));
 		volumeInterpreterPanel.setLayout(new BoxLayout(volumeInterpreterPanel, BoxLayout.Y_AXIS));
@@ -260,11 +287,9 @@ public class SceneControlsWindow extends JFrame {
 		volumeInterpreterPanel.add(aligneLeft(isoPanel));
 		volumeInterpreterPanel.add(aligneLeft(maximumIntensityProjectionRadioButton));
 		volumeInterpreterPanel.setAlignmentY(TOP_ALIGNMENT);
-
 	}
 
-
-	public void updateUseGradient(){
+/*	public void updateUseGradient(){
 		renderer.setUseGradient(this.useGradient.isSelected());
 		drawWindow.getGlCanvas().repaint();
 	}
@@ -279,8 +304,11 @@ public class SceneControlsWindow extends JFrame {
 			}
 		});
 
-	}
+	}*/
 
+	/**
+	 * Initializes the samples spin box
+	 */
 	private void initSampleSpinner() {
 		sampleSpinner.setPreferredSize(sampleSpinner.getMinimumSize());
 		sampleSpinner.setMaximumSize(sampleSpinner.getMinimumSize());
@@ -291,6 +319,9 @@ public class SceneControlsWindow extends JFrame {
 		updateSamples();
 		sampleSpinner.addChangeListener(new ChangeListener() {
 
+			/**
+			 * Updates renderer sample count on spinner update
+			 */
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				updateSamples();	
@@ -298,15 +329,24 @@ public class SceneControlsWindow extends JFrame {
 		});
 	}
 
+	/**
+	 * Set render sample count with the spinner value. Causing repaint of the scene
+	 */
 	private void updateSamples() {
 		renderer.setSamples(((Number) sampleSpinner.getValue()).intValue());
 		drawWindow.getGlCanvas().repaint();
 	}
 
+	/**
+	 * Initializes the checkbox defining the visability of the 2D slice
+	 */
 	private void initShowSlice() {
 		updateSlice();
 		showSlice.addItemListener(new ItemListener() {
 
+			/**
+			 * Handler for visability
+			 */
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				updateSlice();
@@ -315,29 +355,43 @@ public class SceneControlsWindow extends JFrame {
 
 	}
 
+	/**
+	 * Updates the visability of the 2D slice. Causing repaint of the scene.
+	 */
 	private void updateSlice() {
 		renderer.setSliceShown(showSlice.isSelected());
 		drawWindow.getGlCanvas().repaint();
-
 	}
 
+	/**
+	 * Updates the visability of the partial volume borders. Causing repaint of the scene.
+	 */
 	private void updateBorderStatus(){
 		scene.enableVolumeBorders(rectBorderCheck.isSelected());
 		drawWindow.getGlCanvas().repaint();
 	}
 
+	/**
+	 * Initializes the border visability checkbox 
+	 */
 	private void initBorderCheck() {
 		updateBorderStatus();
 		rectBorderCheck.addItemListener(new ItemListener() {
 
+			/**
+			 * Handler for border visability
+			 */
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				updateBorderStatus();
 			}
 		});
-
 	}
 
+	/**
+	 * Updates the background color of the render view with the button color. Causing repaint if the view.
+	 * @param c
+	 */
 	private void updateBackgroundColors(Color c){
 		backgroundColorButton.setBackground(c);
 		renderer.setBackgroundColor(c);
@@ -345,6 +399,9 @@ public class SceneControlsWindow extends JFrame {
 		drawWindow.getGlCanvas().repaint();
 	}
 
+	/**
+	 * Initializes menu item controling the background color
+	 */
 	private void initBackgroundPanel() {
 
 		backgroundPanel.setLayout(new BoxLayout(backgroundPanel, BoxLayout.X_AXIS));
@@ -354,6 +411,9 @@ public class SceneControlsWindow extends JFrame {
 
 		backgroundColorButton.addActionListener(new ActionListener() {
 
+			/**
+			 * Handler for backgroung color change
+			 */
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Color color = JColorChooser.showDialog(new JFrame(), "color dialog", backgroundColorButton.getBackground());
@@ -365,9 +425,11 @@ public class SceneControlsWindow extends JFrame {
 				updateBackgroundColors(color);
 			}
 		});
-
 	}
 
+	/**
+	 * Updates the interpreter of the renderer with the currently selected one.
+	 */
 	private void changeVolumeInterpreter(){
 		if(isoRadioButton.isSelected()){
 			renderer.getSource().setVolumeInterpreter(new IsoSurfaceVolumeInterpreter());
@@ -383,10 +445,16 @@ public class SceneControlsWindow extends JFrame {
 
 	}
 
-	private void initShowIsoSurface() {
+	/**
+	 * Initializes listeners for volume data changes and interpreter changes
+	 */
+	private void initListeners() {
 
 		dataManager.addVolumeDataManagerListener(new VolumeDataManagerAdapter() {
 
+			/**
+			 * Handler to void low data on data update
+			 */
 			@Override
 			public void dataUpdated(Integer i) {
 			
@@ -402,9 +470,11 @@ public class SceneControlsWindow extends JFrame {
 				transferFunction.setColor(addedTransfeFunctionPoint, transferFunction.getColors().firstEntry().getValue());
 			}
 			
+			/**
+			 * Handler repainting on visibility change
+			 */
 			@Override
 			public void dataEnabled(Integer i, Boolean flag) {
-				
 				drawWindow.getGlCanvas().repaint();
 			}
 		});	
@@ -412,6 +482,9 @@ public class SceneControlsWindow extends JFrame {
 		changeVolumeInterpreter();
 		isoRadioButton.addItemListener(new ItemListener() {
 
+			/**
+			 * Handler for interpreter changes to iso
+			 */
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				changeVolumeInterpreter();
@@ -421,6 +494,9 @@ public class SceneControlsWindow extends JFrame {
 
 		emissionsAbsorbationRadioButton.addItemListener(new ItemListener() {
 
+			/**
+			 * Handler for interpreter changes to em
+			 */
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				changeVolumeInterpreter();
@@ -429,7 +505,10 @@ public class SceneControlsWindow extends JFrame {
 		});
 
 		maximumIntensityProjectionRadioButton.addItemListener(new ItemListener() {
-
+			
+			/**
+			 * Handler for interpreter changes to mip
+			 */
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				changeVolumeInterpreter();
@@ -444,6 +523,9 @@ public class SceneControlsWindow extends JFrame {
 		
 	}
 
+	/**
+	 * Changes sampler for transfer function depending on current configuration
+	 */
 	private void changeTransferfuntionSampler(){
 		if(usePreIntegration.isSelected()){
 			transferFunction.setSampler(new PreIntegrationSampler());
@@ -452,10 +534,16 @@ public class SceneControlsWindow extends JFrame {
 		}
 	}
 
+	/**
+	 * Initializes the preintegration checkbox
+	 */
 	private void initUsePreIntegration() {
 		changeTransferfuntionSampler();
 		usePreIntegration.addItemListener(new ItemListener() {
 
+			/**
+			 * Handler to change sampler
+			 */
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
 				changeTransferfuntionSampler();
@@ -463,19 +551,26 @@ public class SceneControlsWindow extends JFrame {
 		});
 	}
 
+	/**
+	 * Initializes detail transfer function data table switch
+	 */
 	private void initAdvancedBox() {
 		advancedCheck.addItemListener(new ItemListener() {
 
+			/**
+			 * Handler to show data table if needed
+			 */
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				tfDataPanel.setVisible(advancedCheck.isSelected());
 				pack();
-
 			}
 		});
-
 	}
 
+	/**
+	 * Cleanup of the window instance
+	 */
 	public void destroyTFWindow() {
 		dispose();
 		tfpanel = null;
@@ -495,6 +590,10 @@ public class SceneControlsWindow extends JFrame {
 		return showSlice;
 	}
 
+	/**
+	 * Returns the sample spinner instance
+	 * @return
+	 */
 	public JSpinner getSamplesSpinner() {
 		return sampleSpinner;
 	}

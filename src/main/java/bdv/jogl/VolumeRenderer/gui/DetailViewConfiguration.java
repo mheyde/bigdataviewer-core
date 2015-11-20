@@ -15,10 +15,15 @@ import bdv.jogl.VolumeRenderer.ShaderPrograms.MultiVolumeRenderer;
 import bdv.jogl.VolumeRenderer.gui.GLWindow.GLWindow;
 import static bdv.jogl.VolumeRenderer.utils.WindowUtils.aligneLeft;
 
+/**
+ * Configuration panel for the detailed partial volume view 
+ * @author michael
+ *
+ */
 public class DetailViewConfiguration extends JPanel{
 	
 	/**
-	 * 
+	 * Default id
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -30,12 +35,19 @@ public class DetailViewConfiguration extends JPanel{
 
 	private final JButton resetButton = new JButton("Reset to full volume view"); 
 	
+	/**
+	 * Constructor
+	 */
 	public DetailViewConfiguration(){
-		
 		initUI();
-		
 	}
 
+	/**
+	 * Creates a named slider and adds it to the layout
+	 * @param name
+	 * @param value
+	 * @param c
+	 */
 	private void createSliderPanel(final String name, final JSpinner value,final GridBagConstraints c){
 		
 		value.setPreferredSize(value.getMinimumSize());
@@ -48,6 +60,9 @@ public class DetailViewConfiguration extends JPanel{
 	    c.gridy++;
 	} 
 	
+	/**
+	 * Initializes the UI
+	 */
 	private void initUI() {
 		this.setBorder(BorderFactory.createTitledBorder("Detail View configuration"));
 		GridBagLayout layout = new GridBagLayout();
