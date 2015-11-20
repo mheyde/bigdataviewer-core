@@ -23,7 +23,7 @@ import bdv.jogl.VolumeRenderer.gui.TFDrawPanel.Axis.AxisType;
 import bdv.jogl.VolumeRenderer.utils.VolumeDataManager;
 
 /**
- * Frames the render panel and adds scales and options
+ * Frame for the render panel and adds scales and options
  * @author michael
  *
  */
@@ -40,9 +40,9 @@ public class TransferFunctionDrawPanel extends JPanel {
 	
 	private final BoxLayout mainLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
 	
-	private final Axis yTauAxis = new Axis("Tau",AxisType.YAXIS);
+	private final Axis yTauAxis = new Axis("Tau",AxisType.YAXIS_LEFT_SIDE);
 	
-	private final Axis yDistributionAxis = new Axis("Count", AxisType.YAXIS);
+	private final Axis yDistributionAxis = new Axis("Count", AxisType.YAXIS_RIGHT_SIDE);
 	
 	private final Axis xAxis = new Axis("Volume values",AxisType.XAXIS);
 	
@@ -51,8 +51,6 @@ public class TransferFunctionDrawPanel extends JPanel {
 	private final JPanel renderAndAxisArea= new JPanel();
 	
 	private final JScrollPane scrollArea = new JScrollPane(renderAndAxisArea);
-	
-
 
 	private final JPanel zoomXPanel = new JPanel();
 	
@@ -78,18 +76,23 @@ public class TransferFunctionDrawPanel extends JPanel {
 		initListener();
 	}
 	
+	/**
+	 * Add a left aligned component to the main layout
+	 * @param c
+	 */
 	private void addComponent(JComponent c){
 		c.setAlignmentX(LEFT_ALIGNMENT);
 		add(c);
 	}
 	
-	
+	/**
+	 * Initializes the UI and does the layout preparations 
+	 */
 	private void initUI(){
 		setLayout(mainLayout);
 		
 		renderAndAxisArea.setLayout(raaalayout);
-		
-		yTauAxis.setLeftAxis(true);
+	
 		//render area + axis
 		GridBagConstraints c = new GridBagConstraints();
 		
@@ -137,6 +140,9 @@ public class TransferFunctionDrawPanel extends JPanel {
 		addComponent(logarithmicOccuranceCheck);
 	}
 
+	/**
+	 * Repaint the editor and axis. Updates the axis data. 
+	 */
 	@Override
 	public void paint(Graphics g) {
 		//update xAxis TODO
@@ -145,18 +151,27 @@ public class TransferFunctionDrawPanel extends JPanel {
 		super.paint(g);
 	};
 	
+	/**
+	 * Re-scales scroll area in x
+	 */
 	private void updateXScale(){
 		renderPanel.setSize(renderPanel.getMinimumSize().width * ((Number)zoomSpinnerx.getValue()).intValue(), renderPanel.getHeight());
 		renderPanel.setPreferredSize(renderPanel.getSize());
 		scrollArea.updateUI();
 	}
 
+	/**
+	 * Re-scales scroll area in y
+	 */
 	private void updateYScale(){
 		renderPanel.setSize(renderPanel.getWidth(), renderPanel.getMinimumSize().height * ((Number) zoomSpinnery.getValue()).intValue());
 		renderPanel.setPreferredSize(renderPanel.getSize());
 		scrollArea.updateUI();
 	}
 	
+	/**
+	 * Initializes scale and logarithmic distribution listeners 
+	 */
 	private void initListener(){
 		logarithmicOccuranceCheck.addItemListener(new ItemListener() {
 			

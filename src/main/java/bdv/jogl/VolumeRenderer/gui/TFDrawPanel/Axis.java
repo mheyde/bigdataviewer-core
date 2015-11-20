@@ -9,6 +9,11 @@ import java.awt.geom.AffineTransform;
 
 import javax.swing.JPanel;
 
+/**
+ * Class defining a coordinate axis for the transferfunktion editor 
+ * @author michael
+ *
+ */
 public class Axis extends JPanel {
 
 	/**
@@ -18,7 +23,9 @@ public class Axis extends JPanel {
 	
 	public static enum AxisType {
 		XAXIS,
-		YAXIS
+		YAXIS_RIGHT_SIDE,
+		YAXIS_LEFT_SIDE
+		
 	};
 	
 	private int vMargin = 5;
@@ -31,43 +38,58 @@ public class Axis extends JPanel {
 	
 	private float max = 1;
 	
-	private boolean leftAxis = false;
-	
 	private String minAxisString = ""+min;
 	
 	private String maxAxisString = ""+max;
 	
+	/**
+	 * Constructor
+	 * @param name
+	 * @param type
+	 */
 	public Axis(String name, AxisType type){
 		this.axisName = name;
 		this.type = type;
 		updateToolTip();
 		updateSize();
-
 	}
 	
+	/**
+	 * Ubdates the tool tip using the current min and max data 
+	 */
 	private void updateToolTip(){
 		setToolTipText(axisName+ " values form: "+min+ " to "+ max);
 	}
 	
+	/**
+	 * Updates the panel size 
+	 */
 	private void updateSize(){
 		FontMetrics metrics = getFontMetrics(getFont());
 		Dimension minSize = new Dimension();
 		if(type == AxisType.XAXIS){
+			//a horizontal axis has to concern the vertical margin
 			minSize = getMinimumSize();
 			minSize.setSize(minSize.width, metrics.getHeight()+vMargin);
 		}else{
-			int widthMax = metrics.stringWidth(maxAxisString);
-			int widthMin = metrics.stringWidth(minAxisString);
-			minSize = new Dimension(Math.max(widthMax, widthMin), getMinimumSize().height);
+			//a vertical axis should have width which is at least as as big as the text sizes 
+			int minWidth = metrics.stringWidth(maxAxisString);
+			minWidth = Math.max(minWidth,  metrics.stringWidth(minAxisString));
+			minSize = new Dimension(minWidth, getMinimumSize().height);
 		}
+		//set all needed sizes
 		setMinimumSize(minSize);
-	
+		
 		Dimension currentSize = new Dimension(Math.max(getWidth(), minSize.width), Math.max(getHeight(), minSize.height));
 		setSize(currentSize);
 		setPreferredSize(currentSize);
 		repaint();
 	}
 	
+	/**
+	 * Draws the minimal an maximal axis value at an appropriate position 
+	 * @param g
+	 */
 	private void drawMinMax(Graphics2D g){
 		FontMetrics metrics = g.getFontMetrics(g.getFont());
 		int maxx=0,maxy=0;
@@ -89,6 +111,10 @@ public class Axis extends JPanel {
 		g.drawChars(maxAxisString.toCharArray(), 0,  maxAxisString.length(), maxx, maxy);
 	}
 	
+	/**
+	 * Set max axis value
+	 * @param max
+	 */
 	public void setMax(float max) {
 		this.max = max;
 		maxAxisString = ""+max;
@@ -96,6 +122,10 @@ public class Axis extends JPanel {
 		updateSize();
 	}
 	
+	/**
+	 * Set min axis value 
+	 * @param min
+	 */
 	public void setMin(float min) {
 		this.min = min;
 		minAxisString = ""+min;
@@ -103,14 +133,10 @@ public class Axis extends JPanel {
 		updateSize();
 	}
 	
-	public boolean isLeftAxis() {
-		return leftAxis;
-	}
-
-	public void setLeftAxis(boolean leftAxis) {
-		this.leftAxis = leftAxis;
-	}
-
+	/**
+	 * Draw axis identifiers at the center of the axis
+	 * @param g2
+	 */
 	private void drawName(Graphics2D g2) {
 		FontMetrics fontMetrics = getFontMetrics(getFont());
 		int strWidth = fontMetrics.stringWidth(axisName);
@@ -121,7 +147,7 @@ public class Axis extends JPanel {
 			
 			AffineTransform rot = new AffineTransform();
 			//foot of text is at axis
-			if(isLeftAxis()){
+			if(AxisType.YAXIS_LEFT_SIDE == type){
 				rot.setToRotation(Math.toRadians(270));
 				g2.setTransform(rot);
 				g2.drawChars(axisName.toCharArray(), 0,axisName.length(),-getLocation().y -getHeight()/2- strWidth/2 ,getLocation().x +getWidth()- vMargin);
@@ -137,6 +163,10 @@ public class Axis extends JPanel {
 			g2.setTransform(rot);
 		}
 	}
+	
+	/**
+	 * Paint the axis panel
+	 */
 	@Override
 	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D)g;

@@ -25,12 +25,16 @@ public class TransferFunctionContexMenu extends JPopupMenu{
 
 	private Point colorPickPoint = null;
 	
-	private ColorMenuActionContainer colorActions;
+	private TransferFunctionPointMenuActionContainer colorActions;
 	
 	private final MouseListener mouseListenrer = new MouseAdapter() {
+		
+		/**
+		 * Open context menu on right button click and storing the position of the action 
+		 */
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			//context menu
+			//right button check
 			if(e.getButton() != MouseEvent.BUTTON3){
 				return;
 			}
@@ -38,11 +42,12 @@ public class TransferFunctionContexMenu extends JPopupMenu{
 			colorActions.setInteractionPoint(colorPickPoint);
 			show(parent, e.getX(), e.getY());
 			e.consume();
-
 		}
 	};
 	
-	
+	/**
+	 * Create actions from the action container
+	 */
 	private void initActions(){
 		
 		add(colorActions.getInsertAction());
@@ -54,12 +59,20 @@ public class TransferFunctionContexMenu extends JPopupMenu{
 		add(colorActions.getResetAction());
 	}
 
+	/**
+	 * Constructor
+	 * @param parent
+	 */
 	public TransferFunctionContexMenu(final TransferFunctionRenderPanel1D parent){
 		this.parent = parent;
-		this.colorActions = new ColorMenuActionContainer(parent, parent.getTransferFunction()); 
+		this.colorActions = new TransferFunctionPointMenuActionContainer(parent, parent.getTransferFunction()); 
 		initActions();
 	}
 	
+	/**
+	 * Returns the mouse listener to adapt the context menu to a panel
+	 * @return
+	 */
 	public MouseListener getMouseListener(){
 		return mouseListenrer;
 	}

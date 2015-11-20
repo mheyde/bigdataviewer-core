@@ -15,6 +15,12 @@ import bdv.jogl.VolumeRenderer.utils.VolumeDataBlock;
 import bdv.jogl.VolumeRenderer.utils.VolumeDataManager;
 import bdv.jogl.VolumeRenderer.utils.VolumeDataManagerAdapter;
 import static bdv.jogl.VolumeRenderer.utils.VolumeDataUtils.getColorOfVolume;
+
+/**
+ * Panel to display the names of the volumes and show the visibility of the partial volume
+ * @author michael
+ *
+ */
 public class VolumeLegend extends JPanel {
 
 	/**
@@ -26,15 +32,25 @@ public class VolumeLegend extends JPanel {
 	
 	private final Map<Integer,JCheckBox> idCheckboxMap = new HashMap<Integer, JCheckBox>(); 
 	
+	/**
+	 * Constructor
+	 * @param m
+	 */
 	public VolumeLegend(final VolumeDataManager m){
 		this.dataManager = m;
 		initLegend();
 		initListener();
 	}
 	
+	/**
+	 * Init data listener
+	 */
 	private void initListener() {
 		dataManager.addVolumeDataManagerListener(new VolumeDataManagerAdapter() {
 			
+			/**
+			 * repaint if data is added
+			 */
 			@Override
 			public void addedData(Integer id) {
 				updateLegend(id);
@@ -43,11 +59,18 @@ public class VolumeLegend extends JPanel {
 		});
 	}
 
+	/**
+	 * Initializes the UI
+	 */
 	private void initLegend() {
 		setBorder(BorderFactory.createTitledBorder("Volume data Legend"));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	}
 
+	/**
+	 * Updates UI, add Entries if they are not already present
+	 * @param id
+	 */
 	private void updateLegend(final Integer id) {
 			if(idCheckboxMap.containsKey(id)){
 				return;
@@ -60,6 +83,9 @@ public class VolumeLegend extends JPanel {
 			tmp.setSelected(true);
 			tmp.addItemListener(new ItemListener() {
 				
+				/**
+				 * Dis- or enables partial volume if selection of the check box changes 
+				 */
 				@Override
 				public void itemStateChanged(ItemEvent e) {
 				 	dataManager.enableVolume(id, tmp.isSelected());
@@ -68,7 +94,5 @@ public class VolumeLegend extends JPanel {
 			});
 			idCheckboxMap.put(id, tmp);
 			add(tmp);
-			
-	
 	}
 }

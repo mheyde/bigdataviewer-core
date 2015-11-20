@@ -13,11 +13,15 @@ import javax.swing.Action;
 import javax.swing.JColorChooser;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JMenuItem;
 
 import bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunction1D;
 
-public class ColorMenuActionContainer {
+/**
+ * Container class for menu entries for manipulating transfer function points
+ * @author michael
+ *
+ */
+public class TransferFunctionPointMenuActionContainer {
 
 	private final JComponent parent;
 	
@@ -51,7 +55,7 @@ public class ColorMenuActionContainer {
 	private final Action setColorAction = new AbstractAction("Set color of point") {
 		
 		/**
-		 * 
+		 * default id 
 		 */
 		private static final long serialVersionUID = 1L;
 
@@ -118,7 +122,12 @@ public class ColorMenuActionContainer {
 		this.interactionPoint = interactionPoint;
 	}
 
-	public ColorMenuActionContainer(JComponent parent, TransferFunction1D tf) {
+	/**
+	 * Constructor
+	 * @param parent
+	 * @param tf
+	 */
+	public TransferFunctionPointMenuActionContainer(JComponent parent, TransferFunction1D tf) {
 		super();
 		this.parent = parent;
 		this.tf = tf;

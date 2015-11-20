@@ -23,7 +23,7 @@ import static bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunction1D.calcu
 import static bdv.jogl.VolumeRenderer.utils.VolumeDataUtils.getColorOfVolume;
 
 /**
- * Transfer function interaction similar to paraview
+ * Transfer function interaction panel similar to paraview
  * @author michael
  *
  */
@@ -46,6 +46,9 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 
 	private boolean logscale = true;
 
+	/**
+	 * Adds all control listeners
+	 */
 	private void addControls(){
 		addMouseListener(contextMenue.getMouseListener());
 
@@ -69,6 +72,9 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 		addControls();
 	}
 
+	/**
+	 * Initializes UI 
+	 */
 	private void initWindow() {
 		setSize(640, 100);
 		setPreferredSize(getSize());
@@ -98,23 +104,40 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 		});
 	}
 
+	/**
+	 * Returns true if the volume distribution is drawn logarithmic and false if not
+	 * @return
+	 */
 	public boolean isLogscaleDistribution() {
 		return logscale;
 	}
 
+	/**
+	 * Defines whether the distributions of volume values in the panel should be drawn in log scale
+	 * @param logscale
+	 */
 	public void setLogscaleDistribution(boolean logscale) {
 		this.logscale = logscale;
 		repaint();
 	}
 
+	/**
+	 * Returns the data manager which is currently in use
+	 * @return
+	 */
 	public VolumeDataManager getVolumeDataManager() {
 		return volumeDataManager;
 	}
 
+	/**
+	 * Set a new data manager to use
+	 * @param volumeDataManager
+	 */
 	public void setVolumeDataManager(VolumeDataManager volumeDataManager) {
 		this.volumeDataManager = volumeDataManager;
 		volumeDataManager.addVolumeDataManagerListener(new IVolumeDataManagerListener() {
 			
+			// Repaint on data update all data actions
 			@Override
 			public void dataUpdated(Integer i) {
 				repaint();
@@ -137,6 +160,10 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 		});
 	}
 
+	/**
+	 * Paints the color gradients
+	 * @param g
+	 */
 	private void paintSkala(Graphics g){
 		//paint gradient image
 		//error check
@@ -174,6 +201,11 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 		}
 	}
 	
+	/**
+	 * Draw a transfer function point 
+	 * @param painter
+	 * @param point
+	 */
 	private void drawPointIcon(Graphics2D painter, final Point point){
 
 		painter.setStroke(new BasicStroke(3));
@@ -181,8 +213,10 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 				pointRadius*2, pointRadius*2);
 	}
 
-
-	
+	/**
+	 * Draw line segments representing the transfer function
+	 * @param g
+	 */
 	private void paintLines(Graphics g){
 		TreeMap<Point2D.Float,Color> functionPoints = transferFunction.getColors();
 		if(functionPoints.size() < 2){
@@ -198,7 +232,7 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 		Point2D.Float latestRenderedPoint = functionPoints.firstKey();
 		for( Point2D.Float currentPoint: functionPoints.keySet()){
 		
-
+			//skip first point to get a valid line
 			if(!currentPoint.equals( latestRenderedPoint) ){
 				Point a = transformWindowNormalSpace(calculateDrawPoint(latestRenderedPoint,transferFunction,getSize()), getSize());
 				Point b = transformWindowNormalSpace(calculateDrawPoint(currentPoint,transferFunction,getSize()), getSize());
@@ -214,13 +248,17 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 		}
 	}
 
+	/**
+	 * Draws the control points of the transfer function 
+	 * @param g
+	 */
 	private void paintPoints(Graphics g){
 		//print points	
 		Graphics2D g2d = (Graphics2D) g;	
 		
 		for( Point2D.Float currentPoint: transferFunction.getColors().keySet()){
 			
-			//TODO
+			//highlight currently selected (dragged) point
 			if(currentPoint.equals(pointInteractor.getSelectedPoint())){
 				g2d.setColor(Color.gray);
 			}
@@ -231,8 +269,10 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 		}	
 	}
 
-	
-	
+	/**
+	 * Paint the value distribution on the panel
+	 * @param g
+	 */
 	private void paintDistributions(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;	
 		Set<Integer> volumeKeys = volumeDataManager.getVolumeKeys();
@@ -272,6 +312,9 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 		}
 	} 
 	
+	/**
+	 * Draw panel as overlapping layers: lowest Colors then Volume distribution then Function line then Controle points 
+	 */
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
@@ -283,9 +326,5 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 		paintLines(g);
 		
 		paintPoints(g);
-		
-
 	}
-
-
 }
