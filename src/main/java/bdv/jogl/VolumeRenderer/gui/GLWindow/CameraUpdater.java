@@ -21,7 +21,6 @@ import bdv.jogl.VolumeRenderer.Camera;
  */
 public class CameraUpdater {
 	
-	
 	private final Camera camera;
 
 	private Point previousOrbitPoint = null;
@@ -32,55 +31,67 @@ public class CameraUpdater {
 	
 	private final static int tracButton = MouseEvent.BUTTON3;
 	
-	private final Collection<CameraMotionListener> cameraMotionListeners = new ArrayList<CameraMotionListener>();
+	private final Collection<CameraTransformationListener> cameraTransformationListeners = new ArrayList<CameraTransformationListener>();
 	
-	private void fireAllMotionStart(){
-		for(CameraMotionListener l : cameraMotionListeners){
-			l.motionStart();
-		}
-	}
+	private long wheelThreadWaiteTime =0;
 	
-	private void fireAllMotionStop(){
-		for(CameraMotionListener l : cameraMotionListeners){
-			l.motionStop();
-		}
-	}
+	private long wheelThreadWaiteTimePeriod = 200;
+	
+	private Thread mouseWheelThread = null;
 	
 	private final MouseListener mouseListener = new MouseAdapter() {
 	
+		/**
+		 * Starts mouse drag events orbit and trac
+		 */
 		@Override
 		public synchronized void mousePressed(MouseEvent e) {
 			Point point = transformWindowNormalSpace(e.getPoint(),e.getComponent().getSize());
+			
+			//start orbit
 			if(e.getButton() == orbitButton){
 				previousOrbitPoint = point;	
-				fireAllMotionStart();
+				fireAllTransformationStart();
 			}
 			
+			//start trac
 			if(e.getButton() == tracButton){
 				previousTracPoint = point;
-				fireAllMotionStart();
+				fireAllTransformationStart();
 			}
 		};
 		
+		/**
+		 * Stops mouse drag events orbit and trac
+		 */
 		@Override
 		public synchronized void mouseReleased(MouseEvent e) {
+			//stop orbit
 			if(e.getButton() == orbitButton){
 				previousOrbitPoint = null;
-				fireAllMotionStop();
+				fireAllTransformationStop();
 			}
 			
+			//stop trac
 			if(e.getButton() == tracButton){
 				previousTracPoint = null;
-				fireAllMotionStop();
+				fireAllTransformationStop();
 			}			
 		};
 	};
 	
 	private final MouseMotionListener mouseMotionListener = new MouseMotionAdapter() {
+	
+		/**
+		 * Updates drag events orbit and trac
+		 */
 		@Override
 		public synchronized void  mouseDragged(MouseEvent e) {
 			Point currentPoint = transformWindowNormalSpace(e.getPoint(),e.getComponent().getSize());
+			
+			//update orbit
 			if(previousOrbitPoint != null){
+				//calculate angles for spinning view 360 degrees by dragging form center to border 
 				float angleScaleX = 90f / (float)(8* e.getComponent().getWidth());
 				float angleScaleY = 90f / (float)(8* e.getComponent().getHeight());
 				float alpha = -( currentPoint.y - previousOrbitPoint.y )*angleScaleY;
@@ -90,6 +101,7 @@ public class CameraUpdater {
 				return;
 			}
 
+			//update trac
 			if(previousTracPoint != null){
 				float diffx = currentPoint.x - previousTracPoint.x;
 				float diffy = currentPoint.y - previousTracPoint.y;
@@ -101,37 +113,40 @@ public class CameraUpdater {
 		};
 	};
 	
-	private long wheelThreadWaiteTime =0;
-	private long wheelThreadWaiteTimePeriod = 200;
-	
-	private Thread mouseWheelThread = null;
-	
 	private final MouseWheelListener mouseWheelListener = new MouseWheelListener() {
 		
+		/**
+		 * Camera zoom handler
+		 */
 		@Override
 		public synchronized void mouseWheelMoved(MouseWheelEvent e) {
+			//reset wait time
 			wheelThreadWaiteTime = wheelThreadWaiteTimePeriod;
+			
+			//create a wheel thread to support down sampling while zoom 
+			//needed since there is no wheel stop and begin event 
 			if(mouseWheelThread ==null || !mouseWheelThread.isAlive()){
 				mouseWheelThread = new Thread(){
 					public void run() {
-						fireAllMotionStart();
+						fireAllTransformationStart();
+						
+						//wait till time runs out for upsampling
 						while(wheelThreadWaiteTime > 0){
 							long waitTime = wheelThreadWaiteTime;
 							wheelThreadWaiteTime = 0;
 							try {
 								sleep(waitTime);
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
-						fireAllMotionStop();
+						fireAllTransformationStop();
 					};
 				};
 				mouseWheelThread.start();
 			}
 			
-			
+			//do zoom in main thread
 			float alpha = camera.getAlpha(); 
 			alpha += (float)e.getWheelRotation();
 			alpha = Math.min(Camera.maxAlpha,Math.max(Camera.minAlpha,alpha));
@@ -139,6 +154,25 @@ public class CameraUpdater {
 			camera.updatePerspectiveMatrix();
 		}
 	};
+	
+	/**
+	 * triggers all listeners for transformation start events
+	 */
+	private void fireAllTransformationStart(){
+		for(CameraTransformationListener l : cameraTransformationListeners){
+			l.transformationStart();
+		}
+	}
+	
+	/**
+	 * triggers all listeners for transformation stop events
+	 */
+	private void fireAllTransformationStop(){
+		for(CameraTransformationListener l : cameraTransformationListeners){
+			l.transformationStop();
+		}
+	}
+	
 	
 	/**
 	 * Constructor for setting the camera
@@ -175,7 +209,7 @@ public class CameraUpdater {
 	 * adds a motionListenr
 	 * @param l
 	 */
-	public void addCameraMotionListener(CameraMotionListener l){
-		cameraMotionListeners.add(l);
+	public void addCameraMotionListener(CameraTransformationListener l){
+		cameraTransformationListeners.add(l);
 	}
 }

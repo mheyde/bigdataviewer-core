@@ -129,8 +129,7 @@ public class InteraktionAnimator {
 	 * @param partialVolumesInHullVolume
 	 * @param time
 	 */
-	public void startMoveToSelectionAnimation( final AABBox hullVolume,
-			final List<VolumeDataBlock> partialVolumesInHullVolume, final int time){
+	public void startMoveToSelectionAnimation( final AABBox hullVolume){
 		if(null != this.motionToTargetThread && motionToTargetThread.isAlive()){
 			return;
 		}
@@ -152,6 +151,7 @@ public class InteraktionAnimator {
 					if(stopTriggered){
 						break;
 					}
+
 					try {
 						float eyeCenter[][] = motionPositions.get(n);
 						//enter hull volume -> invalid fragments
@@ -174,9 +174,7 @@ public class InteraktionAnimator {
 				
 				renderer.setDrawRect(hullVolume);
 				
-				manager.volumeUpdateTransaction( time, partialVolumesInHullVolume);
-				renderWindow.getScene().getCamera().centerOnBox(hullVolume,renderer.getSlice2Dplane());
-				renderWindow.getGlCanvas().repaint();
+
 				
 			}
 		};

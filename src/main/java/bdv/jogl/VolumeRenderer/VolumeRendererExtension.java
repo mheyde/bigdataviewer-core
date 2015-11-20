@@ -32,7 +32,7 @@ import bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunction1D;
 import bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunctionAdapter;
 import bdv.jogl.VolumeRenderer.gui.DetailViewConfiguration;
 import bdv.jogl.VolumeRenderer.gui.SceneControlsWindow;
-import bdv.jogl.VolumeRenderer.gui.GLWindow.CameraMotionListener;
+import bdv.jogl.VolumeRenderer.gui.GLWindow.CameraTransformationListener;
 import bdv.jogl.VolumeRenderer.gui.GLWindow.GLWindow;
 import bdv.jogl.VolumeRenderer.gui.VDataAccumulationPanel.AccumulatorManager;
 import bdv.jogl.VolumeRenderer.gui.VDataAccumulationPanel.IVolumeAccumulatorListener;
@@ -232,14 +232,14 @@ public class VolumeRendererExtension {
 			}
 		});
 		
-		glWindow.getCameraUpdater().addCameraMotionListener(new CameraMotionListener() {
+		glWindow.getCameraUpdater().addCameraMotionListener(new CameraTransformationListener() {
 			@Override
-			public void motionStop() {
+			public void transformationStop() {
 				sampleController.upSample();
 			}
 			
 			@Override
-			public void motionStart() {
+			public void transformationStart() {
 				sampleController.downSample();
 			}
 		});
@@ -248,13 +248,21 @@ public class VolumeRendererExtension {
 		selector.addBigDataViewerDataSelectorListener(new IBigDataViewerDataSelectorListener() {
 			
 			@Override
-			public void selectedDataAvailable(AABBox hullVolume,
-					List<VolumeDataBlock> partialVolumesInHullVolume, int time) {			
-				
+			public void dataRegionSelected(AABBox hullVolume) {
 				resetToFullView();
-				animator.startMoveToSelectionAnimation(hullVolume, partialVolumesInHullVolume, time);
+				animator.startMoveToSelectionAnimation(hullVolume);
 				controls.setVisible(true);
 				glWindow.setVisible(true);
+				
+			}
+			
+			@Override
+			public void selectedDataAvailable(AABBox hullVolume,
+					List<VolumeDataBlock> partialVolumesInHullVolume, int time) {			
+				dataManager.volumeUpdateTransaction( time, partialVolumesInHullVolume);
+				glWindow.getScene().getCamera().centerOnBox(hullVolume,volumeRenderer.getSlice2Dplane());
+				glWindow.getGlCanvas().repaint();
+			
 				
 				
 			}
