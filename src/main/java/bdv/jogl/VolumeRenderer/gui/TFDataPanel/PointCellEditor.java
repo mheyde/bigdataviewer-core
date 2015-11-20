@@ -35,7 +35,7 @@ public class PointCellEditor extends AbstractCellEditor implements TableCellEdit
 	
 	private final JSpinner xSpinner = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 100000.0, 1));
 
-	private final JSpinner ySpinner = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 100000.0, 1));
+	private final JSpinner ySpinner = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 1, 0.1));
 
 	private final JPanel editorPanel = new JPanel();
 
