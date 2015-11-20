@@ -114,6 +114,7 @@ public class VertexAttribute {
 	}
 
 	public void delete(GL4 gl2){
+		associatedVertexBuffer.delete(gl2);
 		int[] arrays = {vao};
 		gl2.glDeleteVertexArrays(1, arrays, 0);
 	}
