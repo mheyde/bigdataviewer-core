@@ -16,10 +16,12 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
-import bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunction1D;
-
-
-
+/**
+ * JTable Editor and render class for a 2D point
+ * Representation as jspinners 
+ * @author michael
+ *
+ */
 public class PointCellEditor extends AbstractCellEditor implements TableCellEditor, TableCellRenderer{
 
 	/**
@@ -37,6 +39,9 @@ public class PointCellEditor extends AbstractCellEditor implements TableCellEdit
 
 	private final JPanel editorPanel = new JPanel();
 
+	/**
+	 * Create the panel UI for the class
+	 */
 	private void buildUI(){
 		editorPanel.setLayout(new BoxLayout(editorPanel, BoxLayout.X_AXIS));
 		editorPanel.add(new JLabel("x:"));
@@ -47,6 +52,9 @@ public class PointCellEditor extends AbstractCellEditor implements TableCellEdit
 		editorPanel.add(ySpinner);
 	};
 
+	/**
+	 * Constructor
+	 */
 	public PointCellEditor(TransferFunctionDataPanel parent){
 		this .parent = parent;
 		buildUI();
@@ -54,9 +62,15 @@ public class PointCellEditor extends AbstractCellEditor implements TableCellEdit
 		createControls();
 	}
 
+	/**
+	 * Creates the handler for point changes 
+	 */
 	private void createControls() {
 		xSpinner.addChangeListener(new ChangeListener() {
 
+			/**
+			 * handles changes of x values 
+			 */
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				if(currentPoint == null){
@@ -68,7 +82,10 @@ public class PointCellEditor extends AbstractCellEditor implements TableCellEdit
 		});
 
 		ySpinner.addChangeListener(new ChangeListener() {
-
+			
+			/**
+			 * handles changes of y values 
+			 */
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				if(currentPoint == null){
@@ -80,12 +97,17 @@ public class PointCellEditor extends AbstractCellEditor implements TableCellEdit
 		});
 	}
 
+	/**
+	 * Return the table value of the current point 
+	 */
 	@Override
 	public Point2D.Float getCellEditorValue() {
 		return currentPoint;
 	}
 
-
+	/**
+	 * Sets spinner values and returns the panel as editor  
+	 */
 	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 		currentPoint = (Point2D.Float)value;
@@ -94,6 +116,9 @@ public class PointCellEditor extends AbstractCellEditor implements TableCellEdit
 		return editorPanel;
 	}
 
+	/**
+	 * Sets spinner values and returns the panel as renderer  
+	 */
 	@Override
 	public Component getTableCellRendererComponent(JTable arg0, Object value, boolean arg2, boolean arg3, int arg4,
 			int arg5) {  	       
@@ -102,5 +127,4 @@ public class PointCellEditor extends AbstractCellEditor implements TableCellEdit
 		ySpinner.setValue(currentPoint.y);  
 		return editorPanel ;
 	}
-
 }

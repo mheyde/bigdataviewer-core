@@ -14,7 +14,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 /**
- * Cell editor for color cells in JTables
+ * Cell editor for color cells in JTables represented as a button
  * @author michael
  *
  */
@@ -24,15 +24,23 @@ public class ColorCellEditor extends AbstractCellEditor implements TableCellEdit
 	 * default version
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	private Color currentColor;
+	
 	private JButton button;
 	
+	/**
+	 * Constructor
+	 */
 	public ColorCellEditor(){
 		button = new JButton();
 		button.setBorderPainted(false);
 		button.setBackground(Color.BLACK);
 		button.addActionListener(new ActionListener() {
 			
+			/**
+			 * change color handler
+			 */
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Color color = JColorChooser.showDialog(new JFrame(), "color dialog", currentColor);
@@ -48,12 +56,17 @@ public class ColorCellEditor extends AbstractCellEditor implements TableCellEdit
 		});
 	}
 	
+	/**
+	 * Return latest color of a button
+	 */
 	@Override
 	public Color getCellEditorValue() {
 		return currentColor;
 	}
 
-	
+	/**
+	 * Set the color of the button and returns it as the cell editor
+	 */
 	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         currentColor = (Color)value;
@@ -61,6 +74,9 @@ public class ColorCellEditor extends AbstractCellEditor implements TableCellEdit
         return button;
 	}
 
+	/**
+	 * Set the color of the button and returns it as the cell renderer
+	 */
 	@Override
 	public Component getTableCellRendererComponent(JTable arg0, Object value, boolean arg2, boolean arg3, int arg4,
 			int arg5) {    
@@ -68,5 +84,4 @@ public class ColorCellEditor extends AbstractCellEditor implements TableCellEdit
 		button.setBackground(currentColor);
 		return button;
 	}
-
 }

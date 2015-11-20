@@ -2,41 +2,22 @@ package bdv.jogl.VolumeRenderer.gui.TFDataPanel;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-
-
-
-
-
-
-
-
-
-
-
 
 import bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunction1D;
 import bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunctionAdapter;
 
 /**
- * direct data manipulation panel
+ * Transferfunction data manipulation table view 
  * @author michael
  *
  */
@@ -55,6 +36,9 @@ public class TransferFunctionDataPanel extends JPanel {
 
 	private BoxLayout mainLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
 
+	/**
+	 * Generates the UI for the panel
+	 */
 	private void initUI(){			
 		colorTableScroller.setPreferredSize(new Dimension(this.getWidth(),100));
 
@@ -62,14 +46,10 @@ public class TransferFunctionDataPanel extends JPanel {
 		add(colorTableScroller);	
 	}
 
-	private void updateData(){
-
-	
-		updateColors();
-	}
-
-
-	private void updateColors() {
+	/**
+	 * Updates the panel data
+	 */
+	private void updateData() {
 
 		final TreeMap<Point2D.Float, Color> colors = transferFunction.getColors();
 
@@ -83,6 +63,9 @@ public class TransferFunctionDataPanel extends JPanel {
 		colorTable.setModel(model);
 		model .addTableModelListener(new TableModelListener() {
 
+			/**
+			 * Handler for data changes
+			 */
 			@Override
 			public void tableChanged(TableModelEvent e) {
 
@@ -97,7 +80,7 @@ public class TransferFunctionDataPanel extends JPanel {
 
 					}
 
-					//points changed TODO
+					//points changed
 					if(e.getColumn() == 0){
 						Point2D.Float[] newPoints = new Point2D.Float[colors.size()];
 						Point2D.Float[] oldPoints = new Point2D.Float[colors.size()];
@@ -113,6 +96,7 @@ public class TransferFunctionDataPanel extends JPanel {
 		ColorCellEditor colorEditor = new ColorCellEditor();		
 		PointCellEditor pointEditor = new PointCellEditor(this);
 
+		//add spinner panel
 		colorTable.getColumnModel().getColumn(0).setCellEditor(pointEditor);
 		colorTable.getColumnModel().getColumn(0).setCellRenderer(pointEditor);
 		colorTable.getColumnModel().getColumn(0).setPreferredWidth(500);
@@ -125,11 +109,17 @@ public class TransferFunctionDataPanel extends JPanel {
 
 	}
 
+	/**
+	 * Sets the transferfunction reference
+	 * @param tf
+	 */
 	public void setTransferFunction(TransferFunction1D tf){
 		transferFunction = tf;
 		transferFunction.addTransferFunctionListener(new TransferFunctionAdapter() {
 
-
+			/**
+			 * Updates data if the transferfunction changes
+			 */
 			@Override
 			public void colorChanged(TransferFunction1D transferFunction) {
 				updateData();
@@ -138,12 +128,19 @@ public class TransferFunctionDataPanel extends JPanel {
 		});
 	}
 
+	/**
+	 * Retruns the current transferfunction reference
+	 * @return
+	 */
 	public TransferFunction1D getTransferFunction(){
 		return transferFunction;
 	}
 	
+	/**
+	 * Constructor 
+	 * @param tf
+	 */
 	public TransferFunctionDataPanel(final TransferFunction1D tf){
-
 		colorTableScroller = new JScrollPane(colorTable);
 		initUI();
 
