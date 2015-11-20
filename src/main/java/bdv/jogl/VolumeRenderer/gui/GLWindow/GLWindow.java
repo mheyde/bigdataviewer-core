@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -43,7 +42,7 @@ public class GLWindow extends JFrame {
 
 	private CameraUpdater cUpdater;
 
-	//TODO bench
+	//TODO bench stuff
 	private final int maxStamps = 61; 
 	private final int startSteps = 1000;
 	private final int startSamples = 10;
@@ -67,19 +66,26 @@ public class GLWindow extends JFrame {
 
 	private int startStepsTaken =  0;
 	private int measureStepsTaken = 0 ;
+	//TODO bench stuff
 
-	//TODO bench
-
+	/**
+	 * Sets context for the current scene
+	 */
 	private void adaptScene(){
 
 		renderScene.addSceneEventListener(new SceneEventListener() {
 
+			/**
+			 * Re-renders if the scene was updated 
+			 */
 			@Override
 			public void needsUpdate() {
 				glCanvas.repaint();
 
 			}
 		});
+		
+		//add camera updater to scen camera
 		cUpdater = new CameraUpdater(renderScene.getCamera());
 		glCanvas.addMouseListener(cUpdater.getMouseListener());
 		glCanvas.addMouseMotionListener(cUpdater.getMouseMotionListener());
@@ -126,6 +132,11 @@ public class GLWindow extends JFrame {
 
 		startBenchmark(startSamples);
 	}
+	
+	/**
+	 * Starts Benchmark with specific sample size
+	 * @param startsamples
+	 */
 	public void startBenchmark(int startsamples){
 		startStepsTaken = 0;
 		measureStepsTaken = 0;
@@ -141,11 +152,17 @@ public class GLWindow extends JFrame {
 		glCanvas.repaint();
 	}
 
+	/**
+	 * Warmup step without measurement s
+	 */
 	private void doWarmupStep(){
 		startPhaseInProgress = startStepsTaken < startSteps;
 		startStepsTaken++;	
 	}
 
+	/**
+	 * Measurement step and evaluation
+	 */
 	private void doMeasurementStep(){
 
 		if(benchmarkInProgress){
@@ -163,7 +180,7 @@ public class GLWindow extends JFrame {
 			}
 			if(measureStepsTaken >= maxStamps){
 
-				evaluateResults();
+				evaluateStatistic();
 				System.out.println("Mesurement done!");
 				benchmarkInProgress = currentSamples < stopSamples;
 				if(benchmarkInProgress){
@@ -176,6 +193,9 @@ public class GLWindow extends JFrame {
 		}
 	}
 
+	/**
+	 * Main benchmark "state" machine
+	 */
 	private void doBenchmarkStep(){
 		if(!benchmarkInProgress ){
 			return;
@@ -187,6 +207,9 @@ public class GLWindow extends JFrame {
 		}
 	}
 
+	/**
+	 * Print results to a file
+	 */
 	private void printResultsToFile() {
 		PrintWriter resultWriter = null;
 		try {
@@ -216,9 +239,10 @@ public class GLWindow extends JFrame {
 
 	}
 
-
-
-	private void evaluateResults(){
+	/**
+	 * Calculate statistic data form the measurements
+	 */
+	private void evaluateStatistic(){
 		double[] fpsField = timeStamp.clone();
 
 		//sort for median
@@ -272,14 +296,23 @@ public class GLWindow extends JFrame {
 		vars.add(Math.sqrt(variance));
 	}
 
+	/**
+	 * Calculates fps from times and samples
+	 * @param frames
+	 * @param timeInNs
+	 * @return
+	 */
 	private double timeToFps(double frames,double timeInNs){
 		return frames/(timeInNs / 1000000000.0);
 	}
+	
+	/**
+	 * Triggers re-rendering and prints progress
+	 */
 	private void prepareNextMeasurement(){
-		if(benchmarkInProgress   ){
+		if(benchmarkInProgress){
 			if(!startPhaseInProgress){
 				if(formerPrintStep != measureStepsTaken){
-
 
 					if(measureStepsTaken %(maxStamps/ 10) ==0){
 						System.out.print(".");
@@ -300,7 +333,6 @@ public class GLWindow extends JFrame {
 		//GLProfile glprofile = GLProfile.getDefault();
 		GLProfile glprofile = GLProfile.get(GLProfile.GL4);
 		GLCapabilities glcapabilities = new GLCapabilities( glprofile );
-
 
 		glCanvas = new GLCanvas(glcapabilities );
 		glCanvas.addGLEventListener(new GLEventListener() {
@@ -338,8 +370,6 @@ public class GLWindow extends JFrame {
 				renderScene.dispose(gl2);
 			}
 
-
-
 			@Override
 			public synchronized void display(GLAutoDrawable drawable) {		
 
@@ -360,22 +390,15 @@ public class GLWindow extends JFrame {
 		setScene(scene);
 	}
 
-
-
 	/**
 	 * Does define the layout of the Window
 	 */
 	private void initWindowElements(){
 		setTitle("Open GL Window");
-
-
-		//sample size
+		//window size
 		setSize(600,600);
-
+		
 		getContentPane().add(glCanvas);
-
-
-
 	}
 
 	/**
@@ -384,5 +407,4 @@ public class GLWindow extends JFrame {
 	public CameraUpdater getCameraUpdater() {
 		return cUpdater;
 	}
-
 }

@@ -129,8 +129,7 @@ public class InteraktionAnimator {
 	 * @param partialVolumesInHullVolume
 	 * @param time
 	 */
-	public void startMoveToSelectionAnimation( final AABBox hullVolume,
-			final List<VolumeDataBlock> partialVolumesInHullVolume, final int time){
+	public void startMoveToSelectionAnimation( final AABBox hullVolume){
 		if(null != this.motionToTargetThread && motionToTargetThread.isAlive()){
 			return;
 		}
