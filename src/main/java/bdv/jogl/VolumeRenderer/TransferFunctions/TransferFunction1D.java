@@ -26,7 +26,7 @@ public class TransferFunction1D {
 
 	private ITransferFunctionSampler sampler; 
 
-	//max text size
+	//max text size so scaling is needed for the transfer function data 
 	private final int maxFunctionPointSamples =2048 -1;
 
 	//order points first by x then by y
