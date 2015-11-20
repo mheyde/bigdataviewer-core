@@ -305,7 +305,7 @@ public class VolumeRendererExtension {
 			transformations.add(calcScaledVolumeTransformation(data));
 		}
 		AABBox drawRect = calculateCloseFittingBox(transformations);
-		
+		//System.out.println(drawRect);
 		volumeRenderer.setDrawRect(drawRect);
 		
 		if(drawRect.equals(hullVolume)){

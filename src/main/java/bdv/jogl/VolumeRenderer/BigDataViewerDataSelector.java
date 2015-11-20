@@ -107,7 +107,7 @@ public class BigDataViewerDataSelector {
 		
 
 		final AABBox volumeRectangle = getVolumeRegion(bdv, p, new float[]{HullVolumeDimensions[0]/2f,HullVolumeDimensions[1]/2f,HullVolumeDimensions[2]/2f});
-		System.out.println("area: "+ volumeRectangle);
+		//System.out.println("area: "+ volumeRectangle);
 		
 		fireAllRegionSelected(volumeRectangle);
 

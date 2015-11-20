@@ -39,6 +39,7 @@ public class VertexBuffer {
 				GL4.GL_STATIC_DRAW);
 		
 		unbind(gl2);
+		//System.out.println("allocated "+ sizeInBytes);
 	}
 	
 	public void memcopyData(GL4 gl2, final Buffer data, int elementSize, int offset){
@@ -50,6 +51,7 @@ public class VertexBuffer {
 				data);
 		
 		unbind(gl2);
+		//System.out.println("memcopy "+ data.capacity() * elementSize );
 	}
 	
 	/**
