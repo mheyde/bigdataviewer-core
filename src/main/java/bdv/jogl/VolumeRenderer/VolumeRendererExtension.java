@@ -24,7 +24,7 @@ import com.jogamp.opengl.math.Matrix4;
 import com.jogamp.opengl.math.geom.AABBox;
 
 import bdv.BigDataViewer;
-import bdv.jogl.VolumeRenderer.Scene.InteraktionAnimator;
+import bdv.jogl.VolumeRenderer.Scene.InteractionAnimator;
 import bdv.jogl.VolumeRenderer.Scene.VolumeDataScene;
 import bdv.jogl.VolumeRenderer.ShaderPrograms.MultiVolumeRenderer;
 import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.functions.accumulator.AbstractVolumeAccumulator;
@@ -75,7 +75,7 @@ public class VolumeRendererExtension {
 	
 	private final VolumeRendereSampleController sampleController;
 	
-	private final InteraktionAnimator animator;
+	private final InteractionAnimator animator;
 
 	private void createControlWindow(){
 		controls =new SceneControlsWindow(transferFunction,aggManager, dataManager, volumeRenderer,glWindow,dataScene);
@@ -106,7 +106,7 @@ public class VolumeRendererExtension {
 		
 		selector = new BigDataViewerDataSelector(bdv);
 		sampleController = new VolumeRendereSampleController(glWindow, controls.getSamplesSpinner(), volumeRenderer,64);
-		animator = new InteraktionAnimator(volumeRenderer, glWindow, dataManager,controls,sampleController);
+		animator = new InteractionAnimator(volumeRenderer, glWindow, dataManager,controls,sampleController);
 	
 		createListeners();
 		createActionInToolBar();

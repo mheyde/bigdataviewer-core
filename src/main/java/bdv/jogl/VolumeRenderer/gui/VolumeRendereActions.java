@@ -2,7 +2,7 @@ package bdv.jogl.VolumeRenderer.gui;
 
 import java.awt.event.ActionEvent;
 
-import bdv.jogl.VolumeRenderer.Scene.InteraktionAnimator;
+import bdv.jogl.VolumeRenderer.Scene.InteractionAnimator;
 import bdv.jogl.VolumeRenderer.gui.GLWindow.GLWindow;
 import bdv.util.AbstractNamedAction;
 
@@ -24,7 +24,7 @@ public class VolumeRendereActions {
 		
 		private final SceneControlsWindow controls;
 		
-		private final InteraktionAnimator animator;
+		private final InteractionAnimator animator;
 		
 		/**
 		 * Constructor
@@ -33,7 +33,7 @@ public class VolumeRendereActions {
 		 * @param controls
 		 * @param animator
 		 */
-		public OpenVolumeRendererAction(final String name, final GLWindow win3d, SceneControlsWindow controls, InteraktionAnimator animator ) {
+		public OpenVolumeRendererAction(final String name, final GLWindow win3d, SceneControlsWindow controls, InteractionAnimator animator ) {
 			super(name);
 			window3D = win3d;
 			this.controls = controls;

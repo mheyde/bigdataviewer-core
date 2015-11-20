@@ -14,7 +14,7 @@ import bdv.jogl.VolumeRenderer.utils.VolumeDataManager;
 import bdv.jogl.VolumeRenderer.utils.VolumeRendereSampleController;
 import static bdv.jogl.VolumeRenderer.utils.VolumeDataUtils.calcEyeAndCenterByGivenHull;;
 
-public class InteraktionAnimator {
+public class InteractionAnimator {
 	
 	private final MultiVolumeRenderer renderer;
 	
@@ -41,7 +41,7 @@ public class InteraktionAnimator {
 	 * @param renderer
 	 * @param renderWindow
 	 */
-	public InteraktionAnimator(
+	public InteractionAnimator(
 			final MultiVolumeRenderer renderer, 
 			final GLWindow renderWindow, 
 			final VolumeDataManager manager,
