@@ -10,10 +10,9 @@ import java.util.EventListener;
 public interface TransferFunctionListener extends EventListener {
 
 	/**
-	 * Triggered by color changes. 
-	 * @param xToColorMap Colors per ordinate.
+	 * Triggered by function point changes. 
 	 */
-	public void colorChanged(final TransferFunction1D transferFunction );
+	public void functionPointChanged(final TransferFunction1D transferFunction );
 	
 
 	/**

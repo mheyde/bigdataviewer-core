@@ -4,15 +4,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
-import com.jogamp.opengl.GLContext;
-import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.math.VectorUtil;
 
 import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.functions.IFunction;
@@ -29,9 +25,9 @@ public class TransferFunction1D {
 	private List<TransferFunctionListener> transferFunctionListeners = new ArrayList<TransferFunctionListener>();
 
 	private ITransferFunctionSampler sampler; 
-	
+
 	//max text size
-	private final int maxFunctionPointSsmples =2048 -1;
+	private final int maxFunctionPointSamples =2048 -1;
 
 	//order points first by x then by y
 	private final Comparator<Point2D.Float> pointOrderXOperator = new Comparator<Point2D.Float>() {
@@ -46,77 +42,88 @@ public class TransferFunction1D {
 		}
 	};
 
-	private Point2D.Float maxOrdinates;
+	private Point2D.Float maxCoordinates;
 
-	private final Point2D.Float minOrdinates = new Point2D.Float(0,0);
+	private final Point2D.Float minCoordinates = new Point2D.Float(0,0);
 
 	private final TreeMap<Point2D.Float,Color> colors = new TreeMap<Point2D.Float, Color>(pointOrderXOperator);
 
 	private float maxVolumeValue;
 
+	/**
+	 * Checks if a certain point is within the min and max coordinates of the transfer function
+	 * @param point
+	 * @return
+	 */
 	private boolean isPointValid(Point2D.Float point){
 		//min
-		if(point.x < minOrdinates.x || point.y < minOrdinates.y ){
+		if(point.x < minCoordinates.x || point.y < minCoordinates.y ){
 			return false;
 		}
-		
+
 		//max
-		if(point.x > maxOrdinates.x || point.y > maxOrdinates.y ){
+		if(point.x > maxCoordinates.x || point.y > maxCoordinates.y ){
 			return false;
 		}
 		return true;
 	}
-	
+
+	/**
+	 * Tells all listeners that the transfer function sampler changed
+	 */
 	private void fireSamplerChangedEventAll(){
 		for(TransferFunctionListener listener: transferFunctionListeners){
-			fireSamplerChangedEvent(listener);
+			listener.samplerChanged(this);
 		}
-	}
-
-	private void fireSamplerChangedEvent(final TransferFunctionListener l){
-		l.samplerChanged(this);
 	}
 
 	/**
-	 * Calls all event methods on listener using the current data state
-	 * @param listener
+	 * Tells all listeners that the function points have changed
 	 */
-	private void fireColorChangedEvent(final TransferFunctionListener listener){
-
-		listener.colorChanged(this);
-	}
-
-	private void fireColorChangedEventAll(){
+	private void fireFunctionPointChangedEventAll(){
 
 		for(TransferFunctionListener listener:transferFunctionListeners){
-			fireColorChangedEvent(listener);
+			listener.functionPointChanged(this);
 		}
 	}
 
-
+	/**
+	 * Resets the transfer function to a canonical configuration
+	 */
 	public void resetColors(){
 		colors.clear();
-		colors.put(new Point2D.Float(minOrdinates.x, minOrdinates.y), Color.BLUE);
-		colors.put(new Point2D.Float(maxOrdinates.x/2f,maxOrdinates.y/2f), Color.WHITE);
-		colors.put(new Point2D.Float(maxOrdinates.x,maxOrdinates.y),Color.RED);
+		colors.put(new Point2D.Float(minCoordinates.x, minCoordinates.y), Color.BLUE);
+		colors.put(new Point2D.Float(maxCoordinates.x/2f,maxCoordinates.y/2f), Color.WHITE);
+		colors.put(new Point2D.Float(maxCoordinates.x,maxCoordinates.y),Color.RED);
 
-		fireColorChangedEventAll();
+		fireFunctionPointChangedEventAll();
 	}
 
-
+	/**
+	 * Initializes the transfer function with standard parameters
+	 * @param maxOrdinates
+	 */
 	private void init( Point2D.Float maxOrdinates){
-		this.maxOrdinates = maxOrdinates;
+		this.maxCoordinates = maxOrdinates;
 
 		resetColors();
 		setSampler( new PreIntegrationSampler());
 	}
 
+	/**
+	 * Constructor
+	 * @param maxVolume
+	 * @param maxTau
+	 */
 	public TransferFunction1D(float maxVolume,  float maxTau) {
 		Double maxV = Math.ceil(maxVolume);
 		Double maxT = Math.ceil(maxTau);
 		init(new Point2D.Float(maxV.intValue(),maxT.intValue()));
 	}
 
+	/**
+	 * Constructor
+	 */
 	public TransferFunction1D(){
 		init(new Point2D.Float(256,1.f));
 	}
@@ -151,12 +158,11 @@ public class TransferFunction1D {
 		if(!isPointValid(point)){
 			throw new IndexOutOfBoundsException("Point: "+point+" was not in tf space");
 		}
-		
+
 		colors.put(point, color);
 
-		fireColorChangedEventAll();
+		fireFunctionPointChangedEventAll();
 	}
-
 
 	/**
 	 * Adds a listener to the transfer function panel
@@ -165,15 +171,14 @@ public class TransferFunction1D {
 	public void addTransferFunctionListener(final TransferFunctionListener listener){
 		transferFunctionListeners.add(listener);
 
-		fireColorChangedEvent(listener);
+		listener.functionPointChanged(this);
 	}
-
 
 	/**
 	 * @return the maxOrdinates
 	 */
 	public Point2D.Float getMaxOrdinates() {
-		return maxOrdinates;
+		return maxCoordinates;
 	}
 
 	/**
@@ -181,23 +186,23 @@ public class TransferFunction1D {
 	 */
 	public void setMaxOrdinates(Point2D.Float maxOrdinates) {
 		maxVolumeValue = maxOrdinates.x;
-		maxOrdinates.x  = (maxOrdinates.x > maxFunctionPointSsmples)?maxFunctionPointSsmples:maxOrdinates.x;
-			
-		Point2D.Float oldMax = new Point2D.Float(this.maxOrdinates.x,this.maxOrdinates.y);
+		maxOrdinates.x  = (maxOrdinates.x > maxFunctionPointSamples)?maxFunctionPointSamples:maxOrdinates.x;
 
-		this.maxOrdinates = maxOrdinates;
+		Point2D.Float oldMax = new Point2D.Float(this.maxCoordinates.x,this.maxCoordinates.y);
+
+		this.maxCoordinates = maxOrdinates;
 
 		rescale(oldMax);
 
-		fireColorChangedEventAll();
+		fireFunctionPointChangedEventAll();
 	}
 
 	/**
 	 * rescales the transfer function from 0 to max ordinate in each dim 
 	 */
 	private void rescale(Point2D.Float oldMax){
-		float [] scaleFactors = {(float)maxOrdinates.x/(float)oldMax.x, 
-				(float)maxOrdinates.y/(float)oldMax.y };
+		float [] scaleFactors = {(float)maxCoordinates.x/(float)oldMax.x, 
+				(float)maxCoordinates.y/(float)oldMax.y };
 
 		//scale color points
 		TreeMap<Point2D.Float, Color> newColorMap = new TreeMap<Point2D.Float, Color>(pointOrderXOperator);
@@ -209,10 +214,13 @@ public class TransferFunction1D {
 		}
 		colors.clear();
 		colors.putAll(newColorMap);
-
-	
 	}
 
+	/**
+	 * Interpolates the color value of a x component of a certain transfer function point 
+	 * @param index
+	 * @return
+	 */
 	private Color getColorComponent(Point2D.Float index){
 		float [] result = {0,0,0};
 
@@ -236,6 +244,7 @@ public class TransferFunction1D {
 		colors.get(previousIndex).getColorComponents(colorPrev);
 		colors.get(nextIndex).getColorComponents(colorNext);
 
+		//interpolation
 		float []tmpColor= {0,0,0};
 		VectorUtil.subVec3(tmpColor, colorNext, colorPrev);
 		VectorUtil.scaleVec3(tmpColor,tmpColor,colorOffset/colorDiff);
@@ -244,7 +253,11 @@ public class TransferFunction1D {
 		return new Color(result[0],result[1],result[2],0);
 	}
 
-
+	/**
+	 * Calculates the normalized alpha value in case the transfer function uses unnormalized ones.
+	 * @param unNormalizedValue
+	 * @return
+	 */
 	private float getNormalizedAlphaValue(float unNormalizedValue){
 		float normFactor = 1f/ (float)getMaxOrdinates().y;
 
@@ -254,6 +267,11 @@ public class TransferFunction1D {
 
 	}
 
+	/**
+	 * Interpolates the alpha value of a x component of a certain transfer function point .
+	 * @param index
+	 * @return
+	 */
 	private float getAlpha (Point2D.Float index){
 		//get alpha
 		Point2D.Float nextIndex = colors.ceilingKey(index);
@@ -267,11 +285,17 @@ public class TransferFunction1D {
 
 		float colorDiff = nextIndex.x-previousIndex.x;
 		float colorOffset = index.x - previousIndex.x;
-
+		
+		//interpolation
 		float m = (nextAlpha - prevAlpha)/colorDiff;
 		return m* colorOffset + prevAlpha;
 	} 
 
+	/**
+	 * Samples the color of a x component of a certain transfer function point .
+	 * @param index
+	 * @return
+	 */
 	private float[] getColorForXSampleTransferSpace(Point2D.Float index){
 
 		float [] result = {0,0,0,0};
@@ -279,12 +303,12 @@ public class TransferFunction1D {
 		getColorComponent(index).getColorComponents(result);
 
 		result[3] = getAlpha(index); 
-	
+
 		return result;
 	}
 
 	/**
-	 * @return the with alpha values
+	 * Create a discrete transfer function by sampling 
 	 */
 	public final TreeMap<Integer, Color> sampleColors() {		
 		TreeMap<Integer, Color> returnColors = new TreeMap<Integer, Color>();
@@ -313,7 +337,7 @@ public class TransferFunction1D {
 			Long num = multiplicities.get(intIndex) + 1;
 			multiplicities.put(intIndex, num);
 		}
-		
+
 		//create colors
 		for(int key: colorComponents.keySet()){
 			float[] component = colorComponents.get(key);
@@ -340,12 +364,12 @@ public class TransferFunction1D {
 	 * @param newPoint
 	 */
 	public void moveColor(Point2D.Float oldPoint, Point2D.Float newPoint) {
-			
+
 		Color color = colors.get(oldPoint);
 		if(color == null){
 			return;
 		}
-		
+
 		if(!isPointValid(newPoint)){
 			throw new IndexOutOfBoundsException("Point: "+newPoint+" was not in tf space");
 		}
@@ -353,14 +377,16 @@ public class TransferFunction1D {
 		if(oldPoint.equals(colors.firstKey()) || oldPoint.equals(colors.lastKey())){
 			newPoint.x = oldPoint.x;
 		}
-		
+
 		colors.remove(oldPoint);
 		colors.put(newPoint, color);
-		fireColorChangedEventAll();
+		fireFunctionPointChangedEventAll();
 	}
 
-
-
+	/**
+	 * Get the transfer function shader code, defined by the current sampler
+	 * @return
+	 */
 	public IFunction getTransferFunctionShaderCode(){
 		return sampler.getShaderCode();
 	}
@@ -413,14 +439,19 @@ public class TransferFunction1D {
 				(float)windowSpacePoint.getY() * xyScale[1]);
 		return functionPoint;
 	}
-	
-	
+
+	/**
+	 * Finds the nearest transfer function point for a given point in a given distance
+	 * @param p
+	 * @param maxDist
+	 * @return
+	 */
 	public Point2D.Float getNearestValidPoint(final Point2D.Float p, float maxDist){
 		Point2D.Float query = null;
 		TreeMap<Point2D.Float, Color> colors = getColors();
 		Point2D.Float upperPoint = colors.higherKey(p);
 		Point2D.Float lowerPoint = colors.lowerKey(p);
-		
+
 		float dists[] = {Float.MAX_VALUE,Float.MAX_VALUE};
 		//valid points ?
 		if(lowerPoint != null ){
@@ -429,7 +460,7 @@ public class TransferFunction1D {
 		if(upperPoint != null ){
 			dists[1]= Math.min(dists[1],(float)p.distance(upperPoint));
 		}
-		
+
 		//min point ? 
 		if(dists[0] < dists[1]){
 			if(dists[0] <= maxDist){
@@ -440,15 +471,25 @@ public class TransferFunction1D {
 				query = upperPoint;
 			}
 		}
-		
+
 		return query;
 	}
-	
+
+	/**
+	 * Transforms a transfer function point to a a volume data value by scaling, since there are only maxFunctionPointSamples spaces for textures
+	 * @param tfVolumeValue
+	 * @return
+	 */
 	public float getDataVolumeValue(float tfVolumeValue){
-		return (maxVolumeValue/maxOrdinates.x)*tfVolumeValue;
+		return (maxVolumeValue/maxCoordinates.x)*tfVolumeValue;
 	}
 	
+	/**
+	 * Transforms a volume data to the transfer function space by scaling, since there are only maxFunctionPointSamples spaces for textures
+	 * @param dataVolumeValue
+	 * @return
+	 */
 	public float getTransferFunctionVolumeValue(float dataVolumeValue){
-		return (maxOrdinates.x/maxVolumeValue)*dataVolumeValue;
+		return (maxCoordinates.x/maxVolumeValue)*dataVolumeValue;
 	}
 }

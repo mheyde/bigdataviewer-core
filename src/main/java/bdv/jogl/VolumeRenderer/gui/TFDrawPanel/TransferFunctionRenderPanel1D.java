@@ -98,7 +98,7 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 		this.transferFunction.addTransferFunctionListener(new TransferFunctionAdapter() {
 			
 			@Override
-			public void colorChanged(TransferFunction1D transferFunction) {
+			public void functionPointChanged(TransferFunction1D transferFunction) {
 				repaint();
 			}
 		});

@@ -129,7 +129,7 @@ public class VolumeRendererExtension {
 		transferFunction.addTransferFunctionListener( new TransferFunctionAdapter() {
 
 			@Override
-			public void colorChanged(final TransferFunction1D function) {
+			public void functionPointChanged(final TransferFunction1D function) {
 
 				//trigger scene update
 				glWindow.getGlCanvas().repaint();

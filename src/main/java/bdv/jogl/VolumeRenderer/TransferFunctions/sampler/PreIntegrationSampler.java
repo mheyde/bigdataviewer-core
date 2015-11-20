@@ -13,14 +13,22 @@ import bdv.jogl.VolumeRenderer.Scene.Texture;
 import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.functions.IFunction;
 import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.functions.transferfunctioninterpreter.PreIntegrationInterpreter;
 import bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunction1D;
-import static bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.MultiVolumeRendererShaderSource.suvColorTexture;
 import static bdv.jogl.VolumeRenderer.utils.WindowUtils.getNormalizedColor;
 
+/**
+ * Class defining the cpu based preparation and transmission of the transfer function texture data
+ * @author michael
+ *
+ */
 public class PreIntegrationSampler implements ITransferFunctionSampler {
 
 	private final PreIntegrationInterpreter desampler = new PreIntegrationInterpreter();
+	
 	private Texture colorTexture;
 
+	/**
+	 * Returns the pre integration shader code
+	 */
 	@Override
 	public IFunction getShaderCode() {
 		return desampler;
@@ -50,6 +58,9 @@ public class PreIntegrationSampler implements ITransferFunctionSampler {
 		return stepSize/2.f * (a1+a2);
 	}
 	
+	/**
+	 * Initializes the necessary 2D texture
+	 */
 	@Override
 	public void init(GL4 gl, int colorTextureId) {
 		colorTexture = new Texture(GL2.GL_TEXTURE_2D,colorTextureId,GL2.GL_RGBA,GL2.GL_RGBA,GL2.GL_FLOAT);
@@ -62,6 +73,9 @@ public class PreIntegrationSampler implements ITransferFunctionSampler {
 		//colorTexture.setShouldGenerateMidmaps(true);
 	}
 	
+	/**
+	 * Calculates the transfer function data and uploads it to the gpu
+	 */
 	@Override
 	public void updateData(GL4 gl, TransferFunction1D transferFunction,
 			float sampleStep) {
@@ -71,14 +85,16 @@ public class PreIntegrationSampler implements ITransferFunctionSampler {
 		
 	}
 	
+	/**
+	 * Samples the transfer function and preintegrates it.
+	 * returns a buffer representing a 2D quadratic color texture
+	 */
 	@Override
 	public FloatBuffer sample( TransferFunction1D transferFunction, float stepSize) {
 		//http://www.uni-koblenz.de/~cg/Studienarbeiten/SA_MariusErdt.pdf
-		
-		int sampleStep=1;
+	
+	//	int sampleStep=1;
 		TreeMap<Integer, Color> colorMap = transferFunction.sampleColors();
-
-
 		
 		//make samples
 		Integer intervalBegin = colorMap.firstKey();
@@ -164,9 +180,11 @@ public class PreIntegrationSampler implements ITransferFunctionSampler {
 		FloatBuffer buffer = Buffers.newDirectFloatBuffer(javaBuffer);
 		buffer.rewind();
 		return buffer;
-		
 	}
 
+	/**
+	 * Deletes the 2D texture
+	 */
 	@Override
 	public void dispose(GL4 gl) {
 		colorTexture.delete(gl);

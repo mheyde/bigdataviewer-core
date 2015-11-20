@@ -21,8 +21,12 @@ import static bdv.jogl.VolumeRenderer.utils.WindowUtils.getNormalizedColor;
 public class RegularSampler implements ITransferFunctionSampler {
 	
 	private final RegularTransferFunctionInterpreter desampler = new RegularTransferFunctionInterpreter();
+	
 	private Texture colorTexture;  
 	
+	/**
+	 * Initialize the 1D transfer function texture
+	 */
 	@Override
 	public void init(GL4 gl, int colorTextureId) {
 		colorTexture = new Texture(GL2.GL_TEXTURE_1D,colorTextureId,GL2.GL_RGBA,GL2.GL_RGBA,GL2.GL_FLOAT);
@@ -32,6 +36,9 @@ public class RegularSampler implements ITransferFunctionSampler {
 		colorTexture.setTexParameteri(GL2.GL_TEXTURE_WRAP_S, GL2.GL_CLAMP_TO_BORDER);
 	}
 	
+	/**
+	 * Calculates the transfer function texture and uploads it to the gpu
+	 */
 	@Override
 	public void updateData(GL4 gl, TransferFunction1D transferFunction,
 			float sampleStep) {
@@ -45,7 +52,6 @@ public class RegularSampler implements ITransferFunctionSampler {
 	 * @param sampleStep
 	 * @return
 	 */
-	
 	public FloatBuffer sample(TransferFunction1D transferFunction, float sampleStep){
 		TreeMap<Integer, Color> colorMap = transferFunction.sampleColors();
 		//get Buffer last key is the highest number 
@@ -99,9 +105,11 @@ public class RegularSampler implements ITransferFunctionSampler {
 		return desampler;
 	}
 
+	/**
+	 * Deletes the 1D texture
+	 */
 	@Override
 	public void dispose(GL4 gl) {
 		colorTexture.delete(gl);
-		
 	}
 }

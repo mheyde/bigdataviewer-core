@@ -10,7 +10,7 @@ public abstract class TransferFunctionAdapter implements
 		TransferFunctionListener {
 
 	@Override
-	public void colorChanged(TransferFunction1D transferFunction) {
+	public void functionPointChanged(TransferFunction1D transferFunction) {
 
 	}
 
@@ -18,5 +18,4 @@ public abstract class TransferFunctionAdapter implements
 	public void samplerChanged(TransferFunction1D transferFunction1D) {
 
 	}
-
 }

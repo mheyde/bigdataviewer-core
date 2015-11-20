@@ -677,7 +677,7 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		this.tf.addTransferFunctionListener(new TransferFunctionAdapter() {
 
 			@Override
-			public void colorChanged(TransferFunction1D transferFunction) {
+			public void functionPointChanged(TransferFunction1D transferFunction) {
 				isColorUpdateable =true;
 
 			}

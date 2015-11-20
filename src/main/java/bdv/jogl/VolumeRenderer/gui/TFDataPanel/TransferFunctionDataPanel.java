@@ -121,7 +121,7 @@ public class TransferFunctionDataPanel extends JPanel {
 			 * Updates data if the transferfunction changes
 			 */
 			@Override
-			public void colorChanged(TransferFunction1D transferFunction) {
+			public void functionPointChanged(TransferFunction1D transferFunction) {
 				updateData();
 
 			}
