@@ -14,4 +14,6 @@ import com.jogamp.opengl.math.geom.AABBox;
 public interface IBigDataViewerDataSelectorListener {
 
 	public void selectedDataAvailable(AABBox hullVolume, List<VolumeDataBlock> partialVolumesInHullVolume, int time );
+	
+	public void dataRegionSelected(AABBox hullVolume);
 }

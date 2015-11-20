@@ -27,16 +27,22 @@ public class BigDataViewerDataSelector {
 	private final BigDataViewer bdv;
 
 	private float HullVolumeDimensions[] = new float[]{100,100,100};
-	
+
 	private AABBox currentGlobalSelection = null;
-	
+
 	private final Collection<IBigDataViewerDataSelectorListener> listeners = new ArrayList<IBigDataViewerDataSelectorListener>();
-	
+
 	public BigDataViewerDataSelector(final BigDataViewer bdv){
 		this.bdv = bdv;	
 		initListener();
 	}
-	
+
+	private void fireAllRegionSelected(final AABBox region){
+		for(IBigDataViewerDataSelectorListener l :listeners){
+			l.dataRegionSelected(region);
+		}
+	}
+
 	private void fireDataAvailable(IBigDataViewerDataSelectorListener l, AABBox hullVolume, List<VolumeDataBlock> partialVolumes,int time){
 		l.selectedDataAvailable(hullVolume, partialVolumes, time);
 	}
@@ -46,7 +52,7 @@ public class BigDataViewerDataSelector {
 			fireDataAvailable(l, hullVolume, partialVolumes, time);
 		}
 	}
-	
+
 	/**
 	 * prints the selected volume box in the bigDataView
 	 */
@@ -54,14 +60,14 @@ public class BigDataViewerDataSelector {
 		if(currentGlobalSelection==null){
 			return;
 		}
-/*		if(!renderer.getDrawRect().equals(currentGlobalSelection)){
+		/*		if(!renderer.getDrawRect().equals(currentGlobalSelection)){
 			currentGlobalSelection = null;
 			return;
 		}
-	*/	
+		 */	
 		//todo
 	}
-	
+
 	/**
 	 * init all needed listeners
 	 */
@@ -94,33 +100,44 @@ public class BigDataViewerDataSelector {
 	 */
 	public void selectVolumePart(final Point p){
 		//test 
-	//	p.x = 252;
-	//	p.y = 284;
+		//	p.x = 252;
+		//	p.y = 284;
+
 		
-		List<SourceState<?>> sources = bdv.getViewer().getState().getSources();
 		
-		AABBox volumeRectangle = getVolumeRegion(bdv, p, new float[]{HullVolumeDimensions[0]/2f,HullVolumeDimensions[1]/2f,HullVolumeDimensions[2]/2f});
-		ArrayList<VolumeDataBlock> partialVolumes = new ArrayList<VolumeDataBlock>();
+
+		final AABBox volumeRectangle = getVolumeRegion(bdv, p, new float[]{HullVolumeDimensions[0]/2f,HullVolumeDimensions[1]/2f,HullVolumeDimensions[2]/2f});
+		System.out.println("area: "+ volumeRectangle);
+		
+		fireAllRegionSelected(volumeRectangle);
+
 		currentGlobalSelection = volumeRectangle;
-		
 
-		int time =bdv.getViewer().getState().getCurrentTimepoint();
-		for(int i =0; i < sources.size(); i++){
-			int midmapLevel =0; //bdv.getViewer().getState().getSources().get(i).getSpimSource().getNumMipmapLevels()-1;
+		// thread to init data gathering
+		Thread collectorThread = new Thread(){
+			@Override
+			public void run() {
+				List<SourceState<?>> sources = bdv.getViewer().getState().getSources();
+				ArrayList<VolumeDataBlock> partialVolumes = new ArrayList<VolumeDataBlock>();
+				int time =bdv.getViewer().getState().getCurrentTimepoint();
+				for(int i =0; i < sources.size(); i++){
+					int midmapLevel =0; //bdv.getViewer().getState().getSources().get(i).getSpimSource().getNumMipmapLevels()-1;
 
-			AABBox b = getInnerVolume(bdv, volumeRectangle, midmapLevel, time,i);
+					AABBox b = getInnerVolume(bdv, volumeRectangle, midmapLevel, time,i);
 
-	//		System.out.println(p);
-	//		System.out.println(b);
-			
-			VolumeDataBlock data = getDataBlock(bdv, b, i, midmapLevel);
-			partialVolumes.add(data);
+					//		System.out.println(p);
+					//		System.out.println(b);
 
-		//	System.out.println(data);
-			//break;
-		}
+					VolumeDataBlock data = getDataBlock(bdv, b, i, midmapLevel);
+					partialVolumes.add(data);
 
-		fireAllDataAvailable(volumeRectangle, partialVolumes, time);
+					//	System.out.println(data);
+					//break;
+				}
+
+				fireAllDataAvailable(volumeRectangle, partialVolumes, time);};
+		};
+		collectorThread.start();
 	}
 
 	/**
@@ -135,8 +152,8 @@ public class BigDataViewerDataSelector {
 		bdv.getViewer().getState().getViewerTransform(transform3D);
 		Matrix4 transformJogl = convertToJoglTransform(transform3D);
 		transformJogl.invert();
-		
-		
+
+
 		//get coord in global space
 		float transformer[] = new float[]{queryPoint.x,queryPoint.y,0,1};
 		float transformed[] = new float[4];
@@ -173,7 +190,7 @@ public class BigDataViewerDataSelector {
 		source.getSourceTransform(time, midmapLevel, sourceTrans3D);
 		Matrix4 sourceTransJogl = convertToJoglTransform(sourceTrans3D);
 		sourceTransJogl.invert();
-		
+
 		//test points for borders since they may overlap
 		float[][]minMax={{Float.MAX_VALUE,Float.MAX_VALUE,Float.MAX_VALUE},
 				{Float.MIN_VALUE,Float.MIN_VALUE,Float.MIN_VALUE}};
@@ -200,7 +217,7 @@ public class BigDataViewerDataSelector {
 			}
 			z = outerVolume.getMaxZ();
 		}
-		
+
 		//get a little offset for surpressing render artefacts of the sparse textures
 		float offset = 10f;
 		for (int i =0; i < 3; i++){
