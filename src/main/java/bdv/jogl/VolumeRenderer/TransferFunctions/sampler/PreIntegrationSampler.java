@@ -54,10 +54,10 @@ public class PreIntegrationSampler implements ITransferFunctionSampler {
 	public void init(GL4 gl, int colorTextureId) {
 		colorTexture = new Texture(GL2.GL_TEXTURE_2D,colorTextureId,GL2.GL_RGBA,GL2.GL_RGBA,GL2.GL_FLOAT);
 		colorTexture.genTexture(gl);
-		colorTexture.setTexParameteri(gl,GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
-		colorTexture.setTexParameteri(gl, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
-		colorTexture.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_S, GL2.GL_CLAMP_TO_BORDER);
-		colorTexture.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_T, GL2.GL_CLAMP_TO_BORDER);
+		colorTexture.setTexParameteri(GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
+		colorTexture.setTexParameteri(GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
+		colorTexture.setTexParameteri(GL2.GL_TEXTURE_WRAP_S, GL2.GL_CLAMP_TO_BORDER);
+		colorTexture.setTexParameteri(GL2.GL_TEXTURE_WRAP_T, GL2.GL_CLAMP_TO_BORDER);
 		//colorTexture.setTexParameteri(gl, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR_MIPMAP_LINEAR);
 		//colorTexture.setShouldGenerateMidmaps(true);
 	}

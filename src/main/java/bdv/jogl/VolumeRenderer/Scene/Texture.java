@@ -46,9 +46,6 @@ public class Texture {
 	private final Map<Integer, float[]> parameterfvMap = new HashMap<Integer, float[]>();
 	
 	private final Map<Integer, Boolean> updatableTextureParameters = new HashMap<Integer, Boolean>();
-	
-	//sparse memory stuff
-	private int virtualDimensions[] = new int[3]; 
 
 	private boolean sparseMemoryAllocated = false;
 
@@ -98,6 +95,10 @@ public class Texture {
 
 	}
 	
+	/**
+	 * Binds the texture object to the current shader program context
+	 * @param gl2
+	 */
 	private void rebindTexture(GL4 gl2){
 		gl2.glBindTexture(textureType, textureObject);
 
@@ -107,10 +108,18 @@ public class Texture {
 		gl2.glUniform1i(variableLocation,logicalTextureUnit);
 	}
 	
+	/**
+	 * Test method to check whether sparse textures are supported
+	 */
 	public static boolean isSparseTextureSupported(GL context){
 		return contextSupportsExtension(context, "GL_ARB_sparse_texture");
 	}
 	
+	/**
+	 * Returns the virtual page sizes needed for sparse textures 
+	 * @param gl
+	 * @return
+	 */
 	public int[] getVirtPageSizes(GL4 gl){
 		int pagesizes[] = new int[3];
 		gl.glGetInternalformativ(textureType, internalFormat,GL4.GL_VIRTUAL_PAGE_SIZE_X_ARB, 1,pagesizes, 0);
@@ -137,16 +146,12 @@ public class Texture {
 			delete(gl2);
 			genTexture(gl2);		
 			rebindTexture(gl2);
-			setTexParameteri(gl2, GL4.GL_TEXTURE_SPARSE_ARB, GL2.GL_TRUE);
+			setTexParameteri(GL4.GL_TEXTURE_SPARSE_ARB, GL2.GL_TRUE);
 			GLErrorHandler.assertGL(gl2);
-			setTexParameteri(gl2, GL4.GL_VIRTUAL_PAGE_SIZE_INDEX_ARB, 0);
+			setTexParameteri(GL4.GL_VIRTUAL_PAGE_SIZE_INDEX_ARB, 0);
 			GLErrorHandler.assertGL(gl2);
 			gl2.glActiveTexture(textureUnit);
 			rebindTexture(gl2);		
-			
-			//stuff for un-commit
-			this.virtualDimensions = virtualDimensions.clone();
-			 
 		}
 		
 		
@@ -240,7 +245,7 @@ public class Texture {
 		if(sparseMemoryAllocated){
 			delete(gl2);
 			genTexture(gl2);
-			setTexParameteri(gl2, GL4.GL_TEXTURE_SPARSE_ARB, GL2.GL_FALSE);
+			setTexParameteri(GL4.GL_TEXTURE_SPARSE_ARB, GL2.GL_FALSE);
 	
 			gl2.glActiveTexture(textureUnit);
 			rebindTexture(gl2);		
@@ -292,29 +297,33 @@ public class Texture {
 	}
 	
 	/**
-	 * Sets texture parameters with glTexParameteri
-	 * @param gl2
+	 * Stores texture parameters with glTexParameteri
 	 * @param parameter 
 	 * @param value
 	 */
-	public void setTexParameteri(GL4 gl2, int parameter, int value){
+	public void setTexParameteri(int parameter, int value){
 		parameteriMap.put(parameter, value);
 		updatableTextureParameters.put(parameter, true);
-		//gl2.glTexParameteri(textureType, parameter, value);
 	}
 
-	public void setTexParameteriv(GL4 gl2, int parameter, int[] values){
+	/**
+	 * Stores texture parameters with glTexParameteriv
+	 * @param parameter
+	 * @param values
+	 */
+	public void setTexParameteriv(int parameter, int[] values){
 		parameterivMap.put(parameter, values.clone());
 		updatableTextureParameters.put(parameter, true);
-		
-		//gl2.glTexParameteriv(textureType, parameter, values,0);
 	}
 	
-	public void setTexParameterfv(GL4 gl2, int parameter, float[] values){
+	/**
+	 * Stores texture parameters with glTexParameterfv
+	 * @param parameter
+	 * @param values
+	 */
+	public void setTexParameterfv(int parameter, float[] values){
 		parameterfvMap.put(parameter, values.clone());
 		updatableTextureParameters.put(parameter, true);
-		
-		//gl2.glTexParameterfv(textureType, parameter, values, 0);
 	}
 	
 	/**
@@ -364,6 +373,10 @@ public class Texture {
 		sparseMemoryAllocated = false;
 	}
 	
+	/**
+	 * Enables the update flag for all stored texture parameters
+	 * @param parameters
+	 */
 	private void setParametersNeedsUpdate(Set<Integer> parameters){
 		for(Integer parameter: parameters){
 			updatableTextureParameters.put(parameter, true);
@@ -383,5 +396,4 @@ public class Texture {
 	public void setShouldGenerateMidmaps(boolean shouldGenerateMidmaps) {
 		this.shouldGenerateMidmaps = shouldGenerateMidmaps;
 	}
-	
 }

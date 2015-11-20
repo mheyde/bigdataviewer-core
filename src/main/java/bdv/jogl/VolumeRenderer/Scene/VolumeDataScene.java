@@ -32,10 +32,15 @@ public class VolumeDataScene extends AbstractScene{
 	private MultiVolumeRenderer renderer;
 	//private UnitCube boundingVolume =new UnitCube();
 
+	
 	@Override
 	protected void disposeSpecial(GL4 gl2) {
 	}
 
+	/**
+	 * Set all Volume Quads to visible
+	 * @param flag
+	 */
 	public void enableVolumeBorders(boolean flag){
 		showVolumes = flag;
 		for(UnitCube c : volumeBorders.values()){
@@ -43,16 +48,23 @@ public class VolumeDataScene extends AbstractScene{
 		}
 	}
 	
+	/**
+	 * Adds a new Cube Shader with an appropriate color
+	 * @param id
+	 */
 	private void addNewCubeBorderShader(Integer id){
 		UnitCube cubeShader = new UnitCube();
 		volumeBorders.put(id,cubeShader);
 		addSceneElement(cubeShader);
 		cubeShader.setRenderWireframe(true);
 		cubeShader.setColor(getColorOfVolume(id));
-		
-
 	}
 	
+	/**
+	 * Updates the model-, view- and projection-matrices for a cube shader 
+	 * @param id
+	 * @param data
+	 */
 	private void updateCubeBorderShader(Integer id, final VolumeDataBlock data){
 		UnitCube cubeShader = volumeBorders.get(id);
 		Matrix4 modelMatrix = calcScaledVolumeTransformation(data);
@@ -62,17 +74,27 @@ public class VolumeDataScene extends AbstractScene{
 		cubeShader.setEnabled(showVolumes);
 	}
 	
+	/**
+	 * Sets and connects a new data manager
+	 * @param manager
+	 */
 	private void setDataManager(final VolumeDataManager manager){
 		dataManager = manager;
 		
 		dataManager.addVolumeDataManagerListener(new VolumeDataManagerAdapter() {
 			
+			/**
+			 * Handler to add new volume borders on adding new data
+			 */
 			@Override
 			public void addedData(Integer id) {
 				//add cubes
 				addNewCubeBorderShader(id);
 			}
 			
+			/**
+			 * Handler to update volume borders on updating data 
+			 */
 			@Override 
 			public void dataUpdated(Integer id) {
 				updateCubeBorderShader(id, dataManager.getVolume(id));
@@ -84,10 +106,19 @@ public class VolumeDataScene extends AbstractScene{
 	@Override
 	protected void resizeSpecial(GL4 gl2, int x, int y, int width, int height) {}
 
+	/**
+	 * Retruns the multi volume renderer in use
+	 * @return
+	 */
 	public MultiVolumeRenderer getRenderer(){
 		return renderer;
 	}
 
+	/**
+	 * Constructor
+	 * @param dataManager
+	 * @param renderer
+	 */
 	public VolumeDataScene( VolumeDataManager dataManager, MultiVolumeRenderer renderer){
 		this.renderer = renderer;
 		setDataManager(dataManager);
@@ -122,7 +153,10 @@ public class VolumeDataScene extends AbstractScene{
 		initLocalCamera(camera, width,height);
 	}
 
-
+	/**
+	 * Adds a cube to show the Hull volume
+	 * @param gl2
+	 */
 	private void initBoundingVolumeCube(GL4 gl2) {
 		/*	addSceneElement(boundingVolume);
 
@@ -132,7 +166,7 @@ public class VolumeDataScene extends AbstractScene{
 	}
 
 	/**
-	 * render the scene
+	 * 
 	 * @param gl2
 	 */
 	protected void renderSpecial(GL4 gl2){

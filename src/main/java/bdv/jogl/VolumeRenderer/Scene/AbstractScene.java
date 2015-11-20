@@ -27,17 +27,19 @@ public abstract class AbstractScene {
 	protected List<ISceneElements> sceneElements = new ArrayList<ISceneElements>();
 	
 	protected List<SceneEventListener> sceneListeners = new ArrayList<SceneEventListener>();
-
-	protected void fireNeedUpdate(SceneEventListener l){
-		l.needsUpdate();
-	}
 	
+	/**
+	 * Informs all listeners that the scene needs to be updated
+	 */
 	protected void fireNeedUpdateAll(){
 		for(SceneEventListener l : sceneListeners){
-			fireNeedUpdate(l);
+			l.needsUpdate();
 		}
 	}
 	
+	/**
+	 * Constructor
+	 */
 	public AbstractScene(){
 		setCamera(new Camera());
 	}
@@ -82,6 +84,9 @@ public abstract class AbstractScene {
 		this.camera = camera;
 		this.camera.addCameraListener(new CameraListener() {
 
+			/**
+			 * Handler for camera view matrix updates
+			 */
 			@Override
 			public void viewMatrixUpdate(Matrix4 matrix) {
 
@@ -92,6 +97,9 @@ public abstract class AbstractScene {
 				fireNeedUpdateAll();
 			}
 
+			/**
+			 * Handler for camera projection matrix updates
+			 */
 			@Override
 			public void projectionMatrixUpdate(Matrix4 matrix) {
 
@@ -151,12 +159,9 @@ public abstract class AbstractScene {
 		
 		gl2.glDepthFunc(GL2.GL_LEQUAL);
 		
-
-		
 		//subclass stuff
 		renderSpecial(gl2);
 
-		
 		//render elements
 		for(ISceneElements element: sceneElements){
 			element.render(gl2);

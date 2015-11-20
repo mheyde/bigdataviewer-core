@@ -106,7 +106,7 @@ public class VolumeRendererExtension {
 		
 		selector = new BigDataViewerDataSelector(bdv);
 		sampleController = new VolumeRendereSampleController(glWindow, controls.getSamplesSpinner(), volumeRenderer,64);
-		animator = new InteractionAnimator(volumeRenderer, glWindow, dataManager,controls,sampleController);
+		animator = new InteractionAnimator(volumeRenderer, glWindow, controls,sampleController);
 	
 		createListeners();
 		createActionInToolBar();

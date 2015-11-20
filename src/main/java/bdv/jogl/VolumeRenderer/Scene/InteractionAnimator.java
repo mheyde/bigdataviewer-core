@@ -9,8 +9,6 @@ import bdv.jogl.VolumeRenderer.Camera;
 import bdv.jogl.VolumeRenderer.ShaderPrograms.MultiVolumeRenderer;
 import bdv.jogl.VolumeRenderer.gui.SceneControlsWindow;
 import bdv.jogl.VolumeRenderer.gui.GLWindow.GLWindow;
-import bdv.jogl.VolumeRenderer.utils.VolumeDataBlock;
-import bdv.jogl.VolumeRenderer.utils.VolumeDataManager;
 import bdv.jogl.VolumeRenderer.utils.VolumeRendereSampleController;
 import static bdv.jogl.VolumeRenderer.utils.VolumeDataUtils.calcEyeAndCenterByGivenHull;;
 
@@ -30,8 +28,6 @@ public class InteractionAnimator {
 	
 	private boolean stopTriggered = false;
 	
-	private final VolumeDataManager manager;
-	
 	private final SceneControlsWindow controls;
 
 	private final VolumeRendereSampleController sampleController;
@@ -44,12 +40,10 @@ public class InteractionAnimator {
 	public InteractionAnimator(
 			final MultiVolumeRenderer renderer, 
 			final GLWindow renderWindow, 
-			final VolumeDataManager manager,
 			final SceneControlsWindow controls,
 			final VolumeRendereSampleController contoller){
 		this.renderer = renderer;
 		this.renderWindow = renderWindow;
-		this.manager =manager; 
 		this.controls = controls;
 		this.sampleController = contoller;
 	}
@@ -90,6 +84,9 @@ public class InteractionAnimator {
 		prepareAnimations();
 		initAnimationThread = new Thread(){
 			
+				/**
+				 * Runs over Animation steps and animates blending of views, is interruptable  
+				 */
 				public void run(){
 					sampleController.downSample();
 					for(currentAnimationPercentage =0; currentAnimationPercentage< 100; currentAnimationPercentage+=percentageIncrement){
@@ -118,6 +115,9 @@ public class InteractionAnimator {
 		initAnimationThread.start();
 	}
 	
+	/**
+	 * Restore default preconditions of an animation, slice is shown and no stop signal was triggered
+	 */
 	private void prepareAnimations(){
 		stopTriggered = false;
 		controls.getShowSlice().setSelected(true);
@@ -140,7 +140,9 @@ public class InteractionAnimator {
 		final List<float[][]> motionPositions = calcEyeAndCenterPath(hullVolume, 100 /percentageIncrement);
 		motionToTargetThread = new Thread(){
 			
-
+			/**
+			 * Runs over animation steps and animates camera motion to target partial volume. is interruptable
+			 */
 			public void run(){
 				boolean updatedData= false;
 				Camera c = renderWindow.getScene().getCamera();
@@ -172,10 +174,8 @@ public class InteractionAnimator {
 				sampleController.upSample();
 				currentAnimationPercentage = 100;
 				
-				renderer.setDrawRect(hullVolume);
-				
-
-				
+				//finally set new hull volume 
+				renderer.setDrawRect(hullVolume);				
 			}
 		};
 		motionToTargetThread.start();
