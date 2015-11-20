@@ -389,7 +389,6 @@ public class SceneControlsWindow extends JFrame {
 
 			@Override
 			public void dataUpdated(Integer i) {
-				float maxVolume=Math.min(dataManager.getGlobalMaxVolumeValue(),1000);
 			
 				transferFunction.setMaxOrdinates(new Point2D.Float(dataManager.getGlobalMaxVolumeValue(), 1.0f));
 				float lowestDataPoint = dataManager.getGlobalLowestVolumeValue();
@@ -399,7 +398,7 @@ public class SceneControlsWindow extends JFrame {
 						transferFunction.removeColor(addedTransfeFunctionPoint);
 					}
 				}
-				addedTransfeFunctionPoint = new Point2D.Float((maxVolume/dataManager.getGlobalMaxVolumeValue())*lowestDataPoint, 0.001f);
+				addedTransfeFunctionPoint = new Point2D.Float((transferFunction.getMaxOrdinates().x/dataManager.getGlobalMaxVolumeValue())*lowestDataPoint, 0.001f);
 				transferFunction.setColor(addedTransfeFunctionPoint, transferFunction.getColors().firstEntry().getValue());
 			}
 			
