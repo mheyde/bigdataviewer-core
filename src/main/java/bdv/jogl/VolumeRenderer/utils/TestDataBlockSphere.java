@@ -4,16 +4,28 @@ import static bdv.jogl.VolumeRenderer.utils.MatrixUtils.*;
 
 import com.jogamp.opengl.math.Matrix4;
 
+/**
+ * Test dataset representing a sphere like volume block 
+ * @author michael
+ *
+ */
 public class TestDataBlockSphere extends VolumeDataBlock {
 
 	private final int radius;
 	
+	/**
+	 * Constructor
+	 * @param radius Radius of the sphere
+	 */
 	public TestDataBlockSphere(int radius){
 		this.radius = radius;
 		
 		initDataVolume();
 	}
-
+	
+	/**
+	 * create the volume values of the sphere
+	 */
 	private void initDataVolume() {
 		//fill data values
 		int i = 0;
@@ -59,7 +71,5 @@ public class TestDataBlockSphere extends VolumeDataBlock {
 	
 		Matrix4 transform =  getNewIdentityMatrix();
 		setLocalTransformation(transform);
-	}
-	
-	
+	}	
 }

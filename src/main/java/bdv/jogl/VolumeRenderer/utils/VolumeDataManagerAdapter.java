@@ -1,7 +1,5 @@
 package bdv.jogl.VolumeRenderer.utils;
 
-import com.jogamp.opengl.math.geom.AABBox;
-
 /**
  * adapter class for the volume manager listeners
  * @author michael

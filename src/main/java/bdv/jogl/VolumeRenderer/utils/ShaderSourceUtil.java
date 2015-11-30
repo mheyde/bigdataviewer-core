@@ -2,7 +2,6 @@ package bdv.jogl.VolumeRenderer.utils;
 
 import java.util.List;
 
-
 /**
  * 
  * @author michael

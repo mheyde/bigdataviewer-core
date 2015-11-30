@@ -39,9 +39,13 @@ public class WindowUtils {
 		return rgba;
 	}
 	
+	/**
+	 * Return the left aligned input component
+	 * @param c
+	 * @return
+	 */
 	public static JComponent aligneLeft(final JComponent c){
 		c.setAlignmentX(JComponent.LEFT_ALIGNMENT);
 		return c;
 	}
-	
 }

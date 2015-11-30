@@ -1,7 +1,6 @@
 package bdv.jogl.VolumeRenderer.utils;
 
 import static bdv.jogl.VolumeRenderer.utils.GeometryUtils.getAABBOfTransformedBox;
-import static bdv.jogl.VolumeRenderer.utils.MatrixUtils.getNewIdentityMatrix;
 
 import java.util.Collection;
 

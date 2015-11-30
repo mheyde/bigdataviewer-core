@@ -6,7 +6,7 @@ import bdv.jogl.VolumeRenderer.ShaderPrograms.MultiVolumeRenderer;
 import bdv.jogl.VolumeRenderer.gui.GLWindow.GLWindow;
 
 /**
- * 
+ * Class for unified access to the up and downsampling functionality
  * @author michael
  *
  */
@@ -26,6 +26,13 @@ public class VolumeRendereSampleController {
 
 	private boolean active = true;
 
+	/**
+	 * Constructor
+	 * @param window
+	 * @param sampleSpinner
+	 * @param volumeRenderer
+	 * @param lowSampleSize
+	 */
 	public VolumeRendereSampleController(
 			final GLWindow window,
 			final JSpinner sampleSpinner,
@@ -39,6 +46,9 @@ public class VolumeRendereSampleController {
 	}
 
 
+	/**
+	 * Set the sample rate to normal if downsampling was done before (Thread safe) 
+	 */
 	public void upSample(){
 		synchronized(lock){
 			if(active){
@@ -54,6 +64,9 @@ public class VolumeRendereSampleController {
 		}
 	}
 
+	/**
+	 * Set the sample rate to a defined lower value (Thread safe)
+	 */
 	public synchronized void downSample(){
 		synchronized (lock) {
 			if(active){

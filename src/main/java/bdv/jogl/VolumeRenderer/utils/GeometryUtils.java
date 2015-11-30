@@ -97,6 +97,10 @@ public class GeometryUtils {
 		return array;
 	}
 	
+	/**
+	 * Retruns the edges of a unit cube defined in the borders of [0,1]
+	 * @return
+	 */
 	public static float[] getUnitCubeEdges(){
 		float array[] = {
 			0,0,0,

@@ -10,15 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.realtransform.AffineTransform3D;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
-
-import com.jogamp.opengl.math.Matrix4;
 import com.jogamp.opengl.math.geom.AABBox;
 
 import bdv.BigDataViewer;
-import bdv.viewer.state.SourceGroup;
 import bdv.viewer.state.SourceState;
 import bdv.viewer.state.ViewerState;
 
@@ -48,31 +42,37 @@ public class VolumeDataManager {
 
 	private float minGlobalValue;
 	
+	/**
+	 * Constructor
+	 * @param bdv The data interface to fetch volume data from
+	 */
 	public VolumeDataManager(final BigDataViewer bdv){
 		this.bdv = bdv;
 	}
-	
+
+	/**
+	 * Tells all listeners that a certain volume stack was removed from the current storage
+	 * @param i
+	 */
 	private void fireAllRemovedData(Integer i ){
 		for(IVolumeDataManagerListener l:listeners){
-			fireRemovedData(i, l);
+			l.dataRemoved(i);
 		}
 	}
 	
-	
-	private void fireRemovedData(Integer i, IVolumeDataManagerListener l){
-		l.dataRemoved(i);
-	}
-	
-	private void fireAddedData(Integer i,IVolumeDataManagerListener l){
-		l.addedData(i);
-	}
-	
+	/**
+	 * Tells all listeners that a certain volume stack was added to the current data set
+	 * @param i
+	 */
 	private void fireAllAddedData(Integer i){
 		for(IVolumeDataManagerListener l:listeners){
-			fireAddedData(i,l);
+			l.addedData(i); 
 		}
 	}
 	
+	/**
+	 * update statistic values over all volume stacks
+	 */
 	private void updateGlobals(){
 
 		globalMaxOccurance = 0;
@@ -85,7 +85,7 @@ public class VolumeDataManager {
 			if(data.getValueDistribution().isEmpty()){
 				continue;
 			}
-			Float cmax =data.getValueDistribution().lastKey();
+			//Float cmax =data.getValueDistribution().lastKey();
 			Float cmin = data.getValueDistribution().firstKey();
 			//globalMaxVolume = Math.max(globalMaxVolume,cmax.floatValue());
 			minGlobalValue = Math.max(0.0f,Math.min(minGlobalValue, cmin.floatValue()));
@@ -100,25 +100,44 @@ public class VolumeDataManager {
 	}
 
 	/**
-	 * Returns the maximal volume value of the currently stored volume values
+	 * Returns the maximal volume value of the currently stored volume values.
 	 * @return
 	 */
 	public float getGlobalMaxVolumeValue(){
 		return globalMaxVolume;
 	}
 
+	/**
+	 * Returns the set of volume indices which are currently in use,
+	 * @return
+	 */
 	public Set<Integer> getVolumeKeys() {
 		return volumes.keySet();
 	}
 
+	/**
+	 * Returns if a certain volume stack is currently visible/ enabled
+	 * @param i
+	 * @return
+	 */
 	public boolean isEnabled(int i){
 		return enabled.get(i);
 	}
 	
+	/**
+	 * Get volume data stack from its id
+	 * @param i
+	 * @return
+	 */
 	public VolumeDataBlock getVolume(Integer i) {
 		return volumes.get(i);
 	}
 
+	/**
+	 * add a list of volume data stack. Triggers the appropriate listeners after every stack was added for synchronization purposes. 
+	 * @param time
+	 * @param data
+	 */
 	public void volumeUpdateTransaction(int time, List<VolumeDataBlock> data){
 		List<Boolean> wasPresent = new ArrayList<Boolean>();
 		if(time != this.currentTime){
@@ -144,6 +163,12 @@ public class VolumeDataManager {
 		}
 	}
  
+	/**
+	 * Adds one data block for a timestamp and an id if non was present.
+	 * @param i
+	 * @param time
+	 * @param data
+	 */
 	public void setVolume(Integer i, int time , VolumeDataBlock data){
 		if(time != this.currentTime){
 			currentTime = time;
@@ -167,24 +192,36 @@ public class VolumeDataManager {
 		fireAllUpdatedData(i);
 	}
 	
+	/**
+	 * Tells all listeners that a certain data stack updated its data
+	 * @param i
+	 */
 	private void fireAllUpdatedData(Integer i) {
 		for(IVolumeDataManagerListener listener : listeners){
-			fireUpdatedData(i,listener);
+			listener.dataUpdated(i);
 		}
 	}
-
-	private void fireUpdatedData(int i,IVolumeDataManagerListener listener) {
-		listener.dataUpdated(i);
-	}
-
+	
+	/**
+	 * Return the count of the most occuring volume data value over all data stacks. Not the value itself
+	 * @return
+	 */
 	public float getGlobalMaxOccurance() {
 		return globalMaxOccurance;
 	}
 
+	/**
+	 * Returns the volume data stacks 
+	 * @return
+	 */
 	public Collection<VolumeDataBlock> getVolumes() {
 		return volumes.values();
 	}
 	
+	/**
+	 * Removes a certain volume data stack from the storage
+	 * @param i
+	 */
 	public void removeVolumeByIndex(int i) {
 		VolumeDataBlock removedData = volumes.remove(i);
 		if(removedData != null){
@@ -192,6 +229,11 @@ public class VolumeDataManager {
 		}
 	}
 	
+	/**
+	 * Sets the visible / enable flag for a certain volume data stack.
+	 * @param i
+	 * @param flag
+	 */
 	public void enableVolume(int i , boolean flag){
 		if(!enabled.containsKey(i)){
 			return;
@@ -200,27 +242,33 @@ public class VolumeDataManager {
 		fireAllDataEnabled(i,flag);
 	}
 	
+	/**
+	 * Tells all listeners that a certain volume data stack has changed its enable/visible status 
+	 * @param i
+	 * @param flag
+	 */
 	private void fireAllDataEnabled(int i, boolean flag) {
 		for(IVolumeDataManagerListener l:listeners){
-			fireDataEnabled(l, i,  flag);
+			l.dataEnabled(i, flag);
 		}
 		
 	}
 
-	private void fireDataEnabled(IVolumeDataManagerListener l, int i,
-			boolean flag) {
-		l.dataEnabled(i,flag);
-		
-	}
-
+	/**
+	 * Add a listener and calls its data add and update method for each data stack
+	 * @param l
+	 */
 	public void addVolumeDataManagerListener(IVolumeDataManagerListener l ){
 		listeners.add(l);
 		for(int i: volumes.keySet()){
-			fireAddedData(i, l);
-			fireUpdatedData(i, l);
+			l.addedData(i);
+			l.dataUpdated(i);		
 		}
 	}
-	
+
+	/**
+	 * Get the lowest resolution of the full data set at the current timestamp from the data interface, if needed.
+	 */
 	public void updateData(){	
 		ViewerState state = bdv.getViewer().getState();
 		int currentTimepoint = state.getCurrentTimepoint();
@@ -231,6 +279,9 @@ public class VolumeDataManager {
 		resetVolumeData();
 	}
 	
+	/**
+	 * Get the lowest resolution of the full data set at the current timestamp from the data interface.
+	 */
 	public void resetVolumeData() {
 		//mainly for new time points and data not realy for transform
 		ViewerState state = bdv.getViewer().getState();
@@ -264,6 +315,10 @@ public class VolumeDataManager {
 		volumeUpdateTransaction(currentTimepoint, data);
 	}
 
+	/**
+	 * Returns the lowest volume value from all current stacks
+	 * @return
+	 */
 	public float getGlobalLowestVolumeValue() {
 		
 		return minGlobalValue;

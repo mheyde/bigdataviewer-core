@@ -37,6 +37,9 @@ import net.imglib2.view.Views;
  */
 public class VolumeDataUtils {
 
+	/**
+	 * global stack id color map 
+	 */
 	private static Color volumeColor[] = new Color[]{
 
 		Color.RED,
@@ -216,14 +219,30 @@ public class VolumeDataUtils {
 		paraWriter.close();
 	}
 
+	/**
+	 * Returns the color for a given volume stack id
+	 * @param i
+	 * @return
+	 */
 	public static Color getColorOfVolume(int i){
 		return volumeColor[i%volumeColor.length];
 	}
 
+	/**
+	 * Returns the transformation matrix for a volume stack to the global coordinate system
+	 * @param block
+	 * @return
+	 */
 	public static Matrix4 fromVolumeToGlobalSpace(final VolumeDataBlock block){
 		return copyMatrix( block.getLocalTransformation());
 	}
 
+	/**
+	 * Returns the transformation matrix for a volume stack to the global coordinate system scaled in each dimension with the voxel count.
+	 * needed to expand the [0,1] defined texture coordinate system and get the real dimension in global space
+	 * @param block
+	 * @return
+	 */
 	public static Matrix4 calcScaledVolumeTransformation(final VolumeDataBlock block){
 		Matrix4 trans = getNewIdentityMatrix();
 
@@ -233,6 +252,11 @@ public class VolumeDataUtils {
 		return trans;
 	}
 
+	/**
+	 * Return the transformation from global to local volume coordinates of a certain stack.
+	 * @param block
+	 * @return
+	 */
 	public static Matrix4 fromCubeToVolumeSpace(final VolumeDataBlock block){
 
 		Matrix4 tmp = copyMatrix(block.getLocalTransformation());
@@ -348,8 +372,11 @@ public class VolumeDataUtils {
 		return new float[][]{eye.clone(),center.clone()}; 
 	}
 
-	private static float minStep = 0.1f;
-
+	/**
+	 * Calculates the total curvature values for each point of a volume stack.
+	 * @param data
+	 * @return
+	 */
 	public static CurvatureContainer calculateCurvatureOfVolume(final VolumeDataBlock data){
 		CurvatureContainer cc = new CurvatureContainer();
 		GradientContainer cg= calculateGradientOfVolume(data);
@@ -429,7 +456,12 @@ public class VolumeDataUtils {
 		return cc;
 	}
 
-
+	/**
+	 * Calculates the hessian matrice for each point of a volume stack.
+	 * @param cg
+	 * @param data
+	 * @return
+	 */
 	private static HessianContainer calculateHessianOfGradients(
 			GradientContainer cg, VolumeDataBlock data) {
 		//get voxel distances per dim
@@ -472,7 +504,6 @@ public class VolumeDataUtils {
 
 		return hc;
 	}
-
 
 	/**
 	 * Calculates for each data point a gradient vector
@@ -526,21 +557,26 @@ public class VolumeDataUtils {
 		return v1+ m*minStep;
 	}
 
-	public static float[] getScaledVolumeDimensions(VolumeDataBlock data){
+	/**
+	 * calculates the Voxel space dimension of a volume stack.
+	 * @param data
+	 * @return
+	 */
+	private static float[] getScaledVolumeDimensions(VolumeDataBlock data){
 		float transferPoints[][] = {{0,0,0,1},{1,0,0,1},{0,1,0,1},{0,0,1,1}};
 		float transferedPoints[][] = new float[4][4];
 		Matrix4 trans = calcScaledVolumeTransformation(data);
-		
+
 		//get the transfered border points
 		for(int i = 0; i < transferPoints.length; i++){
 			trans.multVec(transferPoints[i], transferedPoints[i]);
-			
+
 			//wclip
 			for(int d=0; d < 3; d++){
 				transferedPoints[i][d] /= transferedPoints[i][3];
 			}
 		}
-		
+
 		return new float[]{
 				VectorUtil.distVec3(transferedPoints[0], transferedPoints[1]),
 				VectorUtil.distVec3(transferedPoints[0], transferedPoints[2]),
@@ -548,16 +584,21 @@ public class VolumeDataUtils {
 		};
 	}
 
+	/**
+	 * Calculates the distance between voxels for each dimension.
+	 * @param data
+	 * @return
+	 */
 	private static float[] calculateVoxelDistance(VolumeDataBlock data) {
 		// TODO Auto-generated method stub
 		// TODO correct dim
 		float distances[] = new float[]{1,1,1};
 		float realDimensions[] = getScaledVolumeDimensions(data);
-		
+
 		for(int d = 0; d < 3; d++){
 			distances[d] = realDimensions[d]/(float) data.dimensions[d];
 		}
-		
+
 		return distances;
 	}
 }
