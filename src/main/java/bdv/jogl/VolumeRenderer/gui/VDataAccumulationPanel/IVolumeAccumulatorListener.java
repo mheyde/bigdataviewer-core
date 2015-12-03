@@ -1,6 +1,6 @@
 package bdv.jogl.VolumeRenderer.gui.VDataAccumulationPanel;
 
-import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.functions.accumulator.AbstractVolumeAccumulator;
+import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.accumulator.AbstractVolumeAccumulator;
 
 /**
  * Listen on aggregation events

@@ -2,8 +2,8 @@ package bdv.jogl.VolumeRenderer;
 
 
 
-import bdv.jogl.VolumeRenderer.ShaderPrograms.MultiVolumeRenderer;
 import bdv.jogl.VolumeRenderer.gui.GLWindow.GLWindow;
+import bdv.jogl.VolumeRenderer.shaderprogram.MultiVolumeRenderer;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.ui.TransformListener;
 import static bdv.jogl.VolumeRenderer.utils.MatrixUtils.*;

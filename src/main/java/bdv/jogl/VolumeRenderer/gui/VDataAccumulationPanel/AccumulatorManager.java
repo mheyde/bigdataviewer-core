@@ -5,16 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.functions.accumulator.AbstractVolumeAccumulator;
-import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.functions.accumulator.AverageVolumeAccumulator;
-import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.functions.accumulator.MaxCurvatureDifferenceAccumulator;
-import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.functions.accumulator.MaxDifferenceAccumulator;
-import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.functions.accumulator.MaximumVolumeAccumulator;
-import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.functions.accumulator.MidmapMaxDifferenceAccumulator;
-import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.functions.accumulator.MinimumVolumeAccumulator;
-import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.functions.accumulator.SharpnessVolumeAccumulator;
-import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.functions.accumulator.ViewDirectionAccumulator;
+import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.accumulator.AbstractVolumeAccumulator;
+import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.accumulator.AverageVolumeAccumulator;
+import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.accumulator.MaxCurvatureDifferenceAccumulator;
+import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.accumulator.MaxDifferenceAccumulator;
+import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.accumulator.MaximumVolumeAccumulator;
+import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.accumulator.MidmapMaxDifferenceAccumulator;
+import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.accumulator.MinimumVolumeAccumulator;
+import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.accumulator.SharpnessVolumeAccumulator;
+import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.accumulator.ViewDirectionAccumulator;
 
 /**
  * Stores aggregators and calls listeners

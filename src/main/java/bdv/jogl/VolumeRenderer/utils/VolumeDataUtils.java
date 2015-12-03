@@ -13,8 +13,9 @@ import java.util.TreeMap;
 
 
 
+
 import bdv.BigDataViewer;
-import bdv.jogl.VolumeRenderer.Scene.Texture;
+import bdv.jogl.VolumeRenderer.scene.Texture;
 import bdv.viewer.state.SourceState;
 
 import com.jogamp.opengl.GL4;

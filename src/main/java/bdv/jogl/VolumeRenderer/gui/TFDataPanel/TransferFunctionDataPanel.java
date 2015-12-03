@@ -13,8 +13,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
-import bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunction1D;
-import bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunctionAdapter;
+import bdv.jogl.VolumeRenderer.transferfunction.TransferFunction1D;
+import bdv.jogl.VolumeRenderer.transferfunction.TransferFunctionAdapter;
 
 /**
  * Transferfunction data manipulation table view 

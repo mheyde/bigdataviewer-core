@@ -24,20 +24,20 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import bdv.jogl.VolumeRenderer.Scene.VolumeDataScene;
-import bdv.jogl.VolumeRenderer.ShaderPrograms.MultiVolumeRenderer;
-import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.functions.volumeninterpreter.IsoSurfaceVolumeInterpreter;
-import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.functions.volumeninterpreter.MaximumIntensityProjectionInterpreter;
-import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.functions.volumeninterpreter.TransparentVolumeinterpreter;
-import bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunction1D;
-import bdv.jogl.VolumeRenderer.TransferFunctions.sampler.PreIntegrationSampler;
-import bdv.jogl.VolumeRenderer.TransferFunctions.sampler.RegularSampler;
 import bdv.jogl.VolumeRenderer.gui.GLWindow.GLWindow;
 import bdv.jogl.VolumeRenderer.gui.TFDataPanel.TransferFunctionDataPanel;
 import bdv.jogl.VolumeRenderer.gui.TFDrawPanel.TransferFunctionDrawPanel;
 import bdv.jogl.VolumeRenderer.gui.TFDrawPanel.VolumeLegend;
 import bdv.jogl.VolumeRenderer.gui.VDataAccumulationPanel.AccumulatorManager;
 import bdv.jogl.VolumeRenderer.gui.VDataAccumulationPanel.VolumeDataAccumulatorPanel;
+import bdv.jogl.VolumeRenderer.scene.VolumeDataScene;
+import bdv.jogl.VolumeRenderer.shaderprogram.MultiVolumeRenderer;
+import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.volumeninterpreter.EmissionAbsorbationInterpreter;
+import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.volumeninterpreter.IsoSurfaceInterpreter;
+import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.volumeninterpreter.MaximumIntensityProjectionInterpreter;
+import bdv.jogl.VolumeRenderer.transferfunction.TransferFunction1D;
+import bdv.jogl.VolumeRenderer.transferfunction.sampler.PreIntegrationSampler;
+import bdv.jogl.VolumeRenderer.transferfunction.sampler.RegularSampler;
 import bdv.jogl.VolumeRenderer.utils.VolumeDataManager;
 import bdv.jogl.VolumeRenderer.utils.VolumeDataManagerAdapter;
 import static bdv.jogl.VolumeRenderer.utils.WindowUtils.aligneLeft;
@@ -432,11 +432,11 @@ public class SceneControlsWindow extends JFrame {
 	 */
 	private void changeVolumeInterpreter(){
 		if(isoRadioButton.isSelected()){
-			renderer.getSource().setVolumeInterpreter(new IsoSurfaceVolumeInterpreter());
+			renderer.getSource().setVolumeInterpreter(new IsoSurfaceInterpreter());
 		}
 
 		if(emissionsAbsorbationRadioButton.isSelected()){
-			renderer.getSource().setVolumeInterpreter(new TransparentVolumeinterpreter());
+			renderer.getSource().setVolumeInterpreter(new EmissionAbsorbationInterpreter());
 		}
 
 		if(maximumIntensityProjectionRadioButton.isSelected()){

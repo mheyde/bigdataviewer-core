@@ -2,8 +2,8 @@ package bdv.jogl.VolumeRenderer.gui;
 
 import java.awt.event.ActionEvent;
 
-import bdv.jogl.VolumeRenderer.Scene.InteractionAnimator;
 import bdv.jogl.VolumeRenderer.gui.GLWindow.GLWindow;
+import bdv.jogl.VolumeRenderer.scene.InteractionAnimator;
 import bdv.util.AbstractNamedAction;
 
 /**

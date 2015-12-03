@@ -18,8 +18,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunction1D;
 import bdv.jogl.VolumeRenderer.gui.TFDrawPanel.Axis.AxisType;
+import bdv.jogl.VolumeRenderer.transferfunction.TransferFunction1D;
 import bdv.jogl.VolumeRenderer.utils.VolumeDataManager;
 
 /**

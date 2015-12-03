@@ -6,7 +6,7 @@ import java.awt.geom.Point2D.Float;
 
 import org.junit.Test;
 
-import bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunction1D;
+import bdv.jogl.VolumeRenderer.transferfunction.TransferFunction1D;
 
 public class TransferFunction1DTest {
 

@@ -1,6 +1,6 @@
 package bdv.jogl.VolumeRenderer.gui.TFDrawPanel;
 
-import static bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunction1D.calculateTransferFunctionPoint;
+import static bdv.jogl.VolumeRenderer.transferfunction.TransferFunction1D.calculateTransferFunctionPoint;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -14,7 +14,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
-import bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunction1D;
+import bdv.jogl.VolumeRenderer.transferfunction.TransferFunction1D;
 
 /**
  * Container class for menu entries for manipulating transfer function points

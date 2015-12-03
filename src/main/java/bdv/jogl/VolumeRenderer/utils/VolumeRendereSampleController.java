@@ -2,8 +2,8 @@ package bdv.jogl.VolumeRenderer.utils;
 
 import javax.swing.JSpinner;
 
-import bdv.jogl.VolumeRenderer.ShaderPrograms.MultiVolumeRenderer;
 import bdv.jogl.VolumeRenderer.gui.GLWindow.GLWindow;
+import bdv.jogl.VolumeRenderer.shaderprogram.MultiVolumeRenderer;
 
 /**
  * Class for unified access to the up and downsampling functionality

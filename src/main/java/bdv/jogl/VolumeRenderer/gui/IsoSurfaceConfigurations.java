@@ -15,8 +15,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import bdv.jogl.VolumeRenderer.ShaderPrograms.MultiVolumeRenderer;
 import bdv.jogl.VolumeRenderer.gui.GLWindow.GLWindow;
+import bdv.jogl.VolumeRenderer.shaderprogram.MultiVolumeRenderer;
 
 /**
  * Configuration panel for the iso surface interpreter

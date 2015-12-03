@@ -9,7 +9,7 @@ import javax.swing.JFrame;
 
 import org.junit.Test;
 
-import bdv.jogl.VolumeRenderer.Camera;
+import bdv.jogl.VolumeRenderer.scene.Camera;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;

@@ -24,12 +24,12 @@ import com.jogamp.opengl.math.VectorUtil;
 import com.jogamp.opengl.math.geom.AABBox;
 
 import Jama.Matrix;
-import bdv.jogl.VolumeRenderer.Camera;
 import bdv.jogl.VolumeRenderer.FrameBufferRedirector;
 import bdv.jogl.VolumeRenderer.GLErrorHandler;
-import bdv.jogl.VolumeRenderer.Scene.SimpleScene;
-import bdv.jogl.VolumeRenderer.ShaderPrograms.MultiVolumeRenderer;
-import bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunction1D;
+import bdv.jogl.VolumeRenderer.scene.Camera;
+import bdv.jogl.VolumeRenderer.scene.SimpleScene;
+import bdv.jogl.VolumeRenderer.shaderprogram.MultiVolumeRenderer;
+import bdv.jogl.VolumeRenderer.transferfunction.TransferFunction1D;
 import bdv.jogl.VolumeRenderer.utils.VolumeDataBlock;
 import bdv.jogl.VolumeRenderer.utils.VolumeDataManager;
 import static bdv.jogl.VolumeRenderer.utils.MatrixUtils.*;

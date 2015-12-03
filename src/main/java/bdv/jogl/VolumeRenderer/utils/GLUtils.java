@@ -1,6 +1,6 @@
 package bdv.jogl.VolumeRenderer.utils;
 
-import bdv.jogl.VolumeRenderer.Scene.Texture;
+import bdv.jogl.VolumeRenderer.scene.Texture;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL4;

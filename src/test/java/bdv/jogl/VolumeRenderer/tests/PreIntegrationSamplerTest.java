@@ -21,10 +21,10 @@ import com.jogamp.opengl.math.Matrix4;
 
 import bdv.jogl.VolumeRenderer.FrameBufferRedirector;
 import bdv.jogl.VolumeRenderer.GLErrorHandler;
-import bdv.jogl.VolumeRenderer.Scene.SimpleScene;
-import bdv.jogl.VolumeRenderer.ShaderPrograms.MultiVolumeRenderer;
-import bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunction1D;
-import bdv.jogl.VolumeRenderer.TransferFunctions.sampler.PreIntegrationSampler;
+import bdv.jogl.VolumeRenderer.scene.SimpleScene;
+import bdv.jogl.VolumeRenderer.shaderprogram.MultiVolumeRenderer;
+import bdv.jogl.VolumeRenderer.transferfunction.TransferFunction1D;
+import bdv.jogl.VolumeRenderer.transferfunction.sampler.PreIntegrationSampler;
 import bdv.jogl.VolumeRenderer.utils.VolumeDataBlock;
 import bdv.jogl.VolumeRenderer.utils.VolumeDataManager;
 

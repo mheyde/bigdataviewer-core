@@ -12,11 +12,11 @@ import javax.swing.JFrame;
 import org.junit.Before;
 import org.junit.Test;
 
-import bdv.jogl.VolumeRenderer.Camera;
 import bdv.jogl.VolumeRenderer.FrameBufferRedirector;
 import bdv.jogl.VolumeRenderer.GLErrorHandler;
-import bdv.jogl.VolumeRenderer.Scene.AbstractScene;
-import bdv.jogl.VolumeRenderer.Scene.SimpleScene;
+import bdv.jogl.VolumeRenderer.scene.AbstractScene;
+import bdv.jogl.VolumeRenderer.scene.Camera;
+import bdv.jogl.VolumeRenderer.scene.SimpleScene;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL4;

@@ -17,7 +17,7 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 
-import bdv.jogl.VolumeRenderer.ShaderPrograms.ShaderSources.UnitCubeShaderSource;
+import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.UnitCubeShaderSource;
 
 public class UnitCubeShaderSourceTest {
 

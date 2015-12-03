@@ -13,13 +13,13 @@ import java.util.TreeMap;
 
 import javax.swing.JPanel;
 
-import bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunction1D;
-import bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunctionAdapter;
+import bdv.jogl.VolumeRenderer.transferfunction.TransferFunction1D;
+import bdv.jogl.VolumeRenderer.transferfunction.TransferFunctionAdapter;
 import bdv.jogl.VolumeRenderer.utils.IVolumeDataManagerListener;
 import bdv.jogl.VolumeRenderer.utils.VolumeDataBlock;
 import bdv.jogl.VolumeRenderer.utils.VolumeDataManager;
+import static bdv.jogl.VolumeRenderer.transferfunction.TransferFunction1D.calculateDrawPoint;
 import static bdv.jogl.VolumeRenderer.utils.WindowUtils.*;
-import static bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunction1D.calculateDrawPoint;
 import static bdv.jogl.VolumeRenderer.utils.VolumeDataUtils.getColorOfVolume;
 
 /**

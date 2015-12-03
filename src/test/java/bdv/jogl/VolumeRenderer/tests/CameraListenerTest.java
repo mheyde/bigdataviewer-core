@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import bdv.jogl.VolumeRenderer.Camera;
-import bdv.jogl.VolumeRenderer.CameraListener;
+import bdv.jogl.VolumeRenderer.scene.Camera;
+import bdv.jogl.VolumeRenderer.scene.CameraListener;
 
 import com.jogamp.opengl.math.Matrix4;
 

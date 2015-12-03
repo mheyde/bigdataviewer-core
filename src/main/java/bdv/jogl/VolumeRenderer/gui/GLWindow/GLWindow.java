@@ -11,9 +11,9 @@ import java.util.HashMap;
 
 import javax.swing.JFrame;
 
-import bdv.jogl.VolumeRenderer.Scene.AbstractScene;
-import bdv.jogl.VolumeRenderer.Scene.SceneEventListener;
-import bdv.jogl.VolumeRenderer.Scene.VolumeDataScene;
+import bdv.jogl.VolumeRenderer.scene.AbstractScene;
+import bdv.jogl.VolumeRenderer.scene.SceneEventListener;
+import bdv.jogl.VolumeRenderer.scene.VolumeDataScene;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL4;

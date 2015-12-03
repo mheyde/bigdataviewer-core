@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import static bdv.jogl.VolumeRenderer.utils.WindowUtils.transformWindowNormalSpace;
-import bdv.jogl.VolumeRenderer.Camera;
+import bdv.jogl.VolumeRenderer.scene.Camera;
 
 /**
  * Class for providing mouse camere interactions in gl scenes

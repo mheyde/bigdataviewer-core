@@ -10,9 +10,9 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 
-import bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunction1D;
+import bdv.jogl.VolumeRenderer.transferfunction.TransferFunction1D;
+import static bdv.jogl.VolumeRenderer.transferfunction.TransferFunction1D.calculateTransferFunctionPoint;
 import static bdv.jogl.VolumeRenderer.utils.WindowUtils.*;
-import static bdv.jogl.VolumeRenderer.TransferFunctions.TransferFunction1D.calculateTransferFunctionPoint;
 
 /**
  * Delivers drag point interactions and double click events on the transfer function panel
