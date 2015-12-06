@@ -231,6 +231,13 @@ public abstract class AbstractShaderSceneElement implements ISceneElements{
 		return shaderVariableMapping.get(variableName);
 	}
 
+	/**
+	 * Same as getLocation but for array entries
+	 * @param gl
+	 * @param variableName
+	 * @param index
+	 * @return
+	 */
 	public int getArrayEntryLocation(GL4 gl, final String variableName, int index){
 		return gl.glGetUniformLocation(shaderProgram.program(),variableName+"["+index+"]");
 	}

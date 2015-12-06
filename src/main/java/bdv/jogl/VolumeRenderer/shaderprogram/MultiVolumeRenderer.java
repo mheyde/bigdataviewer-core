@@ -93,7 +93,7 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 	private boolean isOpacity3DUpdateable = true;
 
 	private boolean isHullVolumeUpdateable = true;
-	
+
 	private boolean isVertBufferUpdateable = true;
 
 	private float opacity3D = 1.f;
@@ -105,7 +105,11 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 	private float[] slice2Dplane;
 
 	private ITransferFunctionSampler currentSampler;
-	
+
+	/**
+	 * set the new hull volume in global space
+	 * @param rect
+	 */
 	public void setDrawRect(AABBox rect){
 		drawCubeTransformation = getTransformationRepresentAABBox(rect);
 		drawRect  = rect;
@@ -138,7 +142,7 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		GLErrorHandler.assertGL(gl2);
 		updateOpacity3D(gl2);
 
-		boolean update = updateTextureData(gl2);
+		boolean update = updateVolumeStackData(gl2);
 
 		GLErrorHandler.assertGL(gl2);
 		if(update){
@@ -152,7 +156,7 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		GLErrorHandler.assertGL(gl2);
 		updateClippingPlanes(gl2);
 		updateMaxDiagonalLength(gl2);
-		updateColor(gl2);
+		updateTransferFunction(gl2);
 		GLErrorHandler.assertGL(gl2);
 		updateEye(gl2);
 		GLErrorHandler.assertGL(gl2);
@@ -168,6 +172,10 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 
 	}
 
+	/**
+	 * Uploads the iso surface lighte source color to the gpu
+	 * @param gl2
+	 */
 	private void updateLightColor(GL4 gl2) {
 		if(!isLightColorUpdateable){
 			return;
@@ -181,7 +189,7 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 	}
 
 	/**
-	 * Updates the opacity of the 3D volume for animations 
+	 * Updates the opacity of the 3D volume for animations to the gpu
 	 * @param gl2
 	 */
 	private void updateOpacity3D(GL4 gl2) {
@@ -192,6 +200,10 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		isOpacity3DUpdateable=false;
 	}
 
+	/**
+	 * Uploads a flag whether the gradient values of the data should be used for rendering   
+	 * @param gl2
+	 */
 	private void updateUseGradient(GL4 gl2) {
 		if(!isUseGradientUpdateable){
 			return;
@@ -199,6 +211,10 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		gl2.glUniform1i(getLocation(suvUseGradient), boolToInt(useGradient));
 	}
 
+	/**
+	 * Uploads the sample count for rendering
+	 * @param gl2
+	 */
 	private void updateSamples(GL4 gl2) {
 		if(!isSamplesUpdatable){
 			return;
@@ -208,6 +224,11 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		isSamplesUpdatable = false;
 	}
 
+	/**
+	 * Convertes a boolean to an int value for the shader
+	 * @param bool
+	 * @return
+	 */
 	private int boolToInt(boolean bool){
 		if(bool){
 			return 1;
@@ -216,6 +237,10 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		}
 	}
 
+	/**
+	 * Uploads a flag whether the big data viewer slice should be rendered in the 3D view 
+	 * @param gl2
+	 */
 	private void updateSliceShown(GL4 gl2) {
 		if(!isShownUpdatable){
 			return;
@@ -224,11 +249,14 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		gl2.glUniform1i(getLocation(suvShowSlice), boolToInt( this.showSlice));
 	}
 
+	/**
+	 * Calculates and uploads the bdv slice plane
+	 * @param gl2
+	 */
 	private void updateSlice(GL4 gl2) {
 		if(!isSliceUpdateable){
 			return;
 		}
-
 
 		slice2Dplane=calcSlicePlane();
 
@@ -289,6 +317,10 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		sources.setTransferFunctionCode(tf.getTransferFunctionShaderCode());
 	} 
 
+	/**
+	 * Sets and connects a new volume data manager
+	 * @param manager
+	 */
 	private void setVolumeDataManager(VolumeDataManager manager){
 		dataManager = manager;
 		this.dataManager.addVolumeDataManagerListener(new VolumeDataManagerAdapter() {
@@ -305,7 +337,11 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		});
 	}
 
-
+	/**
+	 * Constructor
+	 * @param tf
+	 * @param manager
+	 */
 	public MultiVolumeRenderer(TransferFunction1D tf, VolumeDataManager manager){
 		setVolumeDataManager(manager);
 		setTransferFunction(tf);
@@ -322,6 +358,10 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		});
 	}
 
+	/**
+	 * Calculates the eye position in global space 
+	 * @return
+	 */
 	private float[] calculateEyePosition(){
 		float eyePositionsObjectSpace[] = new float[3];
 
@@ -340,6 +380,10 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		return eyePositionsObjectSpace;
 	}
 
+	/**
+	 * Calculates and uploads the eye position in global space 
+	 * @param gl2
+	 */
 	private void updateEye(GL4 gl2){
 		if(!isEyeUpdateable ){
 			return;
@@ -355,6 +399,10 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		isEyeUpdateable = false;
 	}
 
+	/**
+	 * Updates the background color of the renderer
+	 * @param gl2
+	 */
 	private void updateBackgroundColor(GL4 gl2) {
 		if(!this.isBackgroundColorUpdateable){
 			return;
@@ -398,12 +446,14 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		gl2.glUniform1f(getLocation(suvTransferFuntionSize), length);
 		GLErrorHandler.assertGL(gl2);
 
-
-
 		islengthUpdatable = false;
 		isColorUpdateable = true;
 	}
 
+	/**
+	 * Uploads the active flags for the volume stacks
+	 * @param gl2
+	 */
 	private void updateActiveVolumes(GL4 gl2) {
 		IntBuffer activeBuffers = Buffers.newDirectIntBuffer(sources.getMaxNumberOfVolumes());
 		activeBuffers.rewind();
@@ -422,6 +472,10 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 				activeBuffers.capacity(),activeBuffers);
 	}
 
+	/**
+	 * Uploads the local inverses of the volume stacks 
+	 * @param gl2
+	 */
 	private void updateLocalTransformationInverse(GL4 gl2) {
 		int numberOfVolumes = dataManager.getVolumeKeys().size();
 		float localInverses[] = new float[16*numberOfVolumes];
@@ -491,6 +545,10 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		isClippingUpdatable = false;
 	}
 
+	/**
+	 * Uploads the unit cube to hull volume transformation
+	 * @param gl2
+	 */
 	private void updateGlobalScale(GL4 gl2) {
 
 		if(!isHullVolumeUpdateable){
@@ -500,6 +558,10 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		isHullVolumeUpdateable = false;
 	}
 
+	/**
+	 * uplaods the iso value for the surfaces
+	 * @param gl2
+	 */
 	private void updateIsoValue(GL4 gl2){
 		if(!isIsoSurfaceValueUpdatable){
 			return;
@@ -509,7 +571,12 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		isIsoSurfaceValueUpdatable = false;
 	}
 
-	private boolean updateTextureData(GL4 gl2){
+	/**
+	 * Upload the volume stack data
+	 * @param gl2
+	 * @return
+	 */
+	private boolean updateVolumeStackData(GL4 gl2){
 
 		float min = Float.MAX_VALUE;
 		boolean somethingUpdated = false;
@@ -518,7 +585,7 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 			VolumeDataBlock data = dataManager.getVolume(i);
 
 			min = Math.min(min, data.minValue);
-			
+
 
 			if(!data.needsUpdate()){
 				continue;
@@ -538,7 +605,7 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 					(int)data.memSize[1], 
 					(int)data.memSize[2]};
 			if(buffer.capacity()>0){
-			volumeTextureMap.get(i).update(gl2, 0, buffer, dim);
+				volumeTextureMap.get(i).update(gl2, 0, buffer, dim);
 			}
 			if(getArrayEntryLocation(gl2,suvVoxelOffsets,i)!=-1){
 				int off[] = new int[]{
@@ -597,7 +664,7 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		for(int i =0; i< sources.getMaxNumberOfVolumes(); i++){
 			location = getArrayEntryLocation(gl2, suvVolumeTexture, i);
 			Texture t = createVolumeTexture(gl2, location);
-				t.setTexParameteri(GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR_MIPMAP_LINEAR);
+			t.setTexParameteri(GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR_MIPMAP_LINEAR);
 			t.setShouldGenerateMidmaps(true);
 			volumeTextureMap.put(i, t);
 			GLErrorHandler.assertGL(gl2);
@@ -639,7 +706,11 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		isEyeUpdateable = true;
 	}
 
-	private void updateColor(GL4 gl2){
+	/**
+	 * Update the transfer function configuration
+	 * @param gl2
+	 */
+	private void updateTransferFunction(GL4 gl2){
 		if(!isColorUpdateable){
 			return;
 		}
@@ -648,7 +719,7 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		//FloatBuffer buffer = tf.getTexture(length/(float)samples); 
 
 		tf.getSampler().updateData(gl2,tf, length/(float)samples);
-		
+
 		//upload data
 
 		//gl2.glBindTexture(GL2.GL_TEXTURE_1D, 0);
@@ -712,7 +783,7 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 
 	@Override
 	protected void disposeSubClass(GL4 gl2) {
-	
+
 
 		currentSampler.dispose(gl2);
 		for(Texture texture: volumeTextureMap.values() ){
@@ -723,12 +794,20 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 		setAllUpdate(true);
 	}
 
+	/**
+	 * setter for iso value. triggers update on next rendering
+	 * @param floatValue
+	 */
 	public void setIsoSurface(float floatValue) {
 		this.isoSurfaceValue = floatValue;
 
 		isIsoSurfaceValueUpdatable = true;
 	}
 
+	/**
+	 * setter for showing slice. triggers update on next rendering
+	 * @param selected
+	 */
 	public void setSliceShown(boolean selected) {
 		this.showSlice = selected;
 
@@ -736,6 +815,10 @@ public class MultiVolumeRenderer extends AbstractShaderSceneElement{
 
 	}
 
+	/**
+	 * setter for sample count. triggers update on next rendering
+	 * @param intValue
+	 */
 	public void setSamples(int intValue) {
 		this.samples = intValue;
 

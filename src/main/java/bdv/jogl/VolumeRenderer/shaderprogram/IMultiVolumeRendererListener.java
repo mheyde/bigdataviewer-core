@@ -10,5 +10,9 @@ import com.jogamp.opengl.math.geom.AABBox;
  */
 public interface IMultiVolumeRendererListener extends EventListener {
 
+	/**
+	 * Called when the hull volume changed
+	 * @param drawRect
+	 */
 	public void drawRectChanged(AABBox drawRect);
 }
