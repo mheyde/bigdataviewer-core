@@ -13,6 +13,10 @@ public class VertexBuffer {
 
 	private int vbo; 
 	
+	/**
+	 * Generates the opengl buffer object
+	 * @param gl2
+	 */
 	private void generateBuffer(GL4 gl2){
 		//vertex buffer
 		int[] vertexBufferObject = new int[1];
@@ -20,6 +24,10 @@ public class VertexBuffer {
 		vbo =  vertexBufferObject[0];
 	}
 	
+	/**
+	 * Constructor
+	 * @param gl2
+	 */
 	public VertexBuffer(GL4 gl2){
 		generateBuffer(gl2);
 	}
@@ -42,6 +50,13 @@ public class VertexBuffer {
 		//System.out.println("allocated "+ sizeInBytes);
 	}
 	
+	/**
+	 * Copies data for the buffer object to the gpu after the storage was allocated
+	 * @param gl2
+	 * @param data
+	 * @param elementSize
+	 * @param offset
+	 */
 	public void memcopyData(GL4 gl2, final Buffer data, int elementSize, int offset){
 		bind(gl2);
 		gl2.glBufferSubData(
@@ -70,9 +85,12 @@ public class VertexBuffer {
 		gl2.glBindBuffer(GL4.GL_ARRAY_BUFFER, 0);
 	}
 	
+	/**
+	 * Deletes the opengl buffer object 
+	 * @param gl2
+	 */
 	public void delete(GL4 gl2){
 		int[] buffers = {vbo};
 		gl2.glDeleteBuffers(1, buffers,0);
 	}
-
 }

@@ -26,6 +26,10 @@ public class VertexAttribute {
 	
 	private final int dataTypeSize;
 	
+	/**
+	 * generates the opengl attribute array object 
+	 * @param gl2
+	 */
 	private void generateAttributeArray(GL4 gl2){
 	
 		//gen vertex array
@@ -34,6 +38,10 @@ public class VertexAttribute {
 		vao = vertexArrays[0];
 	}
 	
+	/**
+	 * Generate the buffer pointer
+	 * @param gl2
+	 */
 	private void generatePointer(GL4 gl2){
 
 		associatedVertexBuffer.bind(gl2);
@@ -54,6 +62,15 @@ public class VertexAttribute {
 		
 		associatedVertexBuffer.unbind(gl2);
 	}	
+	
+	/**
+	 * Constructor
+	 * @param gl2
+	 * @param location
+	 * @param glDataType
+	 * @param elementsPerVertex
+	 * @param dataTypeSize
+	 */
 	public VertexAttribute(GL4 gl2,
 			int location, 
 			int glDataType, 
@@ -75,7 +92,11 @@ public class VertexAttribute {
 		generatePointer(gl2);	
 	}
 	
-	
+	/**
+	 * Allocate the buffer for the attribute
+	 * @param gl2
+	 * @param numberOfElements
+	 */
 	public void allocateAttributes(GL4 gl2,int numberOfElements){
 		
 		bind(gl2);
@@ -85,6 +106,11 @@ public class VertexAttribute {
 		unbind(gl2);
 	}
 	
+	/**
+	 * Copies the data array to the gpu
+	 * @param gl2
+	 * @param data
+	 */
 	public void setAttributeValues(GL4 gl2, final Buffer data){
 		
 		bind(gl2);
@@ -98,21 +124,37 @@ public class VertexAttribute {
 		unbind(gl2);
 	}
 	
+	/**
+	 * get the buffer object used
+	 * @return
+	 */
 	public VertexBuffer getVBO(){
 		return associatedVertexBuffer;
 	}
 	
+	/**
+	 * activates the attribute
+	 * @param gl2
+	 */
 	public void bind(GL4 gl2){
 		//bind
 		gl2.glBindVertexArray(vao);
 		
 	}
 	
+	/**
+	 * unbinds the attribute
+	 * @param gl2
+	 */
 	public void unbind(GL4 gl2){
 		//unbind
 		gl2.glBindVertexArray(0);
 	}
 
+	/**
+	 * delete the attribute array
+	 * @param gl2
+	 */
 	public void delete(GL4 gl2){
 		associatedVertexBuffer.delete(gl2);
 		int[] arrays = {vao};
