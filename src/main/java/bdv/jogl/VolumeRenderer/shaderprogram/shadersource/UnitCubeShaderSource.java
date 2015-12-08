@@ -8,9 +8,12 @@ import java.util.Set;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 
+/**
+ * Stores shader code string for cubes 
+ * @author michael
+ *
+ */
 public class UnitCubeShaderSource extends AbstractShaderSource {
-
-	private static final String svFragmentColor = "fragmentColor";
 	
 	public static final String suvColor = "inColor";
 	
@@ -22,6 +25,10 @@ public class UnitCubeShaderSource extends AbstractShaderSource {
 		return codes;
 	}
 
+	/**
+	 * Creates fragment shader code string
+	 * @return
+	 */
 	private String[] vertexShaderCode(){
 		String[] code={
 				"#version "+getShaderLanguageVersion(),
@@ -29,32 +36,35 @@ public class UnitCubeShaderSource extends AbstractShaderSource {
 				"uniform mat4x4 "+suvProjectionMatrix+";",
 				"uniform mat4x4 "+suvViewMatrix+";",
 				"uniform mat4x4 "+suvModelMatrix+";",
-				"uniform vec4 "+suvColor+";",
 				"",
 				"in vec3 "+satPosition+";",
-				"out vec4 "+svFragmentColor+";",
 				"",
 				"void main()",
 				"{",
 				"	vec4 position4d = vec4("+satPosition+".xyz,1.f);",
 				"",
+				"	//model view transformation",
 				"	gl_Position ="+suvProjectionMatrix+" * "+suvViewMatrix+" * "+suvModelMatrix+" * position4d;",
-				"	"+svFragmentColor+" = "+suvColor+";",
 				"}"
 		};
 		appendNewLines(code);
 		return code;
 	}
-	
+
+	/**
+	 * Creates vertex shader code string
+	 * @return
+	 */
 	private String[] fragmentShaderCode(){
 		String[] code={
 				"#version "+getShaderLanguageVersion(),
-				"in vec4 "+svFragmentColor+";",
+				"uniform vec4 "+suvColor+";",
 				"out vec4 color;",
 				"",
+				"//pipe through fragment shader",
 				"void main(void)",
 				"{",	
-				"	color = "+svFragmentColor+";",
+				"	color = "+suvColor+";",
 				"}"
 		};
 		appendNewLines(code);

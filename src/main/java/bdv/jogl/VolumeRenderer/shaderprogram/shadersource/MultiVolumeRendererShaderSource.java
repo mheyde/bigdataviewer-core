@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import static bdv.jogl.VolumeRenderer.utils.ShaderSourceUtil.*;
-import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.GetMaxStepsFunction;
-import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.GetStepsToVolumeFunction;
+//import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.GetMaxStepsFunction;
+//import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.GetStepsToVolumeFunction;
 import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.IFunction;
 import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.VolumeGradientEvaluationFunction;
 import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.accumulator.AbstractVolumeAccumulator;
@@ -27,18 +27,18 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 
 	private int maxNumberOfVolumes = 2;
 
-	private final GetMaxStepsFunction stepsFunction = new GetMaxStepsFunction(); 
+	//private final GetMaxStepsFunction stepsFunction = new GetMaxStepsFunction(); 
 
-	private final GetStepsToVolumeFunction stepsToVolume = new GetStepsToVolumeFunction();
-	
+	//private final GetStepsToVolumeFunction stepsToVolume = new GetStepsToVolumeFunction();
+
 	private IFunction transferFunctionCode;
 
 	private AbstractVolumeAccumulator accumulator = new AverageVolumeAccumulator();
-	
+
 	private AbstractVolumeInterpreter interpreter; 
 
 	private VolumeGradientEvaluationFunction gradient = new VolumeGradientEvaluationFunction();
-	
+
 	private static final String svRayStartCoordinate = "textureCoordinate";
 
 	//Vertex shader uniforms
@@ -48,7 +48,7 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 
 	//Fragment shader uniforms 
 	public static final String suvIsoValue = "inIsoValue";
-	
+
 	public static final String suvActiveVolumes = "inActiveVolumes";
 
 	public static final String suvVolumeTexture = "inVolumeTexture";
@@ -62,50 +62,53 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 	public static final String suvMaxVolumeValue = "inMaxVolumeValue";
 
 	public static final String scvMaxNumberOfVolumes = "maxNumberOfVolumes";
-	
+
 	public static final String sgvNormIsoValue = "normIsoValue";
-	
+
 	public static final String scvMinDelta = "minDelta";
-	
+
 	public static final String sgvRayPositions = "ray_poss";
-	
+
 	public static final String sgvRayDirections = "ray_dirs";
-	
+
 	public static final String sgvVolumeNormalizeFactor = "volumeNormalizeFactor";
-	
+
 	public static final String suvBackgroundColor = "inBackgroundColorFragmentShader";
-	
+
 	public static final String suvLightIntensiy = "iniIn";
-	
+
 	public static final String suvNormalSlice = "inZeroSliceNormal";
-	
+
 	public static final String suvShowSlice = "inShowSlice";
-	
+
 	public static final String suvVoxelCount = "inVoxelCount";
-	
+
 	public static final String suvSamples = "inSamples";
-	
+
 	public static final String sgvTexTOffsets = "vtextOffsets";
-	
+
 	public static final String sgvTexTScales = "vtextScales";
-	
+
 	public static final String suvUseGradient = "inUseGradient";
-	
+
 	public static final String suvRenderRectClippingPlanes = "inRectClippingPlanes";
-	 
+
 	public static final String suvRenderRectStepSize = "inRectStepSize";
-	
+
 	public static final String suvTransferFuntionSize = "inTransferFunctionSize";
-	
+
 	public static final String suvOpacity3D = "inOpacity3D"; 
-	
+
 	public static final String suvVoxelOffsets = "inVoxelOffsets";
-	
+
+	/**
+	 * constructor
+	 */
 	public MultiVolumeRendererShaderSource(){
 		setVolumeInterpreter(  new EmissionAbsorbationInterpreter());
 		setShaderLanguageVersion(330);
 	}
-	
+
 	/**
 	 * @return the maxNumberOfVolumes
 	 */
@@ -145,7 +148,10 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 		notifySourceCodeChanged();
 	}
 
-
+	/**
+	 * creates vertex shader code string
+	 * @return
+	 */
 	private String[] vertexShaderCode() {
 		String[] shaderCode ={
 				"#version "+getShaderLanguageVersion(),
@@ -167,9 +173,13 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 				"",
 				"	vec4 position4d = vec4("+satPosition+".xyz,1.f);",
 				"",
+				"	//global hull volume coordiante",
 				"	vec4 positionInGlobalSpace = "+suvDrawCubeTransformation+" * position4d;",
 				"",
+				"	//geometry coordinate",
 				"	gl_Position ="+suvProjectionMatrix+" * "+suvViewMatrix+"  * positionInGlobalSpace;",
+				"",
+				"	//set ray start coordinate for later rasterization",
 				"	"+svRayStartCoordinate+"= positionInGlobalSpace.xyz /max(positionInGlobalSpace.w,"+scvMinDelta+");",
 				"}",
 
@@ -183,7 +193,7 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 		String[] head = {
 				"#version "+getShaderLanguageVersion(),
 				"#line "+Thread.currentThread().getStackTrace()[1].getLineNumber() +" 0",
-	 
+
 				"const int "+scvMaxNumberOfVolumes+" = "+maxNumberOfVolumes+";",
 				"const int maxInt = "+Integer.MAX_VALUE+";",
 				"const float gamma = 20.0;",
@@ -217,28 +227,32 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 				"vec3 vtextOffsets["+scvMaxNumberOfVolumes+"]; ",
 				"vec3 vtextScales["+scvMaxNumberOfVolumes+"]; ",
 				"",
+				"//retruns the corrected texture coordinate for surpressing texture border missselection",
 				"vec3 correctTexturePositions(vec3 positionOnRay, vec3 offset, vec3 scale){",
 				"	return positionOnRay * scale + offset;",
 				"}",
 				"",
+				"//transforms a global space coordinate to a local volume coordinate",
 				"vec3 getCoordinateInVolumeSpace(vec3 positionOnRay, int volumeNumber){",
 				"	vec4 transformedPosition ="+suvTextureTransformationInverse+"[volumeNumber]*vec4(positionOnRay.xyz,1.0); ",
 				"	transformedPosition /= max(transformedPosition.w,"+scvMinDelta+");",
 				"	return transformedPosition.xyz;",
 				"}",
 				"",
+				"//calculates the corrected texture coordinate from a partial volume for a given globale coordinate",
 				"vec3 getCorrectedTexturePositions(vec3 positionOnRay, int volumeNumber){",
 				"	vec3 transformedPosition =getCoordinateInVolumeSpace(positionOnRay,volumeNumber)-"+suvVoxelOffsets+"[volumeNumber]; ",
 				"	return correctTexturePositions(transformedPosition,vtextOffsets[volumeNumber],vtextScales[volumeNumber]);",
 				"}",
 				"",
-				"",
+				"//calculates the distance between a point and a plane in hessian normal form",
 				"float getPlaneDistance(vec4 plane, vec3 position){",
 				"	float distance = -plane.a;",
 				"	distance += dot(plane.xyz,position);",
 				"	return distance;",
 				"}",
 				"",
+				"//returns the maximal possible steps in the hull volume",
 				"int getStepsTillClipp(){",
 				"	int steps = "+suvSamples+";",
 				"	//render cube clipping plane",
@@ -265,6 +279,8 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 
 		String[] dependingFunctions ={
 				"#line "+Thread.currentThread().getStackTrace()[1].getLineNumber() + " 1",
+				"",
+				"//collects the volume values of a given position for each partial volume",
 				"float["+scvMaxNumberOfVolumes+"] getVolumeValues(vec3 positions ){",
 				"	float volumeValues["+scvMaxNumberOfVolumes+"];",
 				"	for(int i = 0; i < "+scvMaxNumberOfVolumes+"; i++){",
@@ -283,17 +299,21 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 				"	return volumeValues;",
 				"}",
 				"",
+				"//collects the accumulated volume value and normalizes them to [0,1] for accessing the texture",
 				"float getNormalizedAndAggregatedVolumeValue(vec3 positionOnRay){",
 				"	float densities["+scvMaxNumberOfVolumes+"] = getVolumeValues(positionOnRay);",
 				"	return "+accumulator.call(new String[]{"densities"})+" * "+sgvVolumeNormalizeFactor+";",		
 				"}",
 				"",
+				"//pre declaration for using this function in the iso surface interpreter",
 				"float getValue(vec3 positionOnRay);",
-				
-				};
-				
-			String body[] = {	
+
+		};
+
+		String body[] = {	
 				"#line "+Thread.currentThread().getStackTrace()[1].getLineNumber() + " 1111",
+				"",
+				"//returns the aggregated volume or volume gradient value",
 				"float getValue(vec3 positionOnRay){",
 				"	if("+suvUseGradient+"== 0){",
 				"		return getNormalizedAndAggregatedVolumeValue(positionOnRay );",
@@ -305,6 +325,8 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 				"int renderedSlice =0;",
 				"float latestdDistanceToSlice;",
 				"bool sliceNeedsGammaCorrection = (1.0/max("+scvMinDelta+",("+suvMaxVolumeValue+")*"+suvMinVolumeValue+") < 0.05);",
+				"",
+				"//evaluates and renders the current bdv slice",
 				"void evaluate2DSlice(float density, float nextDensity){",
 				"	if("+suvShowSlice+" == 1 && renderedSlice != 1){",
 				"		vec4 sliceColor= vec4(0.0);  ",
@@ -332,19 +354,21 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 				"	}",	
 				"}",
 				"",
+				"//main fragment shader",
 				"void main(void)",
 				"{",	
 				"",	
 				"	fragmentColor = vec4("+suvBackgroundColor+".xyz,0.0);",
 				"	"+sgvVolumeNormalizeFactor+" = 1.0/ ("+suvMaxVolumeValue+");",
 				"	"+sgvNormIsoValue+"="+suvIsoValue+"*"+sgvVolumeNormalizeFactor+";",
-				"	//get rays of volumes",
 				"	int steps = "+Short.MAX_VALUE+";",
 				"	int startStep = "+Short.MAX_VALUE+";",	
 				"",
-				"	//init positions, directions ,etc",
+				"	//init position, direction ,etc",
 				"	"+sgvRayDirections+" = normalize("+svRayStartCoordinate+" - "+suvEyePosition+" );",
-				"	"+sgvRayPositions+" = "+svRayStartCoordinate+";",	
+				"	"+sgvRayPositions+" = "+svRayStartCoordinate+";",
+				"",
+				"	//calculate volume texture normalization data and surpress unrolling tor fit on gpu memory",	
 				"#pragma optionNV(unroll none)",
 				"	for(int n = 0; n < "+scvMaxNumberOfVolumes+"; n++){",
 				"		vec3 tmp = "+suvVoxelCount+"[n];",
@@ -352,6 +376,8 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 				"	    vtextScales[n] = (vec3("+suvVoxelCount+"[n]-ivec3(1)))/max((vec3("+suvVoxelCount+"[n])*vec3("+suvVoxelCount+"[n]-ivec3(1))),vec3(1.0));",
 				"",   
 				"	}",
+				"",
+				"	//update steps",
 				"	steps = min(steps,getStepsTillClipp());",
 				"   steps = min(steps, "+suvSamples+");",
 				"	startStep = max(startStep,steps-1);",	
@@ -378,7 +404,7 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 				"		//render slice",
 				"		evaluate2DSlice(density,nextDensity);",	
 				"",
-				"",
+				"		//early ray termination",
 				"		if(fragmentColor.a +"+scvMinDelta+" >= 1.0){",
 				"			fragmentColor.a = 1.0;",
 				"			break;",
@@ -389,21 +415,36 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 				"			fragmentColor *= "+suvOpacity3D+";",
 				"		}",
 				"",
-
+				"		//increment ray",
 				"		"+sgvRayPositions+" += "+sgvRayDirections+" * "+suvRenderRectStepSize+";",
+				"",
+				"		//save density value",
 				"		density = nextDensity;",
 				"   }",
 				"}"
 		};
+		//append shader strings
+		//global declarations
 		addCodeArrayToList(head, code);
+		//addCodeArrayToList(stepsToVolume.declaration(), code);
+		//addCodeArrayToList(stepsFunction.declaration(), code);
 
-		addCodeArrayToList(stepsToVolume.declaration(), code);
-		addCodeArrayToList(stepsFunction.declaration(), code);
+		//add acumulator code
 		addCodeArrayToList(accumulator.declaration(), code);
+
+		//transfer function interpreter
 		addCodeArrayToList(transferFunctionCode.declaration(), code);
+
+		//function using former declared functions
 		addCodeArrayToList(dependingFunctions, code);
+
+		//gradient evaluator
 		addCodeArrayToList(gradient.declaration(), code);
+
+		//visualization mode
 		addCodeArrayToList(interpreter.declaration(), code);
+
+		//main method
 		addCodeArrayToList(body, code);
 		String[] codeArray = new String[code.size()];
 		code.toArray(codeArray);
@@ -411,7 +452,10 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 		return codeArray;
 	}
 
-
+	/**
+	 * set new accumulator code and trigger rebuild
+	 * @param a1
+	 */
 	public void setAccumulator(AbstractVolumeAccumulator a1) {
 		if(a1.equals(this.accumulator)){
 			return;
@@ -421,12 +465,14 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 		notifySourceCodeChanged();
 	}
 
-
+	/**
+	 * set new volume interpreter code and trigger rebuild
+	 * @param a1
+	 */
 	public void setVolumeInterpreter(AbstractVolumeInterpreter volumeInterpreter) {
 		this.interpreter = volumeInterpreter;
 		this.interpreter.setAccumulator(accumulator);
 		notifySourceCodeChanged();
-		
-	}
 
+	}
 }
