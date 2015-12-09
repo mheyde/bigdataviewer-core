@@ -9,14 +9,16 @@ public abstract class AbstractShaderFunction implements IFunction {
 
 	private final String functionName;
 
-	
+	/**
+	 * constructor
+	 * @param functionName the function name to use in the definition
+	 */
 	protected AbstractShaderFunction(String functionName){
 		this.functionName = functionName; 
 	}
 
 	/**
-	 * Returns the name of the shader function
-	 * @return
+	 * @return the name of the shader function
 	 */
 	public String getFunctionName() {
 		return functionName;

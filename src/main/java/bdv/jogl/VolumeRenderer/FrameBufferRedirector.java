@@ -27,6 +27,10 @@ public class FrameBufferRedirector {
 	
 	private Colorbuffer buffer;
 	
+	/**
+	 * initializes the gl bindings
+	 * @param gl2 the gl context to use
+	 */
 	private void initFrameBufferObject(GL4 gl2){	
 		buffer = FBObject.createColorTextureAttachment(gl2, true, width, height);
 		buffer.initialize(gl2);
@@ -36,7 +40,10 @@ public class FrameBufferRedirector {
 		internalFrameBuffer.bind(gl2);
 	
 	}
-	
+	/**
+	 * deletes the gl bindings 
+	 * @param gl2 the gl context to use
+	 */
 	private void disposeFrameBufferObject(GL4 gl2){
 		internalFrameBuffer.destroy(gl2);
 	}
@@ -59,7 +66,7 @@ public class FrameBufferRedirector {
 	
 	/**
 	 * init wrapper
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	public void init(GL4 gl2){
 		initFrameBufferObject(gl2);
@@ -68,7 +75,7 @@ public class FrameBufferRedirector {
 	
 	/**
 	 * render wrapper
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	public void render(GL4 gl2){
 		internalFrameBuffer.bind(gl2);
@@ -78,7 +85,7 @@ public class FrameBufferRedirector {
 	
 	/**
 	 * dispose wrapper
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	public void disposeGL(GL4 gl2){
 		scene.dispose(gl2);
@@ -87,8 +94,9 @@ public class FrameBufferRedirector {
 	}
 	
 	/**
-	 * returns the current content of the framebuffer as a matrix. x,y rgba
-	 * @return
+	 * returns the current content of the frame buffer as a matrix. x,y rgba
+	 * @param gl2 the gl context to use
+	 * @return the 2D rgba image of the rendered scene. first is x , then y, then rgba dimension
 	 */
 	public float[][][] getFrameBufferContent(GL4 gl2){
 		internalFrameBuffer.bind(gl2);

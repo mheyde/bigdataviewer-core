@@ -29,7 +29,9 @@ public class TransferFunction1D {
 	//max text size so scaling is needed for the transfer function data 
 	private final int maxFunctionPointSamples =2048 -1;
 
-	//order points first by x then by y
+	/**
+	 * order points first by x then by y
+	 */
 	private final Comparator<Point2D.Float> pointOrderXOperator = new Comparator<Point2D.Float>() {
 
 		@Override
@@ -52,8 +54,8 @@ public class TransferFunction1D {
 
 	/**
 	 * Checks if a certain point is within the min and max coordinates of the transfer function
-	 * @param point
-	 * @return
+	 * @param point the point to check
+	 * @return true if the point is valid
 	 */
 	private boolean isPointValid(Point2D.Float point){
 		//min
@@ -73,7 +75,7 @@ public class TransferFunction1D {
 	 */
 	private void fireSamplerChangedEventAll(){
 		for(TransferFunctionListener listener: transferFunctionListeners){
-			listener.samplerChanged(this);
+			listener.classifierChanged(this);
 		}
 	}
 
@@ -101,10 +103,10 @@ public class TransferFunction1D {
 
 	/**
 	 * Initializes the transfer function with standard parameters
-	 * @param maxOrdinates
+	 * @param maxCoordinates  the highest valid coordinate 
 	 */
-	private void init( Point2D.Float maxOrdinates){
-		this.maxCoordinates = maxOrdinates;
+	private void init( Point2D.Float maxCoordinates){
+		this.maxCoordinates = maxCoordinates;
 
 		resetColors();
 		setSampler( new PreIntegrationSampler());
@@ -112,8 +114,8 @@ public class TransferFunction1D {
 
 	/**
 	 * Constructor
-	 * @param maxVolume
-	 * @param maxTau
+	 * @param maxVolume the highest volume value
+	 * @param maxTau the highest absorbation value
 	 */
 	public TransferFunction1D(float maxVolume,  float maxTau) {
 		Double maxV = Math.ceil(maxVolume);
@@ -130,16 +132,16 @@ public class TransferFunction1D {
 
 	/**
 	 * removes a color point if it is contained and not the first or last point.
-	 * @param pos
+	 * @param point the point to remove
 	 */
-	public void removeColor(Point2D.Float pos){
-		if(!colors.containsKey(pos)){
+	public void removeControlPoint(Point2D.Float point){
+		if(!colors.containsKey(point)){
 			return;
 		}
-		if(pos.equals(colors.firstKey()) || pos.equals(colors.lastKey())){
+		if(point.equals(colors.firstKey()) || point.equals(colors.lastKey())){
 			return;
 		}
-		colors.remove(pos);
+		colors.remove(point);
 	}
 
 	/**
@@ -166,7 +168,7 @@ public class TransferFunction1D {
 
 	/**
 	 * Adds a listener to the transfer function panel
-	 * @param listener
+	 * @param listener the lsitener to add
 	 */
 	public void addTransferFunctionListener(final TransferFunctionListener listener){
 		transferFunctionListeners.add(listener);
@@ -198,7 +200,8 @@ public class TransferFunction1D {
 	}
 
 	/**
-	 * rescales the transfer function from 0 to max ordinate in each dim 
+	 * re-scales the transfer function from 0 to max coordinate in each dim 
+	 * @param oldMax the old maximum coordinate
 	 */
 	private void rescale(Point2D.Float oldMax){
 		float [] scaleFactors = {(float)maxCoordinates.x/(float)oldMax.x, 
@@ -218,8 +221,8 @@ public class TransferFunction1D {
 
 	/**
 	 * Interpolates the color value of a x component of a certain transfer function point 
-	 * @param index
-	 * @return
+	 * @param index the control point
+	 * @return the color
 	 */
 	private Color getColorComponent(Point2D.Float index){
 		float [] result = {0,0,0};
@@ -255,8 +258,8 @@ public class TransferFunction1D {
 
 	/**
 	 * Calculates the normalized alpha value in case the transfer function uses unnormalized ones.
-	 * @param unNormalizedValue
-	 * @return
+	 * @param unNormalizedValue the value
+	 * @return the normalized value
 	 */
 	private float getNormalizedAlphaValue(float unNormalizedValue){
 		float normFactor = 1f/ (float)getMaxOrdinates().y;
@@ -269,8 +272,8 @@ public class TransferFunction1D {
 
 	/**
 	 * Interpolates the alpha value of a x component of a certain transfer function point .
-	 * @param index
-	 * @return
+	 * @param index the point
+	 * @return the interpolated alpha value
 	 */
 	private float getAlpha (Point2D.Float index){
 		//get alpha
@@ -293,8 +296,8 @@ public class TransferFunction1D {
 
 	/**
 	 * Samples the color of a x component of a certain transfer function point .
-	 * @param index
-	 * @return
+	 * @param index the point 
+	 * @return the rgb color components
 	 */
 	private float[] getColorForXSampleTransferSpace(Point2D.Float index){
 
@@ -309,6 +312,7 @@ public class TransferFunction1D {
 
 	/**
 	 * Create a discrete transfer function by sampling 
+	 * @return the sample-index color mapping
 	 */
 	public final TreeMap<Integer, Color> sampleColors() {		
 		TreeMap<Integer, Color> returnColors = new TreeMap<Integer, Color>();
@@ -360,8 +364,8 @@ public class TransferFunction1D {
 
 	/**
 	 * updates a color point
-	 * @param oldPoint
-	 * @param newPoint
+	 * @param oldPoint the current point
+	 * @param newPoint the new point
 	 */
 	public void moveColor(Point2D.Float oldPoint, Point2D.Float newPoint) {
 
@@ -384,8 +388,8 @@ public class TransferFunction1D {
 	}
 
 	/**
-	 * Get the transfer function shader code, defined by the current sampler
-	 * @return
+	 * Get the transfer function shader code, defined by the current classifier
+	 * @return the classification shader code
 	 */
 	public IFunction getTransferFunctionShaderCode(){
 		return sampler.getShaderCode();
@@ -408,10 +412,10 @@ public class TransferFunction1D {
 
 	/**
 	 * Calculates the draw point of a transfer function  coordinate in window space
-	 * @param transferFunctionPoint
-	 * @param transferFunction
-	 * @param drawAreaSize
-	 * @return
+	 * @param transferFunctionPoint the point in transfer function space
+	 * @param transferFunction the transfer function
+	 * @param drawAreaSize the paint area size
+	 * @return the paint area point
 	 */
 	public static Point calculateDrawPoint(Point2D.Float transferFunctionPoint, 
 			TransferFunction1D transferFunction,
@@ -425,10 +429,10 @@ public class TransferFunction1D {
 
 	/**
 	 * Calculates the transfer function point from a given window space point 
-	 * @param windowSpacePoint
-	 * @param transferFunction
-	 * @param drawAreaSize
-	 * @return
+	 * @param windowSpacePoint the paint area point
+	 * @param transferFunction the transfer function
+	 * @param drawAreaSize the paint area size
+	 * @return the point in transfer function space
 	 */
 	public static Point2D.Float calculateTransferFunctionPoint(Point windowSpacePoint, 
 			TransferFunction1D transferFunction,
@@ -442,9 +446,9 @@ public class TransferFunction1D {
 
 	/**
 	 * Finds the nearest transfer function point for a given point in a given distance
-	 * @param p
-	 * @param maxDist
-	 * @return
+	 * @param p the query point
+	 * @param maxDist the maximal queried distance
+	 * @return the nearest point
 	 */
 	public Point2D.Float getNearestValidPoint(final Point2D.Float p, float maxDist){
 		Point2D.Float query = null;
@@ -477,8 +481,8 @@ public class TransferFunction1D {
 
 	/**
 	 * Transforms a transfer function point to a a volume data value by scaling, since there are only maxFunctionPointSamples spaces for textures
-	 * @param tfVolumeValue
-	 * @return
+	 * @param tfVolumeValue the transfer function value
+	 * @return the corresponding volume value
 	 */
 	public float getDataVolumeValue(float tfVolumeValue){
 		return (maxVolumeValue/maxCoordinates.x)*tfVolumeValue;
@@ -486,8 +490,8 @@ public class TransferFunction1D {
 	
 	/**
 	 * Transforms a volume data to the transfer function space by scaling, since there are only maxFunctionPointSamples spaces for textures
-	 * @param dataVolumeValue
-	 * @return
+	 * @param dataVolumeValue the volume value
+	 * @return the corresponding transfer function value
 	 */
 	public float getTransferFunctionVolumeValue(float dataVolumeValue){
 		return (maxCoordinates.x/maxVolumeValue)*dataVolumeValue;

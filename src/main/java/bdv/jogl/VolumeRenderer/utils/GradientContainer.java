@@ -6,6 +6,14 @@ package bdv.jogl.VolumeRenderer.utils;
  *
  */
 public class GradientContainer {
+	
+	/**
+	 * gradient vectors for each voxel
+	 */
 	public float[][] valueMesh3d;
+	
+	/**
+	 * dimension of the gradient mesh
+	 */
 	public int dimension[]; 
 }

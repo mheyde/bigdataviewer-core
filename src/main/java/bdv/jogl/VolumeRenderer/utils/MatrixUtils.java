@@ -18,8 +18,8 @@ import com.jogamp.opengl.math.geom.AABBox;
 public class MatrixUtils {
 
 	/**
-	 * Returns a new matrix instance intialized with the identity
-	 * @return
+	 * Returns a new matrix instance initialized with the identity
+	 * @return the identity matrix
 	 */
 	public static Matrix4 getNewIdentityMatrix(){
 		Matrix4 matrix = new Matrix4();
@@ -29,8 +29,8 @@ public class MatrixUtils {
 	
 	/**
 	 * converts a AffineTransform3D matrix to a matrix 4 in opengl format
-	 * @param viewerTransform
-	 * @return
+	 * @param viewerTransform the matrix to convert
+	 * @return the converted matrix
 	 */
 	public static Matrix4 convertToJoglTransform(final AffineTransform3D viewerTransform) {
 		Matrix4 matrix = getNewIdentityMatrix();
@@ -50,8 +50,8 @@ public class MatrixUtils {
 	
 	/**
 	 * Create a new instance as copy of a given matrix
-	 * @param matrixToCopy
-	 * @return
+	 * @param matrixToCopy the matrix to copy
+	 * @return the copied matrix
 	 */
 	public static Matrix4 copyMatrix(final Matrix4 matrixToCopy){
 		Matrix4 matrix = getNewIdentityMatrix();
@@ -60,9 +60,9 @@ public class MatrixUtils {
 	}
 	
 	/**
-	 * Get the normalized eye position in the current space.
+	 * Get the normalized eye position in the model view space.
 	 * @param modelViewMatrix model view matrix defining the current space in gl format (transposed)
-	 * @return
+	 * @return the eye position in the given model view space
 	 */
 	public static float[] getEyeInCurrentSpace(final Matrix4 modelViewMatrix){
 		float eyePositionInCurrentSpace[] = new float[3];
@@ -103,9 +103,9 @@ public class MatrixUtils {
 	
 	/**
 	 * adds two matrices and returns a new matrix object containing the result
-	 * @param a
-	 * @param b
-	 * @return
+	 * @param a matrix a
+	 * @param b matrix b
+	 * @return matrix a + b
 	 */
 	public static Matrix4 addMatrix(Matrix4 a, Matrix4 b){
 		Matrix4 ret = new Matrix4();
@@ -117,9 +117,9 @@ public class MatrixUtils {
 	
 	/**
 	 * subs two matrices and returns a new matrix object containing the result
-	 * @param a
-	 * @param b
-	 * @return
+	 * @param a matrix a 
+	 * @param b matrix b
+	 * @return matrix a - b
 	 */
 	public static Matrix4 subMatrix(Matrix4 a, Matrix4 b){
 		Matrix4 binv = new Matrix4();
@@ -132,8 +132,8 @@ public class MatrixUtils {
 	
 	/**
 	 * Creates a matrix instance from given data
-	 * @param data 
-	 * @return
+	 * @param data 16 entry field symbolizing a 4 x 4 matrix as vector of rows
+	 * @return the matrix of the data
 	 */
 	public static Matrix4 createMatrix4X4(float data[]){
 		Matrix4 m = new Matrix4();
@@ -145,8 +145,9 @@ public class MatrixUtils {
 	
 	/**
 	 * scales the given matrix by n and returns a new matrix of its content
-	 * @param n
-	 * @return
+	 * @param m the matrix to scale
+	 * @param n the scaling factor
+	 * @return the new scaled matrix instance
 	 */
 	public static Matrix4 scale(Matrix4 m,  float n){
 		Matrix4 k = copyMatrix(m);
@@ -158,9 +159,9 @@ public class MatrixUtils {
 	
 	/**
 	 * Does matmul without altering a and b
-	 * @param a
-	 * @param b
-	 * @return
+	 * @param a the matrix a
+	 * @param b the matrix b
+	 * @return the new matrix instance a * b
 	 */
 	public static Matrix4 matMul(Matrix4 a, Matrix4 b){
 		Matrix4 c = copyMatrix(a);
@@ -170,8 +171,8 @@ public class MatrixUtils {
 	
 	/**
 	 * Calculates the trace of a given Matrix 
-	 * @param m
-	 * @return
+	 * @param m the matrix to use
+	 * @return the trace of m
 	 */
 	public static float trace(Matrix4 m){
 		float t = 0;
@@ -211,9 +212,9 @@ public class MatrixUtils {
 	
 	/**
 	 * transforms a given plane as hessian normal form using a matrix transformation
-	 * @param transformation
-	 * @param plane
-	 * @return
+	 * @param transformation the transformation to apply
+	 * @param plane the plane in hessian normal form
+	 * @return the plane in the transformed space
 	 */
     public static float[] transformPlane(Matrix4 transformation, final float[] plane){
     	Matrix4 mat = copyMatrix(transformation); 

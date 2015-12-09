@@ -44,8 +44,8 @@ public class Axis extends JPanel {
 	
 	/**
 	 * Constructor
-	 * @param name
-	 * @param type
+	 * @param name the text of the axis
+	 * @param type the type of the axis
 	 */
 	public Axis(String name, AxisType type){
 		this.axisName = name;
@@ -88,7 +88,7 @@ public class Axis extends JPanel {
 	
 	/**
 	 * Draws the minimal an maximal axis value at an appropriate position 
-	 * @param g
+	 * @param g the painter of the axis panel
 	 */
 	private void drawMinMax(Graphics2D g){
 		FontMetrics metrics = g.getFontMetrics(g.getFont());
@@ -113,7 +113,7 @@ public class Axis extends JPanel {
 	
 	/**
 	 * Set max axis value
-	 * @param max
+	 * @param max the maximal value to set
 	 */
 	public void setMax(float max) {
 		this.max = max;
@@ -124,7 +124,7 @@ public class Axis extends JPanel {
 	
 	/**
 	 * Set min axis value 
-	 * @param min
+	 * @param min the minimum value to set
 	 */
 	public void setMin(float min) {
 		this.min = min;
@@ -135,7 +135,7 @@ public class Axis extends JPanel {
 	
 	/**
 	 * Draw axis identifiers at the center of the axis
-	 * @param g2
+	 * @param g2 the painter of the axis panel
 	 */
 	private void drawName(Graphics2D g2) {
 		FontMetrics fontMetrics = getFontMetrics(getFont());

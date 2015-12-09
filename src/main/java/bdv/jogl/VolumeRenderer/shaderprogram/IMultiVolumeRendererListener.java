@@ -12,7 +12,7 @@ public interface IMultiVolumeRendererListener extends EventListener {
 
 	/**
 	 * Called when the hull volume changed
-	 * @param drawRect
+	 * @param drawRect the new hull volume
 	 */
 	public void drawRectChanged(AABBox drawRect);
 }

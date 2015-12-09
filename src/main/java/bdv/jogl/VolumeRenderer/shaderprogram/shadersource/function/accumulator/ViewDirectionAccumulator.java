@@ -7,10 +7,16 @@ import static bdv.jogl.VolumeRenderer.utils.ShaderSourceUtil.appendNewLines;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Volume value accumulator which uses the dot product
+ * @author michael
+ *
+ */
 public class ViewDirectionAccumulator extends AbstractVolumeAccumulator {
 
-	
-	
+	/**
+	 * constructor
+	 */
 	public ViewDirectionAccumulator() {
 		super("view_direction_weight");
 	}

@@ -110,15 +110,15 @@ public class TransferFunctionDataPanel extends JPanel {
 	}
 
 	/**
-	 * Sets the transferfunction reference
-	 * @param tf
+	 * Sets the transfer function reference
+	 * @param tf the transfer function to set
 	 */
 	public void setTransferFunction(TransferFunction1D tf){
 		transferFunction = tf;
 		transferFunction.addTransferFunctionListener(new TransferFunctionAdapter() {
 
 			/**
-			 * Updates data if the transferfunction changes
+			 * Updates data if the transfer function changes
 			 */
 			@Override
 			public void functionPointChanged(TransferFunction1D transferFunction) {
@@ -129,8 +129,8 @@ public class TransferFunctionDataPanel extends JPanel {
 	}
 
 	/**
-	 * Retruns the current transferfunction reference
-	 * @return
+	 * Returns the current transfer function reference
+	 * @return the transfer function in use
 	 */
 	public TransferFunction1D getTransferFunction(){
 		return transferFunction;
@@ -138,7 +138,7 @@ public class TransferFunctionDataPanel extends JPanel {
 	
 	/**
 	 * Constructor 
-	 * @param tf
+	 * @param tf the transfer function to use
 	 */
 	public TransferFunctionDataPanel(final TransferFunction1D tf){
 		colorTableScroller = new JScrollPane(colorTable);

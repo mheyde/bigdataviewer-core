@@ -9,9 +9,28 @@ import java.util.TreeMap;
  */
 public class CurvatureContainer {
 	
+	/**
+	 * curvature values of each voxel
+	 */
 	public float[] valueMesh3d; 
+	
+	/**
+	 * histogram of curvature values
+	 */
 	public final TreeMap<Float,Integer> distribution = new TreeMap<Float, Integer>(); 
+	
+	/**
+	 * minimal curvature value
+	 */
 	public float minValue = Float.MAX_VALUE;
+	
+	/**
+	 * maximal curvature values
+	 */
 	public float maxValue = Float.MIN_VALUE;
+	
+	/**
+	 * dimension of the value field
+	 */
 	public int dimension[]; 
 }

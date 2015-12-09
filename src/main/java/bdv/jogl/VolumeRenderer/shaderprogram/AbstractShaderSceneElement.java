@@ -91,13 +91,13 @@ public abstract class AbstractShaderSceneElement implements ISceneElements{
 	}
 
 	/**
-	 * Retruns the Source object of the shader element
+	 * @return the Source object of the shader element
 	 */
 	protected abstract AbstractShaderSource getSource();
 	
 	/**
 	 * releases all gl resources
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	public void disposeGL(GL4 gl2){
 		
@@ -119,7 +119,7 @@ public abstract class AbstractShaderSceneElement implements ISceneElements{
 	
 	/**
 	 * Subclass hooks for disposal
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	protected void disposeSubClass(GL4 gl2){
 		
@@ -141,7 +141,7 @@ public abstract class AbstractShaderSceneElement implements ISceneElements{
 
 	/**
 	 * initializes the shader program
-	 * @param gl
+	 * @param gl the gl context to use
 	 */
 	public void init(GL4 gl){
 
@@ -158,6 +158,7 @@ public abstract class AbstractShaderSceneElement implements ISceneElements{
 
 	/**
 	 * update all shader variables 
+	 * @param gl the gl context to use
 	 */
 	public void update(GL4 gl){
 		if(needsRebuild){
@@ -177,14 +178,15 @@ public abstract class AbstractShaderSceneElement implements ISceneElements{
 
 	/**
 	 * Sub class implemented vertex upload.
-	 * @param gl2
+	 * @param gl2 the gl context to use
+	 * @param position the attribute to update
 	 */
 	protected abstract void updateVertexBufferSubClass(GL4 gl2, VertexAttribute position);
 
 
 	/**
 	 * Activates vertex buffer and uploads data by calling updateVertexBufferSubClass.
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	private void updateVertexBuffer(GL4 gl2){
 
@@ -211,7 +213,7 @@ public abstract class AbstractShaderSceneElement implements ISceneElements{
 	/**
 	 * Creates a name location mapping for attribute variables
 	 * @param gl2 gl context
-	 * @param uniforms List of uniform names to map 
+	 * @param attributes the glsl attribute variable names to map
 	 */
 	public void mapAvertexAttributs(GL4 gl2, final String[] attributes){
 		int location = -1;
@@ -225,7 +227,7 @@ public abstract class AbstractShaderSceneElement implements ISceneElements{
 	/**
 	 * Returns the location of a certain variable 
 	 * @param variableName Name of the shader variable
-	 * @return
+	 * @return the location
 	 */
 	public int getLocation(final String variableName){
 		return shaderVariableMapping.get(variableName);
@@ -233,10 +235,10 @@ public abstract class AbstractShaderSceneElement implements ISceneElements{
 
 	/**
 	 * Same as getLocation but for array entries
-	 * @param gl
-	 * @param variableName
-	 * @param index
-	 * @return
+	 * @param gl the gl context to use
+	 * @param variableName the name of the array variable
+	 * @param index the index within the array
+	 * @return the location
 	 */
 	public int getArrayEntryLocation(GL4 gl, final String variableName, int index){
 		return gl.glGetUniformLocation(shaderProgram.program(),variableName+"["+index+"]");
@@ -244,14 +246,14 @@ public abstract class AbstractShaderSceneElement implements ISceneElements{
 
 	/**
 	 * Sub class uniform upload
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	protected abstract void  updateShaderAttributesSubClass(GL4 gl2);
 
 
 	/**
 	 * uploads uniform shader variables to the graphic device 
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	private void updateShaderAttributes(GL4 gl2){
 
@@ -280,14 +282,14 @@ public abstract class AbstractShaderSceneElement implements ISceneElements{
 
 	/**
 	 * Sub class id mapping for special ids.
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	protected abstract void generateIdMappingSubClass(GL4 gl2);
 
 
 	/**
 	 * Mapps all Shader variables to the shaderVariableMapping, also does for sub classes
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	private void generateIdMapping(GL4 gl2){
 		shaderProgram.useProgram(gl2, true);
@@ -307,7 +309,7 @@ public abstract class AbstractShaderSceneElement implements ISceneElements{
 
 	/**
 	 * Creates a shader program
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	private void initProgram(GL4 gl2){
 		//create program id 
@@ -330,14 +332,14 @@ public abstract class AbstractShaderSceneElement implements ISceneElements{
 
 	/**
 	 * Returns the size of the Vertex buffer needed by the sub class
-	 * @return
+	 * @return the needed buffer size
 	 */
 	protected abstract int getVertexBufferSize();
 
 
 	/**
 	 * Creates a vertex buffer for the current program
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	private void generateVertexBuffer(GL4 gl2){
 
@@ -373,7 +375,7 @@ public abstract class AbstractShaderSceneElement implements ISceneElements{
 
 	/**
 	 * Function containing the actual render call. program and Vertex buffer are bound in there.
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	protected abstract void renderSubClass(GL4 gl2);
 

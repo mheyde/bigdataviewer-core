@@ -61,7 +61,7 @@ public class TransferFunctionContexMenu extends JPopupMenu{
 
 	/**
 	 * Constructor
-	 * @param parent
+	 * @param parent the parent render panel to add the context menu
 	 */
 	public TransferFunctionContexMenu(final TransferFunctionRenderPanel1D parent){
 		this.parent = parent;
@@ -71,7 +71,7 @@ public class TransferFunctionContexMenu extends JPopupMenu{
 	
 	/**
 	 * Returns the mouse listener to adapt the context menu to a panel
-	 * @return
+	 * @return the used mouse listener
 	 */
 	public MouseListener getMouseListener(){
 		return mouseListenrer;

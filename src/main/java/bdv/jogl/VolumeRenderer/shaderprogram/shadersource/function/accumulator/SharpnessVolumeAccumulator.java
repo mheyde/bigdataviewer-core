@@ -30,10 +30,6 @@ import static bdv.jogl.VolumeRenderer.utils.VolumeDataUtils.*;
  */
 public class SharpnessVolumeAccumulator extends AbstractVolumeAccumulator {
 
-	public SharpnessVolumeAccumulator() {
-		super("sharpness_weight");
-	}
-
 	Map<Integer, LaplaceContainer> evalueatedLaplacians = new HashMap<Integer, LaplaceContainer>();
 
 	Map<Integer, Texture> laplacianTextures = new HashMap<Integer, Texture>();
@@ -49,6 +45,13 @@ public class SharpnessVolumeAccumulator extends AbstractVolumeAccumulator {
 	private final Object mutex = new Object();
 
 	private final Set<Integer> needsUpdate = new HashSet<Integer>(); 
+
+	/**
+	 * constructor
+	 */
+	public SharpnessVolumeAccumulator() {
+		super("sharpness_weight");
+	}
 
 	@Override
 	public String[] declaration() {

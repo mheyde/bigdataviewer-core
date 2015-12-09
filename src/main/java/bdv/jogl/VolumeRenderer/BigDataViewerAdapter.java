@@ -1,20 +1,15 @@
 package bdv.jogl.VolumeRenderer;
 
-import static bdv.jogl.VolumeRenderer.utils.VolumeDataUtils.getDataBlock;
 import static bdv.jogl.VolumeRenderer.utils.MatrixUtils.*;
-import java.util.List;
 
 import com.jogamp.opengl.math.Matrix4;
-import com.jogamp.opengl.math.geom.AABBox;
 
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.ui.TransformListener;
 import bdv.BigDataViewer;
 import bdv.jogl.VolumeRenderer.utils.TestDataBlockSphere;
-import bdv.jogl.VolumeRenderer.utils.VolumeDataBlock;
 import bdv.jogl.VolumeRenderer.utils.VolumeDataManager;
 import bdv.viewer.state.SourceState;
-import bdv.viewer.state.ViewerState;
 
 
 /**
@@ -24,15 +19,20 @@ import bdv.viewer.state.ViewerState;
  */
 public class BigDataViewerAdapter {
 
-	private static int getMidmapLevel(final SourceState<?> source){
+	/**
+	 * get the mipmap level to use ()
+	 * @param source the source to get the mipmap index from
+	 * @return the mipmap index
+	 */
+	private static int getMipmapLevel(final SourceState<?> source){
 		int levels= source.getSpimSource().getNumMipmapLevels();
 		return levels -1;
 	}
 
 	/**
 	 * connects the bdv to the data manger
-	 * @param bdv
-	 * @param manager
+	 * @param bdv the data source to use
+	 * @param manager the data manager to connect
 	 */
 	public static synchronized void connect(final BigDataViewer bdv,final VolumeDataManager manager){
 		//updateData(bdv,manager);
@@ -42,12 +42,16 @@ public class BigDataViewerAdapter {
 			@Override
 			public synchronized void transformChanged(AffineTransform3D transform) {
 
-					updateData(bdv,manager);
+					updateData(manager);
 				
 			}
 		});
 	}
 	
+	/**
+	 * adds test sphere data stack to a data manager 
+	 * @param manager the data manager to add data
+	 */
 	private static void updatedTestData(final VolumeDataManager manager){
 		
 		for(int n = 0; n < 4 ; n++){
@@ -66,7 +70,11 @@ public class BigDataViewerAdapter {
 		}
 	};
 	
-	private static void updateData(final BigDataViewer bdv,final VolumeDataManager manager){
+	/**
+	 * updates the manager data
+	 * @param manager the manager to update
+	 */
+	private static void updateData(final VolumeDataManager manager){
 
 		manager.updateData();
 

@@ -12,7 +12,7 @@ public class GLErrorHandler {
 	
 	/**
 	 * evaluates the current gl context and throws an exception if there was an error.
-	 * @param gl
+	 * @param gl the gl context to use
 	 */
 	public static void assertGL(GL gl){
 		int latestError = gl.glGetError();

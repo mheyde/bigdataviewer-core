@@ -28,7 +28,7 @@ public class VertexAttribute {
 	
 	/**
 	 * generates the opengl attribute array object 
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	private void generateAttributeArray(GL4 gl2){
 	
@@ -40,7 +40,7 @@ public class VertexAttribute {
 	
 	/**
 	 * Generate the buffer pointer
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	private void generatePointer(GL4 gl2){
 
@@ -65,11 +65,11 @@ public class VertexAttribute {
 	
 	/**
 	 * Constructor
-	 * @param gl2
-	 * @param location
-	 * @param glDataType
-	 * @param elementsPerVertex
-	 * @param dataTypeSize
+	 * @param gl2 the gl context to use
+	 * @param location the shader code location of the buffer
+	 * @param glDataType the data type of the buffer
+	 * @param elementsPerVertex the amount of elements per vertex (1,2,3D)
+	 * @param dataTypeSize the memory size of the data
 	 */
 	public VertexAttribute(GL4 gl2,
 			int location, 
@@ -94,8 +94,8 @@ public class VertexAttribute {
 	
 	/**
 	 * Allocate the buffer for the attribute
-	 * @param gl2
-	 * @param numberOfElements
+	 * @param gl2 the gl context to use
+	 * @param numberOfElements the number of elements to allocate
 	 */
 	public void allocateAttributes(GL4 gl2,int numberOfElements){
 		
@@ -108,8 +108,8 @@ public class VertexAttribute {
 	
 	/**
 	 * Copies the data array to the gpu
-	 * @param gl2
-	 * @param data
+	 * @param gl2 the gl context to use
+	 * @param data the data to set
 	 */
 	public void setAttributeValues(GL4 gl2, final Buffer data){
 		
@@ -126,7 +126,7 @@ public class VertexAttribute {
 	
 	/**
 	 * get the buffer object used
-	 * @return
+	 * @return the vertex buffer object
 	 */
 	public VertexBuffer getVBO(){
 		return associatedVertexBuffer;
@@ -134,7 +134,7 @@ public class VertexAttribute {
 	
 	/**
 	 * activates the attribute
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	public void bind(GL4 gl2){
 		//bind
@@ -144,7 +144,7 @@ public class VertexAttribute {
 	
 	/**
 	 * unbinds the attribute
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	public void unbind(GL4 gl2){
 		//unbind
@@ -153,7 +153,7 @@ public class VertexAttribute {
 
 	/**
 	 * delete the attribute array
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	public void delete(GL4 gl2){
 		associatedVertexBuffer.delete(gl2);

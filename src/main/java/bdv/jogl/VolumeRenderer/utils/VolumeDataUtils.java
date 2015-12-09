@@ -52,19 +52,21 @@ public class VolumeDataUtils {
 		Color.YELLOW,
 		Color.CYAN,
 	};
-
-
+	
 	/**
-	 * Gets the volume data from a RandomAccessibleInterval
-	 * @param source data to copy from
-	 * @return An array of volume data with the dimensions x,y,z 
+	 * Gets the volume data from the bdv
+	 * @param bdv the bdv as data source
+	 * @param minBoundingBox the local space aabb defining the part of the volume to get
+	 * @param sourceId the volume id to query
+	 * @param mipmap the resolution level to query
+	 * @return the data stack
 	 */
-	public static VolumeDataBlock getDataBlock(final BigDataViewer bdv,final AABBox minBoundingBox, int sourceId, int midmap){
+	public static VolumeDataBlock getDataBlock(final BigDataViewer bdv,final AABBox minBoundingBox, int sourceId, int mipmap){
 		SourceState<?> source = bdv.getViewer().getState().getSources().get(sourceId);
 		int currentTimePoint = bdv.getViewer().getState().getCurrentTimepoint();
 		VolumeDataBlock data = new VolumeDataBlock();
 		TreeMap<Float, Integer> distr = data.getValueDistribution();
-		RandomAccessibleInterval<?> dataField = source.getSpimSource().getSource(currentTimePoint, midmap);
+		RandomAccessibleInterval<?> dataField = source.getSpimSource().getSource(currentTimePoint, mipmap);
 		IterableInterval<?> tmp = Views.flatIterable(dataField);
 		tmp.dimensions( data.dimensions);
 
@@ -115,7 +117,7 @@ public class VolumeDataUtils {
 		data.maxOccurance = maxOcc;
 		data.name = name;
 		AffineTransform3D sourceTransform3D = new AffineTransform3D();
-		source.getSpimSource().getSourceTransform(currentTimePoint, midmap, sourceTransform3D);
+		source.getSpimSource().getSourceTransform(currentTimePoint, mipmap, sourceTransform3D);
 		Matrix4 sourceTransformation = convertToJoglTransform(sourceTransform3D);
 		data.setLocalTransformation(sourceTransformation);
 		data.setNeedsUpdate(true);
@@ -125,7 +127,7 @@ public class VolumeDataUtils {
 
 	/**
 	 * prints the voxel data as a paraview file
-	 * @param data volume data array to write
+	 * @param vData volume data to write
 	 * @param fileName file to write
 	 */
 	public static void writeParaviewFile(final VolumeDataBlock vData, final String fileName){
@@ -222,8 +224,8 @@ public class VolumeDataUtils {
 
 	/**
 	 * Returns the color for a given volume stack id
-	 * @param i
-	 * @return
+	 * @param i the index of the data 
+	 * @return the corresponding color
 	 */
 	public static Color getColorOfVolume(int i){
 		return volumeColor[i%volumeColor.length];
@@ -231,8 +233,8 @@ public class VolumeDataUtils {
 
 	/**
 	 * Returns the transformation matrix for a volume stack to the global coordinate system
-	 * @param block
-	 * @return
+	 * @param block the data to get the transformation from
+	 * @return the transformation
 	 */
 	public static Matrix4 fromVolumeToGlobalSpace(final VolumeDataBlock block){
 		return copyMatrix( block.getLocalTransformation());
@@ -241,8 +243,8 @@ public class VolumeDataUtils {
 	/**
 	 * Returns the transformation matrix for a volume stack to the global coordinate system scaled in each dimension with the voxel count.
 	 * needed to expand the [0,1] defined texture coordinate system and get the real dimension in global space
-	 * @param block
-	 * @return
+	 * @param block the data to get the transformation and scaling from
+	 * @return the transformation
 	 */
 	public static Matrix4 calcScaledVolumeTransformation(final VolumeDataBlock block){
 		Matrix4 trans = getNewIdentityMatrix();
@@ -255,8 +257,8 @@ public class VolumeDataUtils {
 
 	/**
 	 * Return the transformation from global to local volume coordinates of a certain stack.
-	 * @param block
-	 * @return
+	 * @param block the data to calculate the transformation from
+	 * @return the transformation
 	 */
 	public static Matrix4 fromCubeToVolumeSpace(final VolumeDataBlock block){
 
@@ -273,9 +275,9 @@ public class VolumeDataUtils {
 
 
 	/**
-	 * convolves the data in x and y dimension since these dimension have the highest resolution
-	 * @param data
-	 * @return
+	 * convolvs the data in x and y dimension since these dimension have the highest resolution
+	 * @param data the data to get the laplacian from
+	 * @return the evaluated laplacien data
 	 */
 	public static LaplaceContainer calulateLablacianSimple(final VolumeDataBlock data){
 		//assumeed kernel:
@@ -375,8 +377,8 @@ public class VolumeDataUtils {
 
 	/**
 	 * Calculates the total curvature values for each point of a volume stack.
-	 * @param data
-	 * @return
+	 * @param data the volume data stack to get the curvature from
+	 * @return the evaluated curvature data
 	 */
 	public static CurvatureContainer calculateCurvatureOfVolume(final VolumeDataBlock data){
 		CurvatureContainer cc = new CurvatureContainer();
@@ -459,9 +461,9 @@ public class VolumeDataUtils {
 
 	/**
 	 * Calculates the hessian matrice for each point of a volume stack.
-	 * @param cg
-	 * @param data
-	 * @return
+	 * @param cg the already evaluated gradient data of the volume stack
+	 * @param data the volume stack
+	 * @return the evaluated hessian data
 	 */
 	private static HessianContainer calculateHessianOfGradients(
 			GradientContainer cg, VolumeDataBlock data) {
@@ -508,8 +510,8 @@ public class VolumeDataUtils {
 
 	/**
 	 * Calculates for each data point a gradient vector
-	 * @param data
-	 * @return
+	 * @param data the volume data stack for evaluation
+	 * @return the evaluated gradient data
 	 */
 	public static GradientContainer calculateGradientOfVolume(
 			VolumeDataBlock data) {
@@ -551,7 +553,7 @@ public class VolumeDataUtils {
 	 * @param v2 endvalue
 	 * @param dist distance between start and end
 	 * @param minStep distance from start to interpolate
-	 * @return 
+	 * @return the interpolated value
 	 */
 	private static float interpolate(float v1, float v2, float dist, float minStep) {
 		float m = (v2 -v1) /dist;
@@ -560,8 +562,8 @@ public class VolumeDataUtils {
 
 	/**
 	 * calculates the Voxel space dimension of a volume stack.
-	 * @param data
-	 * @return
+	 * @param data the volume data stack
+	 * @return the dimension xyz
 	 */
 	private static float[] getScaledVolumeDimensions(VolumeDataBlock data){
 		float transferPoints[][] = {{0,0,0,1},{1,0,0,1},{0,1,0,1},{0,0,1,1}};
@@ -587,12 +589,10 @@ public class VolumeDataUtils {
 
 	/**
 	 * Calculates the distance between voxels for each dimension.
-	 * @param data
-	 * @return
+	 * @param data the volume data stack to evaluate
+	 * @return the distance in xyz
 	 */
 	private static float[] calculateVoxelDistance(VolumeDataBlock data) {
-		// TODO Auto-generated method stub
-		// TODO correct dim
 		float distances[] = new float[]{1,1,1};
 		float realDimensions[] = getScaledVolumeDimensions(data);
 

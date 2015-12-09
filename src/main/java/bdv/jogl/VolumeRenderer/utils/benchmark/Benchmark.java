@@ -1,10 +1,14 @@
 package bdv.jogl.VolumeRenderer.utils.benchmark;
 
-import java.sql.Time;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * An abstract benchmarking class
+ * @author michael
+ *
+ */
 public abstract class Benchmark {
 
 	private int repeatitions = 1;
@@ -14,10 +18,24 @@ public abstract class Benchmark {
 	private BenchStatistic result = new BenchStatistic();
 	private double values[] = new double[repeatitions];
 
+	/**
+	 * class defining the state of a benchmark
+	 * @author michael
+	 *
+	 */
 	private interface BenchmarkState{
+
+		/**
+		 * make one action in the state
+		 */
 		public void doStep();
 	};
 
+	/**
+	 * start state which just runs the test function without measurements
+	 * @author michael
+	 *
+	 */
 	private class WarmupState implements BenchmarkState{
 
 		@Override
@@ -29,6 +47,12 @@ public abstract class Benchmark {
 			System.out.println("done");
 		}	
 	}
+
+	/**
+	 * state which just runs the test function and does measurements
+	 * @author michael
+	 *
+	 */
 	private class MeasureState implements BenchmarkState{
 
 		@Override
@@ -51,8 +75,11 @@ public abstract class Benchmark {
 		}	
 	}
 
-
-	
+	/**
+	 * evaluate statistics on the data
+	 * @param inValues the run times of the measurements
+	 * @return the statistic
+	 */
 	public static BenchStatistic evaluateResults(double[] inValues){
 		double[] fpsField = inValues.clone();
 		BenchStatistic result = new BenchStatistic();
@@ -104,7 +131,12 @@ public abstract class Benchmark {
 		result.stdder = Math.sqrt(result.stdder); 
 		return result;
 	}
-	
+
+	/**
+	 * last state of the benchmark evaluating the results
+	 * @author michael
+	 *
+	 */
 	private class EvaluationState implements BenchmarkState{
 		@Override
 		public void doStep() {
@@ -115,54 +147,92 @@ public abstract class Benchmark {
 
 	} 
 
+	/**
+	 * starts the benchmark in warmup state
+	 */
 	public void start() {
 		BenchmarkState states[] ={new WarmupState(),new MeasureState(),new EvaluationState()}; 
 		for(BenchmarkState state: states){
 			state.doStep();
 		}
-		
+
 
 	}
+	
+	/**
+	 * the function which run time should be measured
+	 */
 	public abstract void functionToMeasure();
 
+	/**
+	 * set the amount of repeatitions for the measurement
+	 * @param repeatitions number of repeatitions
+	 */
 	public void setRepeatitions(int repeatitions) {
 		this.repeatitions = repeatitions;
 	}
 
+	/**
+	 * set minimal amount of time to pass under measurement until the measurement is valid
+	 * @param number number of time stamps to pass
+	 * @param unit the unit of the time stamps
+	 */
 	public void setMinTimeElapse(int number, TimeUnit unit) {
 		this.minTimeUnit = unit;
 		this.minTime = number;
 	}
 
+	/**
+	 * set the amount of steps in the warmup phase
+	 * @param i the steps
+	 */
 	public void setWarmupSteps(int i) {
 		numberOfWarmupSteps = i;
 		values = new double[repeatitions];
 	}
 
+	/**
+	 * @return the mean of the current measurement times
+	 */
 	public double getMean() {
 		return result.mean;
 	}
 
+	/**
+	 * @return the median of the current measurement times
+	 */
 	public double getMedian() {
 		return result.median;
 	}
 
+	/**
+	 * @return the maximum of the current measurement times
+	 */
 	public double getMax() {
 		return result.max;
 	}
 
+	/**
+	 * @return the minimum of the current measurement times
+	 */
 	public double getMin() {
 		return result.min;
 	}
 
+	/**
+	 * @return the standard derivation of the current measurement times
+	 */
 	public double getStandardDerivation() {
 		return result.stdder;
 	}
 
+	/**
+	 * @return run times of the current measurement
+	 */
 	public double[] getSeconds() {
 		return values;
 	}
-	
+
 	public String toString(){
 		return "" + result.min+ " " +result.max+" "+result.mean + " "+result.median +" " + result.stdder;
 	}

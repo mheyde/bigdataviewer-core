@@ -77,11 +77,17 @@ public class VolumeRendererExtension {
 	
 	private final InteractionAnimator animator;
 
+	/**
+	 * creates the scene control window and its sub menues
+	 */
 	private void createControlWindow(){
 		controls =new SceneControlsWindow(transferFunction,aggManager, dataManager, volumeRenderer,glWindow,dataScene);
 	}
 
-	
+	/**
+	 * Constructor
+	 * @param bdv big data viewer to extend
+	 */
 	public VolumeRendererExtension(final BigDataViewer bdv){
 		if(bdv == null){
 			throw new NullPointerException("The extension needs a valid big data viewer instance");
@@ -113,6 +119,9 @@ public class VolumeRendererExtension {
 	
 	}
 
+	/**
+	 * creates the listeners for the accumulators, the transfer function,etc
+	 */
 	private void createListeners() {
 		//source changes 
 		volumeRenderer.setAccumulator(aggManager.getAccumulator( aggManager.getActiveAccumulator()));
@@ -136,7 +145,7 @@ public class VolumeRendererExtension {
 			}
 
 			@Override
-			public void samplerChanged(TransferFunction1D transferFunction1D) {
+			public void classifierChanged(TransferFunction1D transferFunction1D) {
 				glWindow.getGlCanvas().repaint();
 			}
 		});
@@ -173,7 +182,6 @@ public class VolumeRendererExtension {
 		
 		}); 
 		
-	
 		//on reset go to full view
 		resetToFullView();
 		controls.getResetButton().addActionListener(new ActionListener() {
@@ -185,9 +193,6 @@ public class VolumeRendererExtension {
 				animator.startInitAnimation();
 			}
 		});
-		
-	
-		
 		
 		//update seletor sizes
 		updateSectionSize();
@@ -269,6 +274,9 @@ public class VolumeRendererExtension {
 		});
 	}
 	
+	/**
+	 * down samples if needed
+	 */
 	private void updateDownSamplerSize() {
 		int samples= ((Number)controls.getDownSampleSpinner().getValue()).intValue();
 		if(samples == sampleController.getLowSamples()){
@@ -277,15 +285,18 @@ public class VolumeRendererExtension {
 		sampleController.setLowSamples(samples);
 	}
 
-
+	/**
+	 * set activation state of down sampling
+	 */
 	private void updateDownSamplingActive() {
 		if(sampleController.isActive() != controls.getDownSampleCheckBox().isSelected()){
 			sampleController.setActive(controls.getDownSampleCheckBox().isSelected());
-		}
-		
+		}		
 	}
 
-
+	/**
+	 * updates the selector with new detail view size 
+	 */
 	private void updateSectionSize(){
 		DetailViewConfiguration view = controls.getDetailViewConfig();
 		float dim[] = {
@@ -296,6 +307,9 @@ public class VolumeRendererExtension {
 		selector.setHullVolumeDimensions(dim);
 	}
 	
+	/**
+	 * triggers zoom out of the detail view
+	 */
 	private void resetToFullView(){
 		dataManager.resetVolumeData();
 		List<Matrix4> transformations = new ArrayList<Matrix4>();
@@ -316,8 +330,6 @@ public class VolumeRendererExtension {
 	
 	/**
 	 * creates an action for the volume renderer in the bdv toolbar
-	 * @param parent The BigDataViewer to connect to
-	 * 
 	 */
 	private void createActionInToolBar(){
 		JMenuBar menuBar = bdv.getViewerFrame().getJMenuBar();

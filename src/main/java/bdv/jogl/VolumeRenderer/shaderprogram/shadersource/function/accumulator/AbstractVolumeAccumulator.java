@@ -30,7 +30,7 @@ public abstract class AbstractVolumeAccumulator extends AbstractShaderFunction  
 
 	/**
 	 * constructor
-	 * @param name
+	 * @param name the name as id of the accumulator
 	 */
 	protected AbstractVolumeAccumulator(String name){
 		super(name);
@@ -38,19 +38,19 @@ public abstract class AbstractVolumeAccumulator extends AbstractShaderFunction  
 	
 	/**
 	 * disables all needed gl bindings if some were needed by the accumulator
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	public void disposeGL(GL4 gl2) {}
 	
 	/**
 	 * init all needed gl bindings if some were needed by the accumulator
-	 * @param gl2
+	 * @param gl the gl context to use
 	 */
 	public void init(GL4 gl) {}
 	
 	/**
 	 * update all needed gl bindings if some were needed by the accumulator
-	 * @param gl2
+	 * @param gl the gl context to use
 	 */
 	public void updateData(GL4 gl){}
 }

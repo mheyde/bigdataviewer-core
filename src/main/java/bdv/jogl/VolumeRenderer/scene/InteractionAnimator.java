@@ -11,6 +11,11 @@ import bdv.jogl.VolumeRenderer.shaderprogram.MultiVolumeRenderer;
 import bdv.jogl.VolumeRenderer.utils.VolumeRendereSampleController;
 import static bdv.jogl.VolumeRenderer.utils.VolumeDataUtils.calcEyeAndCenterByGivenHull;;
 
+/**
+ * Class controlling the animations in the scene
+ * @author michael
+ *
+ */
 public class InteractionAnimator {
 	
 	private final MultiVolumeRenderer renderer;
@@ -33,8 +38,10 @@ public class InteractionAnimator {
 	
 	/**
 	 * Animation constructor
-	 * @param renderer
-	 * @param renderWindow
+	 * @param renderer the used volume renderer
+	 * @param renderWindow the window to render in
+	 * @param controls the used menu window
+	 * @param contoller the down sampling controller class
 	 */
 	public InteractionAnimator(
 			final MultiVolumeRenderer renderer, 
@@ -124,9 +131,7 @@ public class InteractionAnimator {
 	
 	/**
 	 * Motion to data and update partial data
-	 * @param hullVolume
-	 * @param partialVolumesInHullVolume
-	 * @param time
+	 * @param hullVolume the hull volume to move to
 	 */
 	public void startMoveToSelectionAnimation( final AABBox hullVolume){
 		if(null != this.motionToTargetThread && motionToTargetThread.isAlive()){
@@ -202,9 +207,9 @@ public class InteractionAnimator {
 	
 	/**
 	 * calculates the positions of eye and center on a n steps path to view hullVolume
-	 * @param hullVolume
-	 * @param n 
-	 * @return
+	 * @param hullVolume the hull volume to move to
+	 * @param n the number of used animation steps
+	 * @return a lost of eye and center coordinates as path for the view 
 	 */
 	private List<float[][]> calcEyeAndCenterPath(AABBox hullVolume,int n){
 		List<float[][]> positions = new ArrayList<float[][]>();

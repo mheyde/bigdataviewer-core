@@ -56,6 +56,9 @@ public class Texture {
 	 * Constructor
 	 * @param textureType type of the texture (GL_TEXTURE_<N>D)
 	 * @param variableLocation Location of the texture variable in the shader program.
+	 * @param internalFormat the texture internal format
+	 * @param pixelFormat the pixel format
+	 * @param pixelDataType the data format
 	 */
 	public Texture(int textureType, int variableLocation, int internalFormat, int pixelFormat, int pixelDataType) {
 
@@ -68,7 +71,7 @@ public class Texture {
 	
 	/**
 	 * Generates the texture binding for the glsl shaders
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	public void genTexture(GL4 gl2){
 		int testUnit = GL2.GL_TEXTURE0; 
@@ -97,7 +100,7 @@ public class Texture {
 	
 	/**
 	 * Binds the texture object to the current shader program context
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	private void rebindTexture(GL4 gl2){
 		gl2.glBindTexture(textureType, textureObject);
@@ -110,6 +113,8 @@ public class Texture {
 	
 	/**
 	 * Test method to check whether sparse textures are supported
+	 * @param context the gl context to use
+	 * @return true if supported
 	 */
 	public static boolean isSparseTextureSupported(GL context){
 		return contextSupportsExtension(context, "GL_ARB_sparse_texture");
@@ -117,8 +122,8 @@ public class Texture {
 	
 	/**
 	 * Returns the virtual page sizes needed for sparse textures 
-	 * @param gl
-	 * @return
+	 * @param gl the gl context to use
+	 * @return the virtual pages size in x,y,z
 	 */
 	public int[] getVirtPageSizes(GL4 gl){
 		int pagesizes[] = new int[3];
@@ -129,16 +134,16 @@ public class Texture {
 	}
 	
 	/**
-	 * 
-	 * @param gl2
-	 * @param midmapLevel
-	 * @param data
-	 * @param virtualDimensions
-	 * @param offsets
-	 * @param sizes
+	 * Uploads sparse texture data
+	 * @param gl2 the gl context to use
+	 * @param mipmapLevel the mipmap level to update
+	 * @param data the data buffer 
+	 * @param virtualDimensions the virtual dimensions of the texture
+	 * @param offsets the texture offset xyz
+	 * @param sizes the element size to set xyz
 	 * @throws UnsupportedOperationException if sparse textures are not supported.
 	 */
-	public void updateSparse(GL4 gl2,int midmapLevel, Buffer data, int[] virtualDimensions, int[] offsets, int[] sizes) {
+	public void updateSparse(GL4 gl2,int mipmapLevel, Buffer data, int[] virtualDimensions, int[] offsets, int[] sizes) {
 		if(!isSparseTextureSupported(gl2)){
 			throw new UnsupportedOperationException("sparse textures are not supported on your system!");
 		}
@@ -230,12 +235,12 @@ public class Texture {
 	
 	/**
 	 * Updates the data for the texture
-	 * @param gl2
-	 * @param midmapLevel
-	 * @param data
-	 * @param dimensions
+	 * @param gl2 the gl context to use
+	 * @param mipmapLevel the mipmap level to set
+	 * @param data the data buffer to set
+	 * @param dimensions the dimensions of the data buffer xyz
 	 */
-	public void update(GL4 gl2,int midmapLevel, Buffer data, int[] dimensions){
+	public void update(GL4 gl2,int mipmapLevel, Buffer data, int[] dimensions){
 		//activate context
 		gl2.glActiveTexture(textureUnit);
 		GLErrorHandler.assertGL(gl2);
@@ -257,7 +262,7 @@ public class Texture {
 		case 1:
 
 			gl2.glTexImage1D(textureType, 
-					midmapLevel, 
+					mipmapLevel, 
 					internalFormat, 
 					dimensions[0], 
 					0,
@@ -268,7 +273,7 @@ public class Texture {
 	
 		case 2:
 			gl2.glTexImage2D(textureType, 
-					midmapLevel, 
+					mipmapLevel, 
 					internalFormat, 
 					dimensions[0],dimensions[1], 
 					0,
@@ -279,7 +284,7 @@ public class Texture {
 
 		case 3:
 			gl2.glTexImage3D(textureType, 
-					midmapLevel, 
+					mipmapLevel, 
 					internalFormat, 
 					dimensions[0],dimensions[1],dimensions[2], 
 					0,
@@ -298,8 +303,8 @@ public class Texture {
 	
 	/**
 	 * Stores texture parameters with glTexParameteri
-	 * @param parameter 
-	 * @param value
+	 * @param parameter the parameter id 
+	 * @param value the value
 	 */
 	public void setTexParameteri(int parameter, int value){
 		parameteriMap.put(parameter, value);
@@ -308,8 +313,8 @@ public class Texture {
 
 	/**
 	 * Stores texture parameters with glTexParameteriv
-	 * @param parameter
-	 * @param values
+	 * @param parameter the parameter id 
+	 * @param values the value field
 	 */
 	public void setTexParameteriv(int parameter, int[] values){
 		parameterivMap.put(parameter, values.clone());
@@ -318,8 +323,8 @@ public class Texture {
 	
 	/**
 	 * Stores texture parameters with glTexParameterfv
-	 * @param parameter
-	 * @param values
+	 * @param parameter the parameter id
+	 * @param values the value field to set
 	 */
 	public void setTexParameterfv(int parameter, float[] values){
 		parameterfvMap.put(parameter, values.clone());
@@ -328,7 +333,7 @@ public class Texture {
 	
 	/**
 	 * central update for parameters
-	 * @param gl
+	 * @param gl the gl context to use
 	 */
 	public void updateTextureParameters(GL4 gl){
 		if(updatableTextureParameters.isEmpty()){
@@ -357,7 +362,7 @@ public class Texture {
 	
 	/**
 	 * Clears the current texture context of the object
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	public void delete(GL4 gl2){
 		
@@ -375,7 +380,7 @@ public class Texture {
 	
 	/**
 	 * Enables the update flag for all stored texture parameters
-	 * @param parameters
+	 * @param parameters the parameter ids to set updateable
 	 */
 	private void setParametersNeedsUpdate(Set<Integer> parameters){
 		for(Integer parameter: parameters){

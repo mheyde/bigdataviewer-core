@@ -15,7 +15,7 @@ public abstract class TransferFunctionAdapter implements
 	}
 
 	@Override
-	public void samplerChanged(TransferFunction1D transferFunction1D) {
+	public void classifierChanged(TransferFunction1D transferFunction1D) {
 
 	}
 }

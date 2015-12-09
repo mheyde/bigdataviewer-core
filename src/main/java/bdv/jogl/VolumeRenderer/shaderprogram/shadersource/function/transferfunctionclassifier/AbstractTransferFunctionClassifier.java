@@ -9,9 +9,10 @@ import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.AbstractShade
  */
 public abstract class AbstractTransferFunctionClassifier extends AbstractShaderFunction {
 	
+	/**
+	 * constructor
+	 */
 	protected AbstractTransferFunctionClassifier(){
 		super("transferFunctionClassifier");
-	}
-	
-	
+	}	
 }

@@ -15,7 +15,7 @@ public class GeometryUtils {
 	/**
 	 * Returns the Vertices of a unit cube, renderable by GL_Triangles_Strip
 	 * (http://doc.qt.io/qt-5/qtopengl-cube-example.html)
-	 * @return
+	 * @return the triangle strip coordinates of a unit cube in [0,1]
 	 */
 	public static float[] getUnitCubeVerticesTriangles(){
 		float [] array = {
@@ -58,7 +58,7 @@ public class GeometryUtils {
 	/**
 	 * Returns the Vertices of a unit cube, renderable by GL_Quads
 	 * (http://doc.qt.io/qt-5/qtopengl-cube-example.html)
-	 * @return
+	 * @return the quads coordinates of a unit cube in [0,1]
 	 */
 	public static float[] getUnitCubeVerticesQuads(){
 		float [] array = {
@@ -98,8 +98,8 @@ public class GeometryUtils {
 	}
 	
 	/**
-	 * Retruns the edges of a unit cube defined in the borders of [0,1]
-	 * @return
+	 * Returns the edges of a unit cube defined in the borders of [0,1]
+	 * @return the edge begin end coordinate pairs
 	 */
 	public static float[] getUnitCubeEdges(){
 		float array[] = {
@@ -143,10 +143,10 @@ public class GeometryUtils {
 	} 
 	
 	/**
-	 * Returns the axis aligned bounding box of a certain box dimension after transformation
-	 * @param formerBoxDim
-	 * @param boxTransformation
-	 * @return
+	 * Returns the axis aligned bounding box of a certain box after transformation
+	 * @param formerBoxDim width, height and depth for the former box
+	 * @param boxTransformation the transformation to apply
+	 * @return the axis aligned bounding box
 	 */
 	public static AABBox getAABBOfTransformedBox(final long[] formerBoxDim, Matrix4 boxTransformation){
 		float[][] minMax = new float[][]{

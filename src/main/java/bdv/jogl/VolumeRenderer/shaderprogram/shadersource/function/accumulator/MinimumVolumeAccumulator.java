@@ -14,6 +14,9 @@ import java.util.List;
  */
 public class MinimumVolumeAccumulator extends AbstractVolumeAccumulator {
 
+	/**
+	 * constructor
+	 */
 	public MinimumVolumeAccumulator(){
 		super("minimum");
 	}

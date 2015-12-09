@@ -44,8 +44,8 @@ public abstract class AbstractScene {
 	
 	/**
 	 * adds an abstract element to scene
-	 * @param sceneElement
-	 * @return
+	 * @param sceneElement the scen element to add
+	 * @return true if succeeded
 	 */
 	public boolean addSceneElement(ISceneElements sceneElement) {
 		return sceneElements.add(sceneElement);
@@ -113,11 +113,11 @@ public abstract class AbstractScene {
 
 	/**
 	 * resizes the scene and the gl shader context
-	 * @param gl2
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
+	 * @param gl2 the gl context to use
+	 * @param x the new x start coordinate
+	 * @param y the new y start coordinate
+	 * @param width the new width of the canvas
+	 * @param height the new height of the canvas
 	 */
 	public void resize(GL4 gl2,int x, int y, int width, int height){
 		camera.setWidth(width);
@@ -131,7 +131,7 @@ public abstract class AbstractScene {
 
 	/**
 	 * releases gl resources
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	public void dispose(GL4 gl2){
 		for(ISceneElements c : sceneElements){
@@ -145,7 +145,7 @@ public abstract class AbstractScene {
 
 	/**
 	 * render the scene
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	public void render(GL4 gl2){
 		float[] c = getNormalizedColor(backgroundColor);
@@ -169,9 +169,9 @@ public abstract class AbstractScene {
 
 	/**
 	 * initializes the scene once
-	 * @param gl2
-	 * @param width
-	 * @param height
+	 * @param gl2 the gl context to use
+	 * @param width the canvas width
+	 * @param height the canvas height
 	 */
 	public void init(GL4 gl2, int width, int height){
 		
@@ -186,7 +186,7 @@ public abstract class AbstractScene {
 
 	/**
 	 * Adds a new listener
-	 * @param listener
+	 * @param listener the listener to add
 	 */
 	public void addSceneEventListener(final SceneEventListener listener){
 		sceneListeners.add(listener);
@@ -195,33 +195,33 @@ public abstract class AbstractScene {
 
 	/**
 	 * specialized init for subclasses
-	 * @param gl2
-	 * @param width
-	 * @param height
+	 * @param gl2 the gl context to use
+	 * @param width the width of the render canvas
+	 * @param height the height of the render canvas
 	 */
 	protected abstract void initSpecial(GL4 gl2, int width, int height);
 
 	/**
-	 * specialized resize for subclasses
-	 * @param gl2
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
+	 * specialized resize for subclasses	 
+	 * @param gl2 the gl context to use
+	 * @param x the new x start coordinate
+	 * @param y the new y start coordinate
+	 * @param width the new width of the canvas
+	 * @param height the new height of the canvas
 	 */
 	protected abstract void resizeSpecial(GL4 gl2,int x, int y, int width, int height);
 
 
 	/**
 	 * specialized dispose for subclasses
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	protected abstract void disposeSpecial(GL4 gl2);
 
 
 	/**
 	 * specialized render for subclasses, actual rendering is performed by render, so should not be done here
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	protected abstract void renderSpecial(GL4 gl2);
 }

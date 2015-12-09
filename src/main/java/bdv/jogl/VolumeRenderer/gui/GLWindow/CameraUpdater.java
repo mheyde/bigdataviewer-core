@@ -176,7 +176,7 @@ public class CameraUpdater {
 	
 	/**
 	 * Constructor for setting the camera
-	 * @param camera
+	 * @param camera the camera to update
 	 */
 	public CameraUpdater(Camera camera) {
 		this.camera = camera;
@@ -184,7 +184,7 @@ public class CameraUpdater {
 
 	/**
 	 * return the motion listener to add to the scene widget
-	 * @return
+	 * @return the mouse motion listener used by the updater
 	 */
 	public MouseMotionListener getMouseMotionListener() {
 		return mouseMotionListener;
@@ -192,7 +192,7 @@ public class CameraUpdater {
 
 	/**
 	 * return the mouse listener to add to the scene widget
-	 * @return
+	 * @return the mouse listener used by the updater 
 	 */
 	public MouseListener getMouseListener() {
 		return mouseListener;
@@ -207,7 +207,7 @@ public class CameraUpdater {
 
 	/**
 	 * adds a motionListenr
-	 * @param l
+	 * @param l the listener to add
 	 */
 	public void addCameraMotionListener(CameraTransformationListener l){
 		cameraTransformationListeners.add(l);

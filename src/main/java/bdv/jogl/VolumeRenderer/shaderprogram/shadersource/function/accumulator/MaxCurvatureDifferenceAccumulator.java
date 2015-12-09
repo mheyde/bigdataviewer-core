@@ -32,9 +32,6 @@ import com.jogamp.opengl.GL4;
  *
  */
 public class MaxCurvatureDifferenceAccumulator extends AbstractVolumeAccumulator {
-	public MaxCurvatureDifferenceAccumulator() {
-		super("difference_total_curvature");
-	}
 
 	private boolean needsReset = true;
 
@@ -52,6 +49,13 @@ public class MaxCurvatureDifferenceAccumulator extends AbstractVolumeAccumulator
 
 	private final Set<Integer> needsUpdate = new HashSet<Integer>(); 
 
+	/**
+	 * Constructor
+	 */
+	public MaxCurvatureDifferenceAccumulator() {
+		super("difference_total_curvature");
+	}
+	
 	@Override
 	public void init(GL4 gl) {
 		//create glsl variable mapping for texture and min may

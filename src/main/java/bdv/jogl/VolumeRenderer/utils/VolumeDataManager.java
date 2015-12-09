@@ -52,7 +52,7 @@ public class VolumeDataManager {
 
 	/**
 	 * Tells all listeners that a certain volume stack was removed from the current storage
-	 * @param i
+	 * @param i the data index which was removed
 	 */
 	private void fireAllRemovedData(Integer i ){
 		for(IVolumeDataManagerListener l:listeners){
@@ -62,7 +62,7 @@ public class VolumeDataManager {
 	
 	/**
 	 * Tells all listeners that a certain volume stack was added to the current data set
-	 * @param i
+	 * @param i the data index which was added
 	 */
 	private void fireAllAddedData(Integer i){
 		for(IVolumeDataManagerListener l:listeners){
@@ -100,16 +100,14 @@ public class VolumeDataManager {
 	}
 
 	/**
-	 * Returns the maximal volume value of the currently stored volume values.
-	 * @return
+	 * @return the maximal volume value of the currently stored volume values.
 	 */
 	public float getGlobalMaxVolumeValue(){
 		return globalMaxVolume;
 	}
 
 	/**
-	 * Returns the set of volume indices which are currently in use,
-	 * @return
+	 * @return  the set of volume indices which are currently in use,
 	 */
 	public Set<Integer> getVolumeKeys() {
 		return volumes.keySet();
@@ -117,8 +115,8 @@ public class VolumeDataManager {
 
 	/**
 	 * Returns if a certain volume stack is currently visible/ enabled
-	 * @param i
-	 * @return
+	 * @param i data index to check
+	 * @return true if the i-th volume was enabled 
 	 */
 	public boolean isEnabled(int i){
 		return enabled.get(i);
@@ -126,8 +124,8 @@ public class VolumeDataManager {
 	
 	/**
 	 * Get volume data stack from its id
-	 * @param i
-	 * @return
+	 * @param i the data index to get data from
+	 * @return the data stack
 	 */
 	public VolumeDataBlock getVolume(Integer i) {
 		return volumes.get(i);
@@ -135,8 +133,8 @@ public class VolumeDataManager {
 
 	/**
 	 * add a list of volume data stack. Triggers the appropriate listeners after every stack was added for synchronization purposes. 
-	 * @param time
-	 * @param data
+	 * @param time the time stamp to add data to
+	 * @param data the data blocks to add
 	 */
 	public void volumeUpdateTransaction(int time, List<VolumeDataBlock> data){
 		List<Boolean> wasPresent = new ArrayList<Boolean>();
@@ -164,10 +162,10 @@ public class VolumeDataManager {
 	}
  
 	/**
-	 * Adds one data block for a timestamp and an id if non was present.
-	 * @param i
-	 * @param time
-	 * @param data
+	 * Adds one data block for a time stamp and an id if non was present.
+	 * @param i the data index to set the data stack
+	 * @param time the time stamp
+	 * @param data the data to add
 	 */
 	public void setVolume(Integer i, int time , VolumeDataBlock data){
 		if(time != this.currentTime){
@@ -194,7 +192,7 @@ public class VolumeDataManager {
 	
 	/**
 	 * Tells all listeners that a certain data stack updated its data
-	 * @param i
+	 * @param i the data index which was updated
 	 */
 	private void fireAllUpdatedData(Integer i) {
 		for(IVolumeDataManagerListener listener : listeners){
@@ -203,16 +201,14 @@ public class VolumeDataManager {
 	}
 	
 	/**
-	 * Return the count of the most occuring volume data value over all data stacks. Not the value itself
-	 * @return
+	 * @return the count of the most occuring volume data value over all data stacks. Not the value itself
 	 */
 	public float getGlobalMaxOccurance() {
 		return globalMaxOccurance;
 	}
 
 	/**
-	 * Returns the volume data stacks 
-	 * @return
+	 * @return the volume data stacks 
 	 */
 	public Collection<VolumeDataBlock> getVolumes() {
 		return volumes.values();
@@ -220,7 +216,7 @@ public class VolumeDataManager {
 	
 	/**
 	 * Removes a certain volume data stack from the storage
-	 * @param i
+	 * @param i the data index to remove
 	 */
 	public void removeVolumeByIndex(int i) {
 		VolumeDataBlock removedData = volumes.remove(i);
@@ -231,8 +227,8 @@ public class VolumeDataManager {
 	
 	/**
 	 * Sets the visible / enable flag for a certain volume data stack.
-	 * @param i
-	 * @param flag
+	 * @param i the index to change
+	 * @param flag the enable status
 	 */
 	public void enableVolume(int i , boolean flag){
 		if(!enabled.containsKey(i)){
@@ -244,8 +240,8 @@ public class VolumeDataManager {
 	
 	/**
 	 * Tells all listeners that a certain volume data stack has changed its enable/visible status 
-	 * @param i
-	 * @param flag
+	 * @param i the data index which was manipulated
+	 * @param flag the enable status to set
 	 */
 	private void fireAllDataEnabled(int i, boolean flag) {
 		for(IVolumeDataManagerListener l:listeners){
@@ -256,7 +252,7 @@ public class VolumeDataManager {
 
 	/**
 	 * Add a listener and calls its data add and update method for each data stack
-	 * @param l
+	 * @param l the listener to add
 	 */
 	public void addVolumeDataManagerListener(IVolumeDataManagerListener l ){
 		listeners.add(l);
@@ -267,7 +263,7 @@ public class VolumeDataManager {
 	}
 
 	/**
-	 * Get the lowest resolution of the full data set at the current timestamp from the data interface, if needed.
+	 * Get the lowest resolution of the full data set at the current time stamp from the data interface, if needed.
 	 */
 	public void updateData(){	
 		ViewerState state = bdv.getViewer().getState();
@@ -280,7 +276,7 @@ public class VolumeDataManager {
 	}
 	
 	/**
-	 * Get the lowest resolution of the full data set at the current timestamp from the data interface.
+	 * Get the lowest resolution of the full data set at the current time stamp from the data interface.
 	 */
 	public void resetVolumeData() {
 		//mainly for new time points and data not realy for transform
@@ -316,8 +312,7 @@ public class VolumeDataManager {
 	}
 
 	/**
-	 * Returns the lowest volume value from all current stacks
-	 * @return
+	 * @return the lowest volume value from all current stacks
 	 */
 	public float getGlobalLowestVolumeValue() {
 		

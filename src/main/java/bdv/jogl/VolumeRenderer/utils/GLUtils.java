@@ -25,10 +25,10 @@ public class GLUtils {
 	
 	/**
 	 * calculates the virtual dimension needed for the spares texture upload
-	 * @param gl
-	 * @param sparseTexture
+	 * @param gl the gl context to use
+	 * @param sparseTexture the sparse texture instance to get the valuse from
 	 * @param currentDimensions full data dimension to map virtually
-	 * @return
+	 * @return the 3D virtual dimension
 	 */
 	public static long[] calculateSparseVirtualTextures(GL4 gl, final Texture sparseTexture, long currentDimensions[]){
 		long dim[] = new long[3];

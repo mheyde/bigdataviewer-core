@@ -21,7 +21,11 @@ import bdv.jogl.VolumeRenderer.utils.VolumeDataBlock;
 import bdv.viewer.Source;
 import bdv.viewer.state.SourceState;
 
-
+/**
+ * Class providing the functions for accessing a partial volume by clicking in the bdv slice view
+ * @author michael
+ *
+ */
 public class BigDataViewerDataSelector {
 
 	private final BigDataViewer bdv;
@@ -32,24 +36,34 @@ public class BigDataViewerDataSelector {
 
 	private final Collection<IBigDataViewerDataSelectorListener> listeners = new ArrayList<IBigDataViewerDataSelectorListener>();
 
+	/**
+	 * Constructor
+	 * @param bdv the data and slice interaction source 
+	 */
 	public BigDataViewerDataSelector(final BigDataViewer bdv){
 		this.bdv = bdv;	
 		initListener();
 	}
 
+	/**
+	 * tells the listener that a global region for the partial volume was selected
+	 * @param region the global region
+	 */
 	private void fireAllRegionSelected(final AABBox region){
 		for(IBigDataViewerDataSelectorListener l :listeners){
 			l.dataRegionSelected(region);
 		}
 	}
 
-	private void fireDataAvailable(IBigDataViewerDataSelectorListener l, AABBox hullVolume, List<VolumeDataBlock> partialVolumes,int time){
-		l.selectedDataAvailable(hullVolume, partialVolumes, time);
-	}
-
+	/**
+	 * tells all listeners that the data is loaded
+	 * @param hullVolume the global region which was queried
+	 * @param partialVolumes the data of the volume stacks situated in the hull volume
+	 * @param time the time stamp that was queried
+	 */
 	private void fireAllDataAvailable(AABBox hullVolume, List<VolumeDataBlock> partialVolumes,int time){
 		for(IBigDataViewerDataSelectorListener l :listeners){
-			fireDataAvailable(l, hullVolume, partialVolumes, time);
+			l.selectedDataAvailable(hullVolume, partialVolumes, time);
 		}
 	}
 
@@ -88,7 +102,7 @@ public class BigDataViewerDataSelector {
 
 	/**
 	 * Adds listener
-	 * @param l
+	 * @param l data listener to add
 	 */
 	public void addBigDataViewerDataSelectorListener(IBigDataViewerDataSelectorListener l){
 		listeners.add(l);
@@ -176,7 +190,7 @@ public class BigDataViewerDataSelector {
 	 * @param outerVolume outer region
 	 * @param midmapLevel current midmap to query
 	 * @param time current time to query
-	 * @param sorceId it of the source to query
+	 * @param sourceId it of the source to query
 	 * @return AABB of the volumes in volume coordinate system
 	 */
 	private static AABBox getInnerVolume(final BigDataViewer bdv, final AABBox outerVolume, int midmapLevel, int time, int sourceId){

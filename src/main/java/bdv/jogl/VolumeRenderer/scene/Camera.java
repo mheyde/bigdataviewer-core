@@ -275,16 +275,19 @@ public class Camera {
 		}
 	}
 
+	/**
+	 * tells all listeners that the view matrix was changed
+	 */
 	private void fireUpdateViewAll(){
 		for(CameraListener l :cameraListeners){
-			fireUpdateView(l);
+			l.viewMatrixUpdate(getViewMatrix());
 		}
 	}
-	
-	private void fireUpdateView(CameraListener l){
-		l.viewMatrixUpdate(getViewMatrix());
-	}
-	
+
+	/**
+	 * tilts the camera at its local x axis
+	 * @param alpha the tilt angle
+	 */
 	private void tilt(float alpha){
 		Matrix4 tmp = getNewIdentityMatrix();
 		
@@ -293,6 +296,10 @@ public class Camera {
 		viewMatrix = copyMatrix(tmp);
 	}
 	
+	/**
+	 * rotates the camera around its y-axis
+	 * @param beta the rotation angle
+	 */
 	private void pan(float beta){
 		Matrix4 tmp = getNewIdentityMatrix();
 		
@@ -301,6 +308,10 @@ public class Camera {
 		viewMatrix = copyMatrix(tmp);
 	} 
 	
+	/**
+	 * moves the camera along its z direction
+	 * @param z the distance to move
+	 */
 	private void dolly(float z) {
 		Matrix4 tmp = getNewIdentityMatrix();
 		tmp.translate(0, 0, z);
@@ -312,8 +323,8 @@ public class Camera {
 	
 	/**
 	 * Transition of the camera on the current view x y plane
-	 * @param x
-	 * @param y
+	 * @param x the translation distance in the x direction
+	 * @param y the translation distance in the y direction
 	 */
 	public void trac(float x, float y){
 		Matrix4 tmp = getNewIdentityMatrix();
@@ -340,7 +351,7 @@ public class Camera {
 	
 	/**
 	 * Adds a new camera listener.
-	 * @param listener
+	 * @param listener the listener to add
 	 * @return true if add was successful
 	 */
 	public boolean addCameraListener(CameraListener listener){

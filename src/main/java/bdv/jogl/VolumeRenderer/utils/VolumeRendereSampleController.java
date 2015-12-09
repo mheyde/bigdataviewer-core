@@ -28,21 +28,21 @@ public class VolumeRendereSampleController {
 
 	/**
 	 * Constructor
-	 * @param window
-	 * @param sampleSpinner
-	 * @param volumeRenderer
-	 * @param lowSampleSize
+	 * @param window the window to render in
+	 * @param sampleSpinner the hogh sample spinner
+	 * @param volumeRenderer the volume renderer to use
+	 * @param lowSampleCount the lower sample count
 	 */
 	public VolumeRendereSampleController(
 			final GLWindow window,
 			final JSpinner sampleSpinner,
 			final MultiVolumeRenderer volumeRenderer,
-			int lowSampleSize) {
+			int lowSampleCount) {
 		super();
 		this.sampleSpinner = sampleSpinner;
 		this.volumeRenderer = volumeRenderer;
 		this.window = window;
-		this.lowSamples = lowSampleSize;
+		this.lowSamples = lowSampleCount;
 	}
 
 

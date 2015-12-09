@@ -22,7 +22,7 @@ import static bdv.jogl.VolumeRenderer.utils.WindowUtils.getNormalizedColor;
  */
 public class PreIntegrationSampler implements ITransferFunctionSampler {
 
-	private final PreIntegrationClassifier desampler = new PreIntegrationClassifier();
+	private final PreIntegrationClassifier classifier = new PreIntegrationClassifier();
 	
 	private Texture colorTexture;
 
@@ -31,7 +31,7 @@ public class PreIntegrationSampler implements ITransferFunctionSampler {
 	 */
 	@Override
 	public IFunction getShaderCode() {
-		return desampler;
+		return classifier;
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class PreIntegrationSampler implements ITransferFunctionSampler {
 	 * @param a1 absorbation at begin
 	 * @param a2 absorbation at end
 	 * @param stepSize slap size
-	 * @return
+	 * @return the integral value
 	 */
 	private float calcColorChannelIntegral(float c1, float c2, float a1, float a2, float stepSize){
 		return stepSize/3.f *(c1*a1+(c1*a2+c2*a1)/2.f +c2*a2);
@@ -52,7 +52,7 @@ public class PreIntegrationSampler implements ITransferFunctionSampler {
 	 * @param a1 absorbation at begin
 	 * @param a2 absorbation at end
 	 * @param stepSize slap size
-	 * @return
+	 * @return the integral value
 	 */
 	private float calcAbsorbationIntegral(float a1, float a2, float stepSize){
 		return stepSize/2.f * (a1+a2);

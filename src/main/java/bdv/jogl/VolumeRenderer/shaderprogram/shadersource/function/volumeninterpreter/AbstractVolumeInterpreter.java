@@ -10,11 +10,14 @@ import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.accumulator.A
  */
 public abstract class AbstractVolumeInterpreter extends AbstractShaderFunction{
 
+	/**
+	 * the current accumulator in use
+	 */
 	protected AbstractVolumeAccumulator accumulator;
 	
 	/**
 	 * constructor using the shader function class interface 
-	 * @param functionName
+	 * @param functionName the function name of the volume interpreter 
 	 */
 	protected AbstractVolumeInterpreter(String functionName) {
 		super(functionName);

@@ -1,14 +1,20 @@
 package bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.volumeninterpreter;
 import static bdv.jogl.VolumeRenderer.shaderprogram.shadersource.MultiVolumeRendererShaderSource.*;
+
 /**
  * Supports Maximum Intensity Projection 
  * @author michael
  *
  */
 public class MaximumIntensityProjectionInterpreter extends AbstractVolumeInterpreter {
+
+	/**
+	 * constructor
+	 */
 	public MaximumIntensityProjectionInterpreter(){
 		super("maximumIntensityProjection");
 	}
+	
 	@Override
 	public String[] declaration() {
 
@@ -33,5 +39,4 @@ public class MaximumIntensityProjectionInterpreter extends AbstractVolumeInterpr
 				"}"
 		};
 	};
-
 }

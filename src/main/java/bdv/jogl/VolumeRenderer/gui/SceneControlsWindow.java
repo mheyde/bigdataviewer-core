@@ -463,7 +463,7 @@ public class SceneControlsWindow extends JFrame {
 			
 				if(addedTransfeFunctionPoint != null){
 					if(transferFunction.getColors().containsKey(addedTransfeFunctionPoint)){
-						transferFunction.removeColor(addedTransfeFunctionPoint);
+						transferFunction.removeControlPoint(addedTransfeFunctionPoint);
 					}
 				}
 				addedTransfeFunctionPoint = new Point2D.Float((transferFunction.getMaxOrdinates().x/dataManager.getGlobalMaxVolumeValue())*lowestDataPoint, 0.001f);
@@ -592,7 +592,7 @@ public class SceneControlsWindow extends JFrame {
 
 	/**
 	 * Returns the sample spinner instance
-	 * @return
+	 * @return the spinner instance
 	 */
 	public JSpinner getSamplesSpinner() {
 		return sampleSpinner;

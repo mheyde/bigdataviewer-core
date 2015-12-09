@@ -6,6 +6,14 @@ package bdv.jogl.VolumeRenderer.utils;
  *
  */
 public class HessianContainer {
+	
+	/**
+	 * hessian matrices for each voxel
+	 */
 	public float[][] valueMesh3d;
+	
+	/**
+	 * dimension of the data field
+	 */
 	public int dimension[]; 
 }

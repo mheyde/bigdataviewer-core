@@ -34,65 +34,152 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 	private VolumeGradientEvaluationFunction gradient = new VolumeGradientEvaluationFunction();
 
 	private static final String svRayStartCoordinate = "textureCoordinate";
-
+	
 	//Vertex shader uniforms
+	/**
+	 * uniform shader variable name for the unit cube transformation 
+	 */
 	public static final String suvDrawCubeTransformation ="inDrawCubeTransformation";
 
+	/**
+	 * uniform shader variable name for inverse volume stack transformation
+	 */
 	public static final String suvTextureTransformationInverse ="inTextureTransformationInverse";
 
 	//Fragment shader uniforms 
+	/**
+	 * uniform shader variable name for the iso value
+	 */
 	public static final String suvIsoValue = "inIsoValue";
 
+	/**
+	 * uniform shader variable name for the active volume flag field
+	 */
 	public static final String suvActiveVolumes = "inActiveVolumes";
 
+	/**
+	 * uniform shader variable name for volume stack textures
+	 */
 	public static final String suvVolumeTexture = "inVolumeTexture";
 
+	/**
+	 * uniform shader variable name for transfer function texture 
+	 */
 	public static final String suvColorTexture = "inColorTexture";
 
+	/**
+	 * uniform shader variable name for global eye position
+	 */
 	public static final String suvEyePosition = "inEyePosition";
 
+	/**
+	 * uniform shader variable name for minimum  global volume value
+	 */
 	public static final String suvMinVolumeValue = "inMinVolumeValue";
 
+	/**
+	 * uniform shader variable name for the maximum global volume value
+	 */
 	public static final String suvMaxVolumeValue = "inMaxVolumeValue";
 
+	/**
+	 * constant shader variable name for the total number of volume stacks
+	 */
 	public static final String scvMaxNumberOfVolumes = "maxNumberOfVolumes";
 
+	/**
+	 * global shader variable name for the normalized [0,1] iso value
+	 */
 	public static final String sgvNormIsoValue = "normIsoValue";
 
+	/**
+	 * constant shader variable name for a minimal float delta value
+	 */
 	public static final String scvMinDelta = "minDelta";
 
+	/**
+	 * global shader variable name for the current ray position
+	 */
 	public static final String sgvRayPositions = "ray_poss";
 
+	/**
+	 * global shader variable name for the ray direction
+	 */
 	public static final String sgvRayDirections = "ray_dirs";
 
+	/**
+	 * global shader variable name for the volume value normalization factor [0,1]
+	 */
 	public static final String sgvVolumeNormalizeFactor = "volumeNormalizeFactor";
 
+	/**
+	 * uniform shader variable name for the scene background color
+	 */
 	public static final String suvBackgroundColor = "inBackgroundColorFragmentShader";
 
+	/**
+	 * uniform shader variable name for the camera light values on the iso surface
+	 */
 	public static final String suvLightIntensiy = "iniIn";
 
+	/**
+	 * uniform shader variable name for the hessian normal form bdv slice plane
+	 */
 	public static final String suvNormalSlice = "inZeroSliceNormal";
 
+	/**
+	 * uniform shader variable name for the slice show flag
+	 */
 	public static final String suvShowSlice = "inShowSlice";
 
+	/**
+	 * uniform shader variable name for the voxel counts of each volume stack
+	 */
 	public static final String suvVoxelCount = "inVoxelCount";
 
+	/**
+	 * uniform shader variable name for the current sample count
+	 */
 	public static final String suvSamples = "inSamples";
 
+	/**
+	 * uniform shader variable name for volume texture offset of each volume stack 
+	 */
 	public static final String sgvTexTOffsets = "vtextOffsets";
 
+	/**
+	 * uniform shader variable name for the volume scale factor of each volume stack
+	 */
 	public static final String sgvTexTScales = "vtextScales";
 
+	/**
+	 * uniform shader variable name for the usage of volume gradients flag 
+	 */
 	public static final String suvUseGradient = "inUseGradient";
 
+	/**
+	 * uniform shader variable name for the hull volume clipping planes array 
+	 */
 	public static final String suvRenderRectClippingPlanes = "inRectClippingPlanes";
 
+	/**
+	 * uniform shader variable name for the step size according to the sample count
+	 */
 	public static final String suvRenderRectStepSize = "inRectStepSize";
 
+	/**
+	 * uniform shader variable name for the number of texture texel in the transfer function texture
+	 */
 	public static final String suvTransferFuntionSize = "inTransferFunctionSize";
 
+	/**
+	 * uniform shader variable name for the opacity of the 3D volume
+	 */
 	public static final String suvOpacity3D = "inOpacity3D"; 
 
+	/**
+	 * uniform shader variable name for the offset of the volume data in the partial/ detail view
+	 */
 	public static final String suvVoxelOffsets = "inVoxelOffsets";
 
 	/**
@@ -144,7 +231,7 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 
 	/**
 	 * creates vertex shader code string
-	 * @return
+	 * @return the vertex shader code as line array
 	 */
 	private String[] vertexShaderCode() {
 		String[] shaderCode ={
@@ -182,6 +269,9 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 		return shaderCode;
 	}
 
+	/**
+	 * @return the fragment shader code as line array
+	 */
 	private String[] fragmentShaderCode(){
 		List<String> code = new ArrayList<String>();
 		String[] head = {
@@ -446,7 +536,7 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 
 	/**
 	 * set new accumulator code and trigger rebuild
-	 * @param a1
+	 * @param a1 the accumulator to set
 	 */
 	public void setAccumulator(AbstractVolumeAccumulator a1) {
 		if(a1.equals(this.accumulator)){
@@ -459,7 +549,7 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 
 	/**
 	 * set new volume interpreter code and trigger rebuild
-	 * @param a1
+	 * @param volumeInterpreter the interpreter to set
 	 */
 	public void setVolumeInterpreter(AbstractVolumeInterpreter volumeInterpreter) {
 		this.interpreter = volumeInterpreter;

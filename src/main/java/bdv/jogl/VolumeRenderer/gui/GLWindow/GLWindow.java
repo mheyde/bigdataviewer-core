@@ -135,7 +135,7 @@ public class GLWindow extends JFrame {
 	
 	/**
 	 * Starts Benchmark with specific sample size
-	 * @param startsamples
+	 * @param startsamples the sample count
 	 */
 	public void startBenchmark(int startsamples){
 		startStepsTaken = 0;
@@ -298,9 +298,9 @@ public class GLWindow extends JFrame {
 
 	/**
 	 * Calculates fps from times and samples
-	 * @param frames
-	 * @param timeInNs
-	 * @return
+	 * @param frames number of rendered frames
+	 * @param timeInNs time elapse in nano seconds
+	 * @return the framerate in  fps
 	 */
 	private double timeToFps(double frames,double timeInNs){
 		return frames/(timeInNs / 1000000000.0);
@@ -327,6 +327,7 @@ public class GLWindow extends JFrame {
 
 	/**
 	 * constructor
+	 * @param scene the scene to display
 	 */
 	public GLWindow(final VolumeDataScene scene){		
 		// create render area

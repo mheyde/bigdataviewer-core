@@ -14,10 +14,12 @@ import java.util.List;
  */
 public class MaximumVolumeAccumulator extends AbstractVolumeAccumulator {
 
+	/**
+	 * Constructor
+	 */
 	public MaximumVolumeAccumulator(){
 		super("maximum");
-	}
-	
+	}	
 	
 	@Override
 	public String[] declaration() {

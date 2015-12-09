@@ -8,18 +8,20 @@ import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.ui.TransformListener;
 import static bdv.jogl.VolumeRenderer.utils.MatrixUtils.*;
 /**
- * Listener for global transformation changes
+ * Listener for global transformation changes to update the bdv slice in 3D
  * @author michael
  *
  */
 public class SceneGlobalTransformationListener implements TransformListener<AffineTransform3D> {
 
 	private final MultiVolumeRenderer renderer;
+
 	private final GLWindow window;
 	
 	/**
-	 * add scene to transfer data
-	 * @param scene
+	 * Constructor
+	 * @param renderer the volume renderer 
+	 * @param window the render window
 	 */
 	public SceneGlobalTransformationListener(final MultiVolumeRenderer renderer, final GLWindow window){
 		this.renderer = renderer;

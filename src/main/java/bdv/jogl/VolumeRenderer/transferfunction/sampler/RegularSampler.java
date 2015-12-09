@@ -20,7 +20,7 @@ import static bdv.jogl.VolumeRenderer.utils.WindowUtils.getNormalizedColor;
  */
 public class RegularSampler implements ITransferFunctionSampler {
 	
-	private final RegularTransferFunctionClassifier desampler = new RegularTransferFunctionClassifier();
+	private final RegularTransferFunctionClassifier classifier = new RegularTransferFunctionClassifier();
 	
 	private Texture colorTexture;  
 	
@@ -48,9 +48,9 @@ public class RegularSampler implements ITransferFunctionSampler {
 	
 	/**
 	 * Samples tf data and returns 1d texture
-	 * @param transferFunction
-	 * @param sampleStep
-	 * @return
+	 * @param transferFunction the transfer function to sample
+	 * @param sampleStep the step size to sample
+	 * @return the texture data
 	 */
 	public FloatBuffer sample(TransferFunction1D transferFunction, float sampleStep){
 		TreeMap<Integer, Color> colorMap = transferFunction.sampleColors();
@@ -98,11 +98,11 @@ public class RegularSampler implements ITransferFunctionSampler {
 	};
 	
 	/**
-	 * Retruns the de sampling shader code
-	 * @return
+	 * Returns the classification shader code
+	 * @return the sha
 	 */
 	public IFunction getShaderCode(){
-		return desampler;
+		return classifier;
 	}
 
 	/**

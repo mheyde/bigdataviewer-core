@@ -14,7 +14,10 @@ import com.jogamp.opengl.util.glsl.ShaderCode;
  *
  */
 public class UnitCubeShaderSource extends AbstractShaderSource {
-	
+
+	/**
+	 * the color uniform variable name in shader code
+	 */
 	public static final String suvColor = "inColor";
 	
 	@Override
@@ -27,7 +30,7 @@ public class UnitCubeShaderSource extends AbstractShaderSource {
 
 	/**
 	 * Creates fragment shader code string
-	 * @return
+	 * @return the lines of the vertex shader code
 	 */
 	private String[] vertexShaderCode(){
 		String[] code={
@@ -53,7 +56,7 @@ public class UnitCubeShaderSource extends AbstractShaderSource {
 
 	/**
 	 * Creates vertex shader code string
-	 * @return
+	 * @return the lines of the fragment shader code
 	 */
 	private String[] fragmentShaderCode(){
 		String[] code={

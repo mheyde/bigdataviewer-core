@@ -59,6 +59,8 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 	
 	/**
 	 * constructor
+	 * @param tf the transfer function to use
+	 * @param dataManager the data manager to use
 	 */
 	public TransferFunctionRenderPanel1D(final TransferFunction1D tf, final VolumeDataManager dataManager){
 
@@ -105,8 +107,7 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 	}
 
 	/**
-	 * Returns true if the volume distribution is drawn logarithmic and false if not
-	 * @return
+	 * @return true if the volume distribution is drawn logarithmic and false if not
 	 */
 	public boolean isLogscaleDistribution() {
 		return logscale;
@@ -114,7 +115,7 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 
 	/**
 	 * Defines whether the distributions of volume values in the panel should be drawn in log scale
-	 * @param logscale
+	 * @param logscale the log scale flag
 	 */
 	public void setLogscaleDistribution(boolean logscale) {
 		this.logscale = logscale;
@@ -122,8 +123,7 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 	}
 
 	/**
-	 * Returns the data manager which is currently in use
-	 * @return
+	 * @return the data manager which is currently in use
 	 */
 	public VolumeDataManager getVolumeDataManager() {
 		return volumeDataManager;
@@ -131,7 +131,7 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 
 	/**
 	 * Set a new data manager to use
-	 * @param volumeDataManager
+	 * @param volumeDataManager the new data manager
 	 */
 	public void setVolumeDataManager(VolumeDataManager volumeDataManager) {
 		this.volumeDataManager = volumeDataManager;
@@ -162,7 +162,7 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 
 	/**
 	 * Paints the color gradients
-	 * @param g
+	 * @param g the painter of the panel
 	 */
 	private void paintSkala(Graphics g){
 		//paint gradient image
@@ -203,8 +203,8 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 	
 	/**
 	 * Draw a transfer function point 
-	 * @param painter
-	 * @param point
+	 * @param painter the painter of the panel
+	 * @param point the point center in panel space
 	 */
 	private void drawPointIcon(Graphics2D painter, final Point point){
 
@@ -215,7 +215,7 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 
 	/**
 	 * Draw line segments representing the transfer function
-	 * @param g
+	 * @param g  the painter of the panel
 	 */
 	private void paintLines(Graphics g){
 		TreeMap<Point2D.Float,Color> functionPoints = transferFunction.getColors();
@@ -250,7 +250,7 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 
 	/**
 	 * Draws the control points of the transfer function 
-	 * @param g
+	 * @param g the painter of the panel
 	 */
 	private void paintPoints(Graphics g){
 		//print points	
@@ -271,7 +271,7 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 
 	/**
 	 * Paint the value distribution on the panel
-	 * @param g
+	 * @param g the painter of the panel
 	 */
 	private void paintDistributions(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;	
@@ -314,6 +314,7 @@ public class TransferFunctionRenderPanel1D extends JPanel {
 	
 	/**
 	 * Draw panel as overlapping layers: lowest Colors then Volume distribution then Function line then Controle points 
+	 * @param g the painter of the panel
 	 */
 	@Override
 	public void paint(Graphics g) {

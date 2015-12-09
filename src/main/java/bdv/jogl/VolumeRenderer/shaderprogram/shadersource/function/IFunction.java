@@ -9,14 +9,14 @@ public interface IFunction {
 
 	/**
 	 * Return the function declaration, the function source code.
-	 * @return
+	 * @return the declaration of the function as string array
 	 */
 	public String[] declaration();
 	
 	/**
 	 * Return the function call semantic 
 	 * @param parameters Parameter Strings for the shader.
-	 * @return
+	 * @return the call syntax of the function
 	 */
 	public String call(final String[] parameters);
 }

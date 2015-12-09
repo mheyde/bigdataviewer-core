@@ -11,7 +11,7 @@ public class ShaderSourceUtil {
 
 	/**
 	 * appends system depending new lines to each line of the source code
-	 * @param shaderCode
+	 * @param shaderCode the lines of shader code to append
 	 */
 	public static void appendNewLines(String[] shaderCode){
 		for(int i = 0; i < shaderCode.length; i++){
@@ -22,8 +22,8 @@ public class ShaderSourceUtil {
 	
 	/**
 	 * Adds the given array code to the given List
-	 * @param code
-	 * @param list
+	 * @param code the lines of shader code to add
+	 * @param list the lines of shader code to be appended
 	 */
 	public static void addCodeArrayToList(final String[] code, List<String> list){
 		for(String line: code){

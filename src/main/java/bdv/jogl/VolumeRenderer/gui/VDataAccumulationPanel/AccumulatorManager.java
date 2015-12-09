@@ -41,7 +41,7 @@ public class AccumulatorManager {
 	
 	/**
 	 * Stores the an accumulator
-	 * @param a
+	 * @param a the accumulator instance to store 
 	 */
 	private void addAccumulator(AbstractVolumeAccumulator a){
 		String visualName = beautifyaccumulatorFuncName(a.getFunctionName());
@@ -50,9 +50,9 @@ public class AccumulatorManager {
 	}
 	
 	/**
-	 * Beautifies the function name of an accumulator (Uppercase first letter, changes '_' to ' ')
-	 * @param functionName
-	 * @return
+	 * Beautifies the function name of an accumulator (Upper case first letter, changes '_' to ' ')
+	 * @param functionName the function name of the accumulator
+	 * @return the beautyfied function name
 	 */
 	private String beautifyaccumulatorFuncName(String functionName) {
 		String beautified =""+ Character.toUpperCase( (char)functionName.getBytes()[0]);
@@ -81,14 +81,13 @@ public class AccumulatorManager {
 		addAccumulator(new MaxDifferenceAccumulator());
 		addAccumulator(new MidmapMaxDifferenceAccumulator());
 		addAccumulator(new MaxCurvatureDifferenceAccumulator());
-	//	addAccumulator(new VoxelDistanceAccumulator());
 
 		setActiveAcumulator( beautifyaccumulatorFuncName(max.getFunctionName()));
 	}
 	
 	/**
 	 * Adds aggregation listener
-	 * @param listener
+	 * @param listener the listener instance to add
 	 */
 	public void addListener(IVolumeAccumulatorListener listener){
 		this.listeners.add(listener);
@@ -96,7 +95,7 @@ public class AccumulatorManager {
 	
 	/**
 	 * Returns the function name of the currently active accumulator
-	 * @return
+	 * @return the name of the current active accumulator
 	 */
 	public String getActiveAccumulator(){
 		return activeAccumulatorName;
@@ -104,7 +103,7 @@ public class AccumulatorManager {
 	
 	/**
 	 * Set the current active accumulator and calls the changed listener 
-	 * @param name
+	 * @param name the name to set
 	 */
 	public void setActiveAcumulator(String name){
 		activeAccumulatorName = name;
@@ -113,8 +112,8 @@ public class AccumulatorManager {
 	
 	/**
 	 * returns a accumulator identified by its funktion name or null if not present
-	 * @param name
-	 * @return
+	 * @param name the name of the queried accumulator
+	 * @return the accumulator instance
 	 */
 	public AbstractVolumeAccumulator getAccumulator(String name){
 		return accumulators.get(name);
@@ -122,7 +121,7 @@ public class AccumulatorManager {
 	
 	/**
 	 * returns the function-names of the stored accumulators 
-	 * @return
+	 * @return a list of all usable accumulator names.
 	 */
 	public List<String> getAccumulatorNames(){
 		return aggregatorNames;

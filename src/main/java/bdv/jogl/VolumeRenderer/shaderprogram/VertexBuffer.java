@@ -15,7 +15,7 @@ public class VertexBuffer {
 	
 	/**
 	 * Generates the opengl buffer object
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	private void generateBuffer(GL4 gl2){
 		//vertex buffer
@@ -26,7 +26,7 @@ public class VertexBuffer {
 	
 	/**
 	 * Constructor
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	public VertexBuffer(GL4 gl2){
 		generateBuffer(gl2);
@@ -34,7 +34,7 @@ public class VertexBuffer {
 	
 	/**
 	 * Allocates gpu memory for the buffer
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 * @param sizeInBytes Memory size
 	 */
 	public void allocateMemory(GL4 gl2, int sizeInBytes){
@@ -52,10 +52,10 @@ public class VertexBuffer {
 	
 	/**
 	 * Copies data for the buffer object to the gpu after the storage was allocated
-	 * @param gl2
-	 * @param data
-	 * @param elementSize
-	 * @param offset
+	 * @param gl2 the gl context to use
+	 * @param data the data buffer to upload
+	 * @param elementSize the mem size of one element
+	 * @param offset the offset on the vbo storage
 	 */
 	public void memcopyData(GL4 gl2, final Buffer data, int elementSize, int offset){
 		bind(gl2);
@@ -71,15 +71,15 @@ public class VertexBuffer {
 	
 	/**
 	 * Binds the buffer to the current context
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	public void bind(GL4 gl2){
 		gl2.glBindBuffer(GL4.GL_ARRAY_BUFFER, vbo);
 	}
 	
 	/**
-	 * Unbinds the buffer
-	 * @param gl2
+	 * Un-binds the buffer
+	 * @param gl2 the gl context to use
 	 */
 	public void unbind(GL4 gl2){
 		gl2.glBindBuffer(GL4.GL_ARRAY_BUFFER, 0);
@@ -87,7 +87,7 @@ public class VertexBuffer {
 	
 	/**
 	 * Deletes the opengl buffer object 
-	 * @param gl2
+	 * @param gl2 the gl context to use
 	 */
 	public void delete(GL4 gl2){
 		int[] buffers = {vbo};

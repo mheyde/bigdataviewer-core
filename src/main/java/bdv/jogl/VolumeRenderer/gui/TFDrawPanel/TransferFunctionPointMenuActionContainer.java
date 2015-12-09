@@ -104,7 +104,7 @@ public class TransferFunctionPointMenuActionContainer {
 			if(colorPoint == null){
 				return;
 			}
-			tf.removeColor(colorPoint);
+			tf.removeControlPoint(colorPoint);
 		}
 	};
 

@@ -2,7 +2,6 @@ package bdv.jogl.VolumeRenderer.gui;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -11,8 +10,6 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import bdv.jogl.VolumeRenderer.gui.GLWindow.GLWindow;
-import bdv.jogl.VolumeRenderer.shaderprogram.MultiVolumeRenderer;
 import static bdv.jogl.VolumeRenderer.utils.WindowUtils.aligneLeft;
 
 /**
@@ -43,12 +40,12 @@ public class DetailViewConfiguration extends JPanel{
 	}
 
 	/**
-	 * Creates a named slider and adds it to the layout
-	 * @param name
-	 * @param value
-	 * @param c
+	 * Creates a named spinner and adds it to the layout
+	 * @param name the name of the spinner
+	 * @param value the spinner 
+	 * @param c the constraint to update
 	 */
-	private void createSliderPanel(final String name, final JSpinner value,final GridBagConstraints c){
+	private void createSpinnerPanel(final String name, final JSpinner value,final GridBagConstraints c){
 		
 		value.setPreferredSize(value.getMinimumSize());
 		value.setMaximumSize(value.getMinimumSize());
@@ -70,9 +67,9 @@ public class DetailViewConfiguration extends JPanel{
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridy =0;
-		createSliderPanel("Width: ", widthSpinner, c);
-		createSliderPanel("Heigth: ", heightSpinner, c);
-		createSliderPanel("depth: ", depthSpinner, c);
+		createSpinnerPanel("Width: ", widthSpinner, c);
+		createSpinnerPanel("Heigth: ", heightSpinner, c);
+		createSpinnerPanel("depth: ", depthSpinner, c);
 		c.gridx = 0;
 		c.gridwidth = 2;
 		add(aligneLeft(resetButton),c);
