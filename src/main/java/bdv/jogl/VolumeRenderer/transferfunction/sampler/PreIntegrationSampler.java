@@ -11,7 +11,7 @@ import com.jogamp.opengl.GL4;
 
 import bdv.jogl.VolumeRenderer.scene.Texture;
 import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.IFunction;
-import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.transferfunctioninterpreter.PreIntegrationClassifier;
+import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.transferfunctionclassifier.PreIntegrationClassifier;
 import bdv.jogl.VolumeRenderer.transferfunction.TransferFunction1D;
 import static bdv.jogl.VolumeRenderer.utils.WindowUtils.getNormalizedColor;
 

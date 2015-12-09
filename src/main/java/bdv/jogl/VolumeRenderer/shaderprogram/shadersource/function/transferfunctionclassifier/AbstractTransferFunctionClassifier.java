@@ -1,4 +1,4 @@
-package bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.transferfunctioninterpreter;
+package bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.transferfunctionclassifier;
 
 import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.AbstractShaderFunction;
 

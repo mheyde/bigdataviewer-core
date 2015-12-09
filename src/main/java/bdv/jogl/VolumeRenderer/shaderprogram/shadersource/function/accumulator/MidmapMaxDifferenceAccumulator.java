@@ -14,6 +14,9 @@ import java.util.List;
  */
 public class MidmapMaxDifferenceAccumulator extends AbstractVolumeAccumulator {
 
+	/**
+	 * constructor
+	 */
 	public MidmapMaxDifferenceAccumulator(){
 		super("difference_of_midmap_area");
 	}
@@ -33,12 +36,17 @@ public class MidmapMaxDifferenceAccumulator extends AbstractVolumeAccumulator {
 				"	return ret;",
 				"}",
 				"",
+				"//main accumulator function",
 				"float "+getFunctionName()+"(float densities["+scvMaxNumberOfVolumes+"]){",
 				"	float maxValue = 0.0;",
 				"	float minValue = "+Float.MAX_VALUE+";",
 				"	float midMap["+scvMaxNumberOfVolumes+"] = getMidmapValues("+sgvRayPositions+");",	
 				"	int numberOfChanges = 0;",
+				"",
+				"	//iterate densities",
 				"	for(int n = 0; n < "+scvMaxNumberOfVolumes+"; n++){",
+				"",
+				"		//scip on invalid",
 				"		if(densities[n] < 0.0){",
 				"			continue;",	
 				"		}",	
@@ -46,6 +54,8 @@ public class MidmapMaxDifferenceAccumulator extends AbstractVolumeAccumulator {
 				"		minValue = min(minValue,midMap[n]);",	
 				"		numberOfChanges++;",
 				"	}",
+				"",
+				"	//no valid values zero returns",
 				"	if(numberOfChanges ==0){",
 				"		return 0.0;",
 				"	}",

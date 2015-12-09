@@ -55,39 +55,50 @@ public class SharpnessVolumeAccumulator extends AbstractVolumeAccumulator {
 		List<String> code = new ArrayList<String>();
 		String[] dec= new String[]{
 				"#line "+Thread.currentThread().getStackTrace()[1].getLineNumber()+ " 909",
+				"",
+				"//pre calculated data",
 				"uniform sampler3D "+suvLaplaceTextures+"["+scvMaxNumberOfVolumes+"];",
 				"uniform float "+suvLaplaceMinValue+";",
 				"uniform float "+suvLaplaceMaxValue+";",
 				"float laplaceNormFactor = 1.0 /("+suvLaplaceMaxValue+"-"+suvLaplaceMinValue+");",
 				"",
+				"//read out the laplacian weights",
 				"float ["+scvMaxNumberOfVolumes+"] calcWeights(){",
 				"	float weights["+scvMaxNumberOfVolumes+"];",
 				"	for(int v = 0; v < "+scvMaxNumberOfVolumes+"; v++){",
 				"		vec3 texC = getCorrectedTexturePositions("+sgvRayPositions+", v);",
+				"",
+				"		//normalize to [0,1]",
 				"		weights[v] =  laplaceNormFactor*(texture("+suvLaplaceTextures+"[v],texC).r -"+suvLaplaceMinValue+") ;",
 				"	}",
 				"	return weights;",
 				"}",
 				"",
+				"//main accumulator function",
 				"float "+getFunctionName()+"(float densities["+scvMaxNumberOfVolumes+"]) {",
 				"	float density = 0.0;",		
 				"	float sum = 0.0;",
 				"	const int N = "+scvMaxNumberOfVolumes+";",
 				"	float weights[N] = calcWeights();",
+				"",
+				"	//iterate densities",
 				"	for(int n = 0; n< N; n++){",
+				"",
+				"		//scip on invalid",
 				"		if(densities[n] < 0.0){",
 				"			continue;",	
 				"		}",	
 				"		sum+=weights[n];",
 				"	}",	
 				"	for(int n = 0; n < N; n++){",
+				"",
+				"		//scip on invalid",
 				"		if(densities[n] < 0.0){",
 				"			continue;",	
 				"		}",	
 				"		float weight = (weights[n]/sum);",
 				"		density += weight * densities[n];",
 				"	}",
-				"	density = density;",
 				"	return density;",	
 				"}"
 		};
@@ -174,6 +185,9 @@ public class SharpnessVolumeAccumulator extends AbstractVolumeAccumulator {
 		if(!parent.equals(super.getParent())){
 			parent.getDataManager().addVolumeDataManagerListener(new VolumeDataManagerAdapter() {
 
+				/**
+				 * call for updates of texture values
+				 */
 				@Override
 				public void dataUpdated(Integer i) {
 					synchronized (mutex) {

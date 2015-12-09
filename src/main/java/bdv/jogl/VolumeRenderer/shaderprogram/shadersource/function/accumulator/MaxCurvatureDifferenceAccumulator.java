@@ -19,7 +19,6 @@ import java.util.Set;
 import bdv.jogl.VolumeRenderer.scene.Texture;
 import bdv.jogl.VolumeRenderer.shaderprogram.MultiVolumeRenderer;
 import bdv.jogl.VolumeRenderer.utils.CurvatureContainer;
-import bdv.jogl.VolumeRenderer.utils.IVolumeDataManagerListener;
 import bdv.jogl.VolumeRenderer.utils.VolumeDataBlock;
 import bdv.jogl.VolumeRenderer.utils.VolumeDataManager;
 import bdv.jogl.VolumeRenderer.utils.VolumeDataManagerAdapter;
@@ -55,6 +54,7 @@ public class MaxCurvatureDifferenceAccumulator extends AbstractVolumeAccumulator
 
 	@Override
 	public void init(GL4 gl) {
+		//create glsl variable mapping for texture and min may
 		getParent().mapUniforms(gl,new String[]{suvCurvatureTexture});
 		getParent().mapUniforms(gl,new String[]{suvCurvatureMax});
 		getParent().mapUniforms(gl,new String[]{suvCurvatureMin});
@@ -127,7 +127,10 @@ public class MaxCurvatureDifferenceAccumulator extends AbstractVolumeAccumulator
 		needsReset = true;
 		if(!parent.equals(super.getParent())){
 			parent.getDataManager().addVolumeDataManagerListener(new VolumeDataManagerAdapter() {
-
+				
+				/**
+				 * needs to update curvature texture
+				 */
 				@Override
 				public void dataUpdated(Integer i) {
 					synchronized (mutex) {
@@ -138,7 +141,6 @@ public class MaxCurvatureDifferenceAccumulator extends AbstractVolumeAccumulator
 			});
 		}
 		super.setParent(parent);
-
 	}
 
 	@Override
@@ -146,31 +148,44 @@ public class MaxCurvatureDifferenceAccumulator extends AbstractVolumeAccumulator
 		List<String> code = new ArrayList<String>();
 		String[] dec= new String[]{
 				"#line "+Thread.currentThread().getStackTrace()[1].getLineNumber()+ " 6666",
+				"",
+				"//pre calculated data",
 				"uniform sampler3D "+suvCurvatureTexture+"["+scvMaxNumberOfVolumes+"];",
 				"uniform float "+suvCurvatureMax+";",
 				"uniform float "+suvCurvatureMin+";",
 				"float curveNormalizeFactor = 1.0/("+suvCurvatureMax+"-"+suvCurvatureMin+");",
 				"bool factorChanged = false;",
 				"",
+				"//main accumulator method",
 				"float "+getFunctionName()+"(float densities["+scvMaxNumberOfVolumes+"]) {",
 				"	float minValue = "+Float.MAX_VALUE+";",
 				"	float maxValue = "+Float.MIN_VALUE+";",
 				"	int numberOfChanges = 0;",
+				"",
+				"	//change globale value normalization factor of the multi volume renderer",
+				"	//on first call. needed for proper tf texture fitting",		
 				"   if(!factorChanged){",
-				//TODO
 				"		"+sgvVolumeNormalizeFactor+" = curveNormalizeFactor;",
 				"		factorChanged = true;",
 				"	}",
+				"",
+				"	//iterate densities",
 				"	for(int n = 0; n < "+scvMaxNumberOfVolumes+"; n++){",
+				"",
+				"		//scip on invalid",
 				"		if(densities[n] < 0.0 ){",
 				"			continue;",
 				"		}",	
+				"",
+				"		//read min max curv values",
 				"		vec3 texCN = getCorrectedTexturePositions("+sgvRayPositions+", n);",
 				"		float cn = texture("+suvCurvatureTexture+"[n],texCN).r;",
 				"		maxValue = max(maxValue,cn);",
 				"		minValue = min(minValue,cn);",	
 				"		numberOfChanges++;",
 				"	}",
+				"",
+				"	//no valid values zero returns",
 				"	if(numberOfChanges ==0){",
 				"		return 0.0;",
 				"	}",
