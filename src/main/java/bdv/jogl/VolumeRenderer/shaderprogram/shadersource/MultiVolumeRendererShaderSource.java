@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import static bdv.jogl.VolumeRenderer.utils.ShaderSourceUtil.*;
-//import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.GetMaxStepsFunction;
-//import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.GetStepsToVolumeFunction;
 import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.IFunction;
 import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.VolumeGradientEvaluationFunction;
 import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.accumulator.AbstractVolumeAccumulator;
@@ -26,10 +24,6 @@ import com.jogamp.opengl.util.glsl.ShaderCode;
 public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 
 	private int maxNumberOfVolumes = 2;
-
-	//private final GetMaxStepsFunction stepsFunction = new GetMaxStepsFunction(); 
-
-	//private final GetStepsToVolumeFunction stepsToVolume = new GetStepsToVolumeFunction();
 
 	private IFunction transferFunctionCode;
 
@@ -426,8 +420,6 @@ public class MultiVolumeRendererShaderSource extends AbstractShaderSource{
 		//append shader strings
 		//global declarations
 		addCodeArrayToList(head, code);
-		//addCodeArrayToList(stepsToVolume.declaration(), code);
-		//addCodeArrayToList(stepsFunction.declaration(), code);
 
 		//add acumulator code
 		addCodeArrayToList(accumulator.declaration(), code);
