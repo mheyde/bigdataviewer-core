@@ -10,7 +10,7 @@ import com.jogamp.opengl.GL4;
 
 import bdv.jogl.VolumeRenderer.scene.Texture;
 import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.IFunction;
-import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.transferfunctioninterpreter.RegularTransferFunctionInterpreter;
+import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.transferfunctioninterpreter.RegularTransferFunctionClassifier;
 import bdv.jogl.VolumeRenderer.transferfunction.TransferFunction1D;
 import static bdv.jogl.VolumeRenderer.utils.WindowUtils.getNormalizedColor;
 /**
@@ -20,7 +20,7 @@ import static bdv.jogl.VolumeRenderer.utils.WindowUtils.getNormalizedColor;
  */
 public class RegularSampler implements ITransferFunctionSampler {
 	
-	private final RegularTransferFunctionInterpreter desampler = new RegularTransferFunctionInterpreter();
+	private final RegularTransferFunctionClassifier desampler = new RegularTransferFunctionClassifier();
 	
 	private Texture colorTexture;  
 	

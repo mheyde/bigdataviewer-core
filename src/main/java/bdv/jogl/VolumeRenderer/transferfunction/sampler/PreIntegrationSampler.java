@@ -11,7 +11,7 @@ import com.jogamp.opengl.GL4;
 
 import bdv.jogl.VolumeRenderer.scene.Texture;
 import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.IFunction;
-import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.transferfunctioninterpreter.PreIntegrationInterpreter;
+import bdv.jogl.VolumeRenderer.shaderprogram.shadersource.function.transferfunctioninterpreter.PreIntegrationClassifier;
 import bdv.jogl.VolumeRenderer.transferfunction.TransferFunction1D;
 import static bdv.jogl.VolumeRenderer.utils.WindowUtils.getNormalizedColor;
 
@@ -22,7 +22,7 @@ import static bdv.jogl.VolumeRenderer.utils.WindowUtils.getNormalizedColor;
  */
 public class PreIntegrationSampler implements ITransferFunctionSampler {
 
-	private final PreIntegrationInterpreter desampler = new PreIntegrationInterpreter();
+	private final PreIntegrationClassifier desampler = new PreIntegrationClassifier();
 	
 	private Texture colorTexture;
 
