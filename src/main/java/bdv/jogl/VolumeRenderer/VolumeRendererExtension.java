@@ -262,12 +262,23 @@ public class VolumeRendererExtension {
 			}
 			
 			@Override
-			public void selectedDataAvailable(AABBox hullVolume,
-					List<VolumeDataBlock> partialVolumesInHullVolume, int time) {			
-				dataManager.volumeUpdateTransaction( time, partialVolumesInHullVolume);
-				glWindow.getScene().getCamera().centerOnBox(hullVolume,volumeRenderer.getSlice2Dplane());
-				glWindow.getGlCanvas().repaint();
+			public void selectedDataAvailable(final AABBox hullVolume,
+					final List<VolumeDataBlock> partialVolumesInHullVolume, final int time) {		
 			
+				//wait until camera translation is done
+				Thread waitForCameraDone = new Thread(){
+				
+					public void run() {
+						synchronized (animator.animationMutex) {
+							
+						
+						dataManager.volumeUpdateTransaction( time, partialVolumesInHullVolume);
+						glWindow.getScene().getCamera().centerOnBox(hullVolume,volumeRenderer.getSlice2Dplane());
+						glWindow.getGlCanvas().repaint();
+						}
+					}
+				};
+				waitForCameraDone.start();
 				
 				
 			}

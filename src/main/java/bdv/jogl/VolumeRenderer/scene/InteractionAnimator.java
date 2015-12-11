@@ -36,6 +36,7 @@ public class InteractionAnimator {
 
 	private final VolumeRendereSampleController sampleController;
 	
+	public final Object animationMutex = new Object();
 	/**
 	 * Animation constructor
 	 * @param renderer the used volume renderer
@@ -148,6 +149,9 @@ public class InteractionAnimator {
 			 * Runs over animation steps and animates camera motion to target partial volume. is interruptable
 			 */
 			public void run(){
+			synchronized (animationMutex) {
+				
+			
 				boolean updatedData= false;
 				Camera c = renderWindow.getScene().getCamera();
 				AABBox currentHullVolume = renderer.getDrawRect();
@@ -180,6 +184,7 @@ public class InteractionAnimator {
 				
 				//finally set new hull volume 
 				renderer.setDrawRect(hullVolume);				
+			}
 			}
 		};
 		motionToTargetThread.start();
