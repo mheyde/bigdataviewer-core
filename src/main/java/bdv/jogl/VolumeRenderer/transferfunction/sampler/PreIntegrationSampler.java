@@ -156,6 +156,7 @@ public class PreIntegrationSampler implements ITransferFunctionSampler {
 		for(int sb = 0; sb < iterations; sb++){
 			float integralBack[] = integalsOfS.get(sb);
 			
+			//color evaluation
 			for(int sf = 0; sf < iterations; sf++){
 	
 				if(sf!=sb){
@@ -164,9 +165,6 @@ public class PreIntegrationSampler implements ITransferFunctionSampler {
 					for(int i =0; i< rgba.length; i++){
 						rgba[i] = factor * (integralBack[i] - integralFront[i]);
 					}
-				}else{
-					//TODO 
-					//here sete diagonal to zero because no integral can be evaluated
 				}
 				rgba[3] = (float) (1.f - Math.exp(-rgba[3]));
 				javaBuffer[index] = rgba[0];
