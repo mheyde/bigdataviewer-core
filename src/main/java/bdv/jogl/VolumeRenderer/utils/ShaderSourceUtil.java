@@ -16,7 +16,7 @@ public class ShaderSourceUtil {
 	public static void appendNewLines(String[] shaderCode){
 		for(int i = 0; i < shaderCode.length; i++){
 			   
-			shaderCode[i] = new String(shaderCode[i] + System.lineSeparator());
+			shaderCode[i] = new String(shaderCode[i] + "\n");
 		}
 	}
 	
