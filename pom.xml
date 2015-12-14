@@ -3,6 +3,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+
+
 	<parent>
 		<groupId>sc.fiji</groupId>
 		<artifactId>pom-bigdataviewer</artifactId>
@@ -112,6 +114,33 @@
 	</licenses>
 	<build>
 		<plugins>
+
+	
+<!-- build standalone -->
+<plugin>
+  <artifactId>maven-assembly-plugin</artifactId>
+  <configuration>
+    <archive>
+      <manifest>
+        <mainClass>bdv.BigDataViewer</mainClass>
+      </manifest>
+    </archive>
+    <descriptors>
+      <descriptor>src/main/assembly/application.xml</descriptor>
+    </descriptors>
+  </configuration>
+  <executions>
+    <execution>
+      <id>make-assembly</id>
+      <phase>package</phase>
+      <goals>
+        <goal>single</goal>
+      </goals>
+    </execution>
+  </executions>
+</plugin>
+<!-- build standalone -->
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
@@ -129,4 +158,5 @@ Jean-Yves Tinevez, HongKee Moon, Johannes Schindelin, Curtis Rueden</copyrightOw
 			</plugin>
 		</plugins>
 	</build>
+
 </project>
